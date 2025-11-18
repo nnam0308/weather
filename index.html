@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="vi" class=""> <!-- Bắt đầu với class trống để JS xử lý theme -->
+<html lang="vi" class=""> 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,1336 +14,752 @@
     <!-- Tải Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Cấu hình Tailwind cho Chế độ Tối (PHẢI nằm sau script chính) -->
+    <!-- Cấu hình Tailwind (Thêm kiểm tra lỗi) -->
     <script>
-        tailwind.config = {
-            darkMode: 'class', // Kích hoạt chế độ tối bằng class 'dark'
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
+        window.onload = function() {
+            if (typeof tailwind !== 'undefined') {
+                tailwind.config = {
+                    darkMode: 'class',
+                    theme: {
+                        extend: {
+                            fontFamily: {
+                                sans: ['Inter', 'sans-serif'],
+                            },
+                            animation: {
+                                'spin-slow': 'spin 10s linear infinite',
+                            }
+                        },
                     },
-                },
-            },
+                }
+            }
         }
     </script>
     
     <style>
-        /* Áp dụng font Inter làm font chữ mặc định */
         body {
             font-family: 'Inter', sans-serif;
-            /* Hiệu ứng chuyển đổi nền mượt mà */
             transition: background 0.5s ease-in-out;
+            position: relative;
+            overflow-x: hidden;
         }
 
-        /* Tùy chỉnh thanh cuộn (cho cả 2 mục cuộn) */
-        ::-webkit-scrollbar {
-            height: 8px; /* Cho cuộn ngang */
-            width: 8px;  /* Cho cuộn dọc */
-        }
-        ::-webkit-scrollbar-track {
-            background: #f1f5f9; /* slate-100 */
-            border-radius: 10px;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #94a3b8; /* slate-400 */
-            border-radius: 10px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #64748b; /* slate-500 */
-        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { height: 6px; width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(150, 150, 150, 0.4); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(150, 150, 150, 0.6); }
 
-        /* Tùy chỉnh thanh cuộn ở CHẾ ĐỘ TỐI */
-        html.dark ::-webkit-scrollbar-track {
-            background: #1e293b; /* slate-800 */
-        }
-        html.dark ::-webkit-scrollbar-thumb {
-            background: #475569; /* slate-600 */
-        }
-        html.dark ::-webkit-scrollbar-thumb:hover {
-            background: #64748b; /* slate-500 */
-        }
+        /* Background Gradients */
+        .weather-default { background: linear-gradient(to top, #d2d6db, #f9fafb); }
+        html.dark .weather-default { background: linear-gradient(to top, #334155, #0f172a); }
 
-        /* CSS cho các lớp nền (gradient) */
-        .weather-default {
-            background: linear-gradient(to top, #d2d6db, #f9fafb); /* Default */
-        }
-        html.dark .weather-default {
-            background: linear-gradient(to top, #334155, #0f172a); /* Default Dark */
-        }
-
-        /* BAN NGÀY (DAY) 10:00 - 16:59 */
+        /* --- MÀU NỀN --- */
         .weather-day-sunny { background: linear-gradient(to bottom, #87CEEB, #f0f8ff); }
         .weather-day-cloudy { background: linear-gradient(to bottom, #B0C4DE, #f0f8ff); }
-        .weather-day-rainy, .weather-day-snowy, .weather-day-foggy {
-            background: linear-gradient(to bottom, #778899, #d3d9e0);
-        }
-        /* BUỔI SÁNG (MORNING) 05:00 - 09:59 */
+        .weather-day-rainy, .weather-day-snowy, .weather-day-foggy { background: linear-gradient(to bottom, #4b79a1, #8e9eab); }
+        
         .weather-morning-sunny { background: linear-gradient(to bottom, #FFDAB9, #E6E6FA); }
         .weather-morning-cloudy { background: linear-gradient(to bottom, #D8BFD8, #E6E6FA); }
-        .weather-morning-rainy, .weather-morning-snowy, .weather-morning-foggy {
-            background: linear-gradient(to bottom, #B0C4DE, #E0E0E0);
-        }
-        /* BUỔI TỐI (EVENING) 17:00 - 19:59 */
+        .weather-morning-rainy, .weather-morning-snowy, .weather-morning-foggy { background: linear-gradient(to bottom, #6190E8, #A7BFE8); }
+        
         .weather-evening-sunny { background: linear-gradient(to bottom, #FF7F50, #4682B4); }
         .weather-evening-cloudy { background: linear-gradient(to bottom, #6A5ACD, #4682B4); }
-        .weather-evening-rainy, .weather-evening-snowy, .weather-evening-foggy {
-            background: linear-gradient(to bottom, #483D8B, #606f86);
-        }
-        /* BAN ĐÊM (NIGHT) 20:00 - 04:59 */
+        .weather-evening-rainy, .weather-evening-snowy, .weather-evening-foggy { background: linear-gradient(to bottom, #1c3b68, #4ca1af); }
+        
         .weather-night-clear { background: linear-gradient(to bottom, #000080, #191970); }
         .weather-night-cloudy { background: linear-gradient(to bottom, #2F4F4F, #1E1E1E); }
-        .weather-night-rainy, .weather-night-snowy, .weather-night-foggy {
-            background: linear-gradient(to bottom, #303030, #101010);
+        .weather-night-rainy, .weather-night-snowy, .weather-night-foggy { background: linear-gradient(to bottom, #0f2027, #203a43, #2c5364); }
+
+        /* Glass Panel */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.35); 
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+            transition: all 0.3s ease;
+        }
+        html.dark .glass-panel {
+            background: rgba(30, 41, 59, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .glass-panel:hover {
+            transform: translateY(-2px);
+            background: rgba(255, 255, 255, 0.45);
+            box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.15);
+            border-color: rgba(255, 255, 255, 0.6);
+        }
+        html.dark .glass-panel:hover {
+            background: rgba(30, 41, 59, 0.65);
+            border-color: rgba(255, 255, 255, 0.2);
         }
 
-        /* Animation khi tải trang */
-        @keyframes slideUpFadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .glass-item {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.2s;
         }
-        .animate-slide-up {
-            animation: slideUpFadeIn 0.5s ease-out forwards;
+        .glass-item:hover {
+            background: rgba(255, 255, 255, 0.4);
+            transform: scale(1.02);
         }
-
-        /* Animation cho Modal */
-        @keyframes modalZoomIn {
-            from {
-                opacity: 0;
-                transform: scale(0.9);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
+        html.dark .glass-item {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.05);
         }
-        @keyframes modalZoomOut {
-            from {
-                opacity: 1;
-                transform: scale(1);
-            }
-            to {
-                opacity: 0;
-                transform: scale(0.9);
-            }
-        }
-        .modal-entering {
-            animation: modalZoomIn 0.2s ease-out forwards;
-        }
-        .modal-exiting {
-            animation: modalZoomOut 0.2s ease-out forwards;
+        html.dark .glass-item:hover {
+            background: rgba(0, 0, 0, 0.3);
         }
 
-        /* Ẩn icon SVG khi chưa tải xong (tránh lỗi kích thước) */
-        .weather-icon {
-            width: 100%;
-            height: 100%;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        .weather-icon.loaded {
-            opacity: 1;
-        }
+        /* Effects */
+        #weather-effects-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; overflow: hidden; }
+        .rain-drop { position: absolute; background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0.7)); width: 2px; height: 25px; top: -25px; animation: fall linear infinite; }
+        @keyframes fall { to { transform: translateY(110vh); } }
+        .thunder-flash { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(255, 255, 255, 0.4); opacity: 0; animation: flash 0.5s ease-out; }
+        @keyframes flash { 0% { opacity: 0.8; } 100% { opacity: 0; } }
+        .sun-beam { position: absolute; top: -20%; right: -20%; width: 80vw; height: 80vw; background: radial-gradient(circle, rgba(255,255,220,0.3) 0%, rgba(255,255,255,0) 60%); animation: sun-pulse 6s ease-in-out infinite alternate; }
+        @keyframes sun-pulse { from { opacity: 0.3; transform: scale(1); } to { opacity: 0.6; transform: scale(1.1); } }
+        .sun-glare { position: absolute; top: -150px; right: -150px; width: 800px; height: 800px; background: repeating-conic-gradient(from 0deg, rgba(255,255,255,0) 0deg, rgba(255,255,255,0.15) 5deg, rgba(255,255,255,0) 10deg); animation: sun-rotate 30s linear infinite; border-radius: 50%; }
+        .sun-core { position: absolute; top: 50px; right: 50px; width: 100px; height: 100px; background: radial-gradient(circle, #fff 20%, rgba(255,220,100,0.8) 60%, transparent 100%); filter: blur(15px); animation: sun-pulse 2s infinite alternate; }
+        @keyframes sun-rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .sweat-drop { position: absolute; background-color: rgba(255,255,255,0.5); border-radius: 50%; width: 4px; height: 4px; animation: sweat-fall linear infinite; }
+        @keyframes sweat-fall { 0% { transform: translateY(0); opacity: 0; } 50% { opacity: 1; } 100% { transform: translateY(100px); opacity: 0; } }
+
+        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-slide-up { animation: slideUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; opacity: 0; }
         
+        .weather-icon { width: 100%; height: 100%; opacity: 0; transition: opacity 0.3s ease; }
+        .weather-icon.loaded { opacity: 1; }
+        .modal-entering { animation: modalZoomIn 0.2s ease-out forwards; }
+        .modal-exiting { animation: modalZoomOut 0.2s ease-out forwards; }
+        @keyframes modalZoomIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        @keyframes modalZoomOut { from { opacity: 1; transform: scale(1); } to { opacity: 0; transform: scale(0.95); } }
     </style>
 </head>
-<body class="weather-default text-slate-800 dark:text-slate-200 p-4 md:p-8 min-h-screen">
 
-    <div class="max-w-screen-2xl mx-auto">
+<body class="weather-default text-slate-800 dark:text-slate-200 px-4 md:px-8 pb-28 pt-16 md:pt-28 md:pb-8 min-h-screen">
+
+    <!-- WEATHER EFFECTS -->
+    <div id="weather-effects-container"></div>
+
+    <!-- CONTENT -->
+    <div class="max-w-screen-2xl mx-auto relative z-10">
         
         <!-- HEADER -->
-        <header class="grid grid-cols-3 items-center gap-4 mb-6">
-            <!-- Trái: Clock & Date -->
-            <div classs="col-span-1">
-                <!-- Màu trắng cố định -->
-                <div id="header-clock" class="text-2xl font-bold text-white">00:00</div>
-                <div id="header-date" class="text-sm text-white opacity-80">Đang tải...</div>
+        <!-- MOBILE: Flex-Col (Top: Clock, Bottom: Footer) -->
+        <!-- DESKTOP: Grid 3 Cols (Left, Center, Right) -->
+        <header class="fixed inset-0 z-50 pointer-events-none flex flex-col justify-between 
+                       md:pointer-events-auto md:fixed md:inset-auto md:top-0 md:left-0 md:right-0 md:h-auto 
+                       md:grid md:grid-cols-3 md:items-center md:gap-4 md:p-8 md:max-w-screen-2xl md:mx-auto md:bg-transparent 
+                       transition-all duration-300">
+            
+            <!-- 1. CLOCK SECTION -->
+            <!-- Mobile: Top Center -->
+            <!-- Desktop: Left Column -->
+            <div class="pointer-events-auto pt-6 flex justify-center items-center gap-3 
+                        md:pt-0 md:block md:text-left md:col-span-1 drop-shadow-md">
+                <div id="header-clock" class="text-2xl md:text-3xl font-bold text-white tracking-tight">00:00</div>
+                <!-- Separator chỉ hiện trên Mobile -->
+                <span class="md:hidden text-white/60 text-xl">|</span>
+                <div id="header-date" class="text-sm text-white/90 font-medium">Đang tải...</div>
             </div>
             
-            <!-- Giữa: Detect & Search -->
-            <div class="col-span-1 flex justify-center items-center gap-2">
-                
-                <!-- NÚT MỚI: Định vị -->
-                <button id="detect-location-button" class="bg-white dark:bg-slate-700 p-3 rounded-full shadow-sm 
-                                                           hover:bg-slate-100 dark:hover:bg-slate-600 
-                                                           transition-transform transform active:scale-90 flex-shrink-0"
-                                                           title="Xác định vị trí của bạn">
-                    <span class="material-symbols-rounded w-6 h-6 text-slate-800 dark:text-slate-200">
-                        my_location
-                    </span>
-                </button>
+            <!-- 2. CONTROLS WRAPPER -->
+            <!-- Mobile: Bottom Footer (Flex Row) -->
+            <!-- Desktop: display:contents (Children become grid items) -->
+            <div class="pointer-events-auto p-4 pb-6 w-full flex items-center gap-3 bg-transparent 
+                        md:contents md:p-0">
 
-                <!-- Thanh Search -->
-                <form id="search-form" class="w-full max-w-md relative">
-                    <div class="relative">
-                        <!-- Icon SVG thay thế -->
-                        <div class="absolute left-3 top-1/2 -translate-y-1/2 w-6 h-6 text-slate-400 dark:text-slate-500">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                              <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+                <!-- Group: Detect + Search -->
+                <!-- Mobile: Flex-1 -->
+                <!-- Desktop: Center Column -->
+                <div class="flex flex-1 items-center gap-3 
+                            md:col-span-1 md:justify-center md:w-full">
+                    
+                    <button id="detect-location-button" class="flex-none bg-white/90 dark:bg-slate-700/90 p-3 rounded-full shadow-lg hover:scale-110 transition-transform active:scale-95 backdrop-blur-sm text-blue-600 dark:text-blue-400" title="Vị trí của tôi">
+                        <span class="material-symbols-rounded w-6 h-6">my_location</span>
+                    </button>
+
+                    <form id="search-form" class="w-full max-w-md relative group flex-1">
+                        <div class="relative">
+                            <div class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                                  <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+                                </svg>
+                            </div>
+                            <input type="text" id="search-input" placeholder="Tìm kiếm..." 
+                                   class="w-full bg-white/90 dark:bg-slate-800/90 shadow-lg rounded-full py-3 px-12 
+                                          focus:outline-none focus:ring-2 focus:ring-blue-500/50 backdrop-blur-sm
+                                          transition-all duration-300 group-hover:shadow-xl">
+                        </div>
+                        <!-- Suggestions: Mobile bật lên (bottom-full), Desktop bật xuống (top-full) -->
+                        <div id="search-suggestions" class="hidden absolute z-50 w-full bg-white/95 dark:bg-slate-800/95 rounded-2xl shadow-2xl overflow-hidden backdrop-blur-md border border-slate-100 dark:border-slate-700
+                            bottom-full mb-3 md:bottom-auto md:mb-0 md:top-full md:mt-2">
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- Settings Button -->
+                <!-- Mobile: Flex-none -->
+                <!-- Desktop: Right Column -->
+                <div class="flex-none 
+                            md:col-span-1 md:flex md:justify-end">
+                    <button id="settings-button" class="bg-white/90 dark:bg-slate-700/90 p-3 rounded-full shadow-lg hover:scale-110 transition-transform active:scale-95 backdrop-blur-sm">
+                        <div class="w-6 h-6 text-slate-700 dark:text-slate-200">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+                              <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m3-6h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5" />
                             </svg>
                         </div>
+                    </button>
+                </div>
 
-                        <input type="text" id="search-input" placeholder="Tìm kiếm vị trí..." 
-                               class="w-full bg-white dark:bg-slate-700 shadow-sm rounded-full py-3 px-12 
-                                      focus:outline-none focus:ring-2 focus:ring-blue-500
-                                      transition-transform transform active:scale-[.98]">
-                    </div>
-                    <!-- Mục Gợi ý Tìm kiếm -->
-                    <div id="search-suggestions" class="hidden absolute z-10 w-full mt-2 bg-white dark:bg-slate-700 rounded-2xl shadow-lg overflow-hidden">
-                        <!-- Gợi ý sẽ được chèn vào đây bởi JS -->
-                    </div>
-                </form>
-            </div>
-            
-            <!-- Phải: Settings -->
-            <div class="col-span-1 flex justify-end">
-                <button id="settings-button" class="bg-white dark:bg-slate-700 p-3 rounded-full shadow-sm 
-                                                   hover:bg-slate-100 dark:hover:bg-slate-600 
-                                                   transition-transform transform active:scale-90">
-                    <!-- Icon SVG thay thế -->
-                    <div class="w-6 h-6 text-slate-800 dark:text-slate-200">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                          <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m3-6h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5" />
-                        </svg>
-                    </div>
-                </button>
             </div>
         </header>
 
         <!-- MAIN CONTENT -->
         <main class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            
-            <!-- BÊN TRÁI (1/2) -->
+            <!-- BÊN TRÁI -->
             <div class="lg:col-span-1 flex flex-col gap-6">
-                
-                <!-- Mục Hiện thông tin -->
-                <section id="current-info-section" class="bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm p-6 rounded-3xl shadow-lg animate-slide-up" style="animation-delay: 0.1s;">
-                    <!-- Dòng 1 & 2 -->
-                    <div class="flex justify-between items-start mb-4">
+                <!-- Mục 1: Hiện thông tin -->
+                <section id="current-info-section" class="glass-panel rounded-[2rem] p-8 shadow-lg animate-slide-up delay-100">
+                    <div class="flex justify-between items-start mb-6">
                         <div>
-                            <h1 id="current-location" class="text-3xl font-bold">Đang tải...</h1>
-                            <p id="current-time-date" class="text-slate-600 dark:text-slate-400">...</p>
+                            <h1 id="current-location" class="text-3xl md:text-4xl font-bold tracking-tight drop-shadow-sm">Đang tải...</h1>
+                            <p id="current-time-date" class="text-slate-600 dark:text-slate-300 font-medium mt-1">...</p>
                         </div>
-                        <div id="loading-spinner" class="hidden animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+                        <div id="loading-spinner" class="hidden animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
                     </div>
-                    
-                    <!-- Dòng 3 -->
-                    <div class="flex items-center gap-4 mb-6">
-                        <!-- Icon SVG (Container) -->
-                        <div id="current-weather-icon-container" class="w-24 h-24 text-blue-500">
-                             <!-- <img> sẽ được chèn bởi JS -->
-                        </div>
+                    <div class="flex items-center gap-6 mb-8">
+                        <div id="current-weather-icon-container" class="w-28 h-28 drop-shadow-xl filter"></div>
                         <div>
-                            <div id="current-temp" class="text-7xl font-bold">--°C</div>
-                            <div id="current-condition" class="text-xl text-slate-700 dark:text-slate-300">...</div>
+                            <div id="current-temp" class="text-7xl md:text-8xl font-bold tracking-tighter drop-shadow-sm">--°</div>
+                            <div id="current-condition" class="text-xl md:text-2xl text-slate-700 dark:text-slate-200 font-medium">...</div>
                         </div>
                     </div>
-                    
-                    <!-- Dòng 4: Thông tin chi tiết -->
                     <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-                        <div class="flex items-center gap-2">
-                            <span class="material-symbols-rounded text-blue-500">air</span>
-                            <div>
-                                <div>Gió</div>
-                                <div id="current-wind" class="font-bold">-- km/h</div>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <span class="material-symbols-rounded text-blue-500">compress</span>
-                            <div>
-                                <div>Áp suất</div>
-                                <div id="current-pressure" class="font-bold">-- hPa</div>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <span class="material-symbols-rounded text-blue-500">water_drop</span>
-                            <div>
-                                <div>Độ ẩm</div>
-                                <div id="current-humidity" class="font-bold">--%</div>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <span class="material-symbols-rounded text-blue-500">visibility</span>
-                            <div>
-                                <div>Tầm nhìn</div>
-                                <div id="current-visibility" class="font-bold">-- km</div>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <span class="material-symbols-rounded text-blue-500">dew_point</span>
-                            <div>
-                                <div>Điểm sương</div>
-                                <div id="current-dewpoint" class="font-bold">--°C</div>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <span class="material-symbols-rounded text-blue-500">wb_sunny</span>
-                            <div>
-                                <div>Chỉ số UV</div>
-                                <div id="current-uv" class="font-bold">--</div>
-                            </div>
-                        </div>
+                        <div class="glass-item flex items-center gap-3 p-3 rounded-xl"><span class="material-symbols-rounded text-blue-500">air</span><div><div class="text-xs opacity-70">Gió</div><div id="current-wind" class="font-bold">--</div></div></div>
+                        <div class="glass-item flex items-center gap-3 p-3 rounded-xl"><span class="material-symbols-rounded text-blue-500">compress</span><div><div class="text-xs opacity-70">Áp suất</div><div id="current-pressure" class="font-bold">--</div></div></div>
+                        <div class="glass-item flex items-center gap-3 p-3 rounded-xl"><span class="material-symbols-rounded text-blue-500">water_drop</span><div><div class="text-xs opacity-70">Độ ẩm</div><div id="current-humidity" class="font-bold">--</div></div></div>
+                        <div class="glass-item flex items-center gap-3 p-3 rounded-xl"><span class="material-symbols-rounded text-blue-500">visibility</span><div><div class="text-xs opacity-70">Tầm nhìn</div><div id="current-visibility" class="font-bold">--</div></div></div>
+                        <div class="glass-item flex items-center gap-3 p-3 rounded-xl"><span class="material-symbols-rounded text-blue-500">dew_point</span><div><div class="text-xs opacity-70">Điểm sương</div><div id="current-dewpoint" class="font-bold">--</div></div></div>
+                        <div class="glass-item flex items-center gap-3 p-3 rounded-xl"><span class="material-symbols-rounded text-orange-500">wb_sunny</span><div><div class="text-xs opacity-70">UV</div><div id="current-uv" class="font-bold">--</div></div></div>
                     </div>
                 </section>
                 
-                <!-- Mục Dự báo hàng giờ -->
-                <section id="hourly-forecast-section" class="bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm p-6 rounded-3xl shadow-lg animate-slide-up" style="animation-delay: 0.2s;">
-                    <h2 class="text-xl font-bold mb-4">Dự báo hàng giờ</h2>
-                    <div id="hourly-forecast-container" class="hourly-forecast flex gap-4 overflow-x-auto pb-4">
-                        <!-- Dữ liệu hàng giờ sẽ được chèn vào đây bởi JS -->
-                    </div>
+                <!-- Mục 2: Dự báo hàng giờ -->
+                <section id="hourly-forecast-section" class="glass-panel rounded-[2rem] p-6 shadow-lg animate-slide-up delay-200">
+                    <h2 class="text-xl font-bold mb-4 flex items-center gap-2"><span class="material-symbols-rounded">schedule</span> Dự báo hàng giờ</h2>
+                    <div id="hourly-forecast-container" class="flex gap-3 overflow-x-auto pb-4 cursor-grab active:cursor-grabbing"></div>
                 </section>
             </div>
             
-            <!-- BÊN PHẢI (1/2) -->
+            <!-- BÊN PHẢI -->
             <div class="lg:col-span-1 flex flex-col gap-6">
-                
-                <!-- Mục Dự báo hàng ngày -->
-                <section id="daily-forecast-section" 
-                         class="bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm p-6 rounded-3xl shadow-lg 
-                                lg:h-[360px] lg:flex lg:flex-col animate-slide-up" 
-                         style="animation-delay: 0.3s;">
-                    <h2 class="text-xl font-bold mb-4">Dự báo 14 ngày</h2>
-                    <div id="daily-forecast-container" 
-                         class="flex gap-4 overflow-x-auto pb-4 
-                                lg:flex-col lg:overflow-y-auto lg:flex-1 lg:min-h-0">
-                        <!-- Dữ liệu hàng ngày sẽ được chèn vào đây bởi JS -->
-                    </div>
+                <!-- Mục 3: Dự báo 14 ngày -->
+                <section id="daily-forecast-section" class="glass-panel rounded-[2rem] p-6 shadow-lg lg:h-[400px] flex flex-col animate-slide-up delay-300">
+                    <h2 class="text-xl font-bold mb-4 flex items-center gap-2"><span class="material-symbols-rounded">calendar_month</span> Dự báo 14 ngày</h2>
+                    <div id="daily-forecast-container" class="flex gap-3 overflow-x-auto pb-2 lg:flex-col lg:overflow-y-auto lg:flex-1 lg:pr-2 custom-scrollbar"></div>
                 </section>
                 
-                <!-- Mục Weather Map -->
-                <section id="weather-map-section" 
-                         class="bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm p-6 rounded-3xl shadow-lg 
-                                lg:h-[360px] flex flex-col animate-slide-up" 
-                         style="animation-delay: 0.4s;">
+                <!-- Mục 4: Bản đồ -->
+                <section id="weather-map-section" class="glass-panel rounded-[2rem] p-6 shadow-lg lg:h-[350px] flex flex-col animate-slide-up delay-400">
                     <div class="flex justify-between items-center mb-4">
-                        <h2 class="text-xl font-bold">Bản đồ thời tiết</h2>
-                        <button id="map-details-button" class="flex items-center text-sm text-blue-500 font-medium
-                                                               hover:text-blue-700 dark:hover:text-blue-400
-                                                               transition-transform transform active:scale-95">
-                            Chi tiết
-                            <!-- Icon SVG thay thế -->
-                            <div class="w-5 h-5 ml-1">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
-                                  <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 19.5 15-15m0 0H8.25m11.25 0v11.25" />
-                                </svg>
-                            </div>
-                        </button>
+                        <h2 class="text-xl font-bold flex items-center gap-2"><span class="material-symbols-rounded">map</span> Bản đồ</h2>
+                        <button id="map-details-button" class="flex items-center text-sm text-blue-600 dark:text-blue-400 font-bold hover:underline">Mở rộng <span class="material-symbols-rounded text-lg ml-1">open_in_full</span></button>
                     </div>
-                    <!-- Sử dụng iframe từ một dịch vụ bản đồ (ví dụ: Windy) -->
-                    <iframe 
-                        id="weather-map"
-                        class="w-full flex-1 rounded-2xl border border-slate-200 dark:border-slate-700"
-                        src="about:blank" 
-                        frameborder="0">
-                    </iframe>
+                    <iframe id="weather-map" class="w-full flex-1 rounded-xl border-0 shadow-inner bg-slate-200 dark:bg-slate-700" src="about:blank"></iframe>
                 </section>
             </div>
             
-            <!-- MỤC MỚI: WEATHER DETAILS -->
-            <section id="weather-details-section" 
-                     class="lg:col-span-2 bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm p-6 rounded-3xl shadow-lg animate-slide-up" 
-                     style="animation-delay: 0.5s;">
-                <h2 class="text-xl font-bold mb-4">Chi tiết thời tiết</h2>
-                
-                <!-- Grid 4 cột -->
+            <!-- Mục 5: Chi tiết thời tiết -->
+            <section id="weather-details-section" class="lg:col-span-2 glass-panel rounded-[2rem] p-8 shadow-lg animate-slide-up delay-500">
+                <h2 class="text-xl font-bold mb-6 flex items-center gap-2"><span class="material-symbols-rounded">tune</span> Chỉ số chi tiết</h2>
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    
-                    <!-- Hàng 1 -->
-                    <div class="flex items-center gap-2 p-3 bg-slate-100/70 dark:bg-slate-700/70 rounded-xl">
-                        <span class="material-symbols-rounded text-blue-500">thermostat</span>
-                        <div>
-                            <div>Nhiệt độ</div>
-                            <div id="detail-temp" class="font-bold">--°C</div>
-                        </div>
-                    </div>
-
-                    <div class="flex items-center gap-2 p-3 bg-slate-100/70 dark:bg-slate-700/70 rounded-xl">
-                        <span class="material-symbols-rounded text-blue-500">device_thermostat</span>
-                        <div>
-                            <div>Cảm giác như</div>
-                            <div id="detail-feels-like" class="font-bold">--°C</div>
-                        </div>
-                    </div>
-
-                    <div class="flex items-center gap-2 p-3 bg-slate-100/70 dark:bg-slate-700/70 rounded-xl">
-                        <span class="material-symbols-rounded text-blue-500">cloud</span>
-                        <div>
-                            <div>Độ che phủ mây</div>
-                            <div id="detail-cloud-cover" class="font-bold">--%</div>
-                        </div>
-                    </div>
-
-                    <div class="flex items-center gap-2 p-3 bg-slate-100/70 dark:bg-slate-700/70 rounded-xl">
-                        <span class="material-symbols-rounded text-blue-500">rainy</span>
-                        <div>
-                            <div>Lượng mưa</div>
-                            <div id="detail-precipitation" class="font-bold">-- mm</div>
-                        </div>
-                    </div>
-
-                    <!-- Hàng 2 -->
-                    <div class="flex items-center gap-2 p-3 bg-slate-100/70 dark:bg-slate-700/70 rounded-xl">
-                        <span class="material-symbols-rounded text-blue-500">air</span>
-                        <div>
-                            <div>Gió</div>
-                            <div id="detail-wind" class="font-bold">-- km/h</div>
-                        </div>
-                    </div>
-
-                    <div class="flex items-center gap-2 p-3 bg-slate-100/70 dark:bg-slate-700/70 rounded-xl">
-                        <span class="material-symbols-rounded text-blue-500">water_drop</span>
-                        <div>
-                            <div>Độ ẩm</div>
-                            <div id="detail-humidity" class="font-bold">--%</div>
-                        </div>
-                    </div>
-
-                    <div class="flex items-center gap-2 p-3 bg-slate-100/70 dark:bg-slate-700/70 rounded-xl">
-                        <span class="material-symbols-rounded text-blue-500">wb_sunny</span>
-                        <div>
-                            <div>Chỉ số UV</div>
-                            <div id="detail-uv" class="font-bold">--</div>
-                        </div>
-                    </div>
-
-                    <div class="flex items-center gap-2 p-3 bg-slate-100/70 dark:bg-slate-700/70 rounded-xl">
-                        <span class="material-symbols-rounded text-blue-500">aq_indoor</span>
-                        <div>
-                            <div>Chỉ số không khí (AQI)</div>
-                            <div id="detail-aqi" class="font-bold">--</div>
-                        </div>
-                    </div>
-
-                    <!-- Hàng 3 -->
-                    <div class="flex items-center gap-2 p-3 bg-slate-100/70 dark:bg-slate-700/70 rounded-xl">
-                        <span class="material-symbols-rounded text-blue-500">visibility</span>
-                        <div>
-                            <div>Tầm nhìn</div>
-                            <div id="detail-visibility" class="font-bold">-- km</div>
-                        </div>
-                    </div>
-
-                    <div class="flex items-center gap-2 p-3 bg-slate-100/70 dark:bg-slate-700/70 rounded-xl">
-                        <span class="material-symbols-rounded text-blue-500">compress</span>
-                        <div>
-                            <div>Áp suất</div>
-                            <div id="detail-pressure" class="font-bold">-- hPa</div>
-                        </div>
-                    </div>
-
-                    <div class="flex items-center gap-2 p-3 bg-slate-100/70 dark:bg-slate-700/70 rounded-xl">
-                        <span class="material-symbols-rounded text-blue-500">light_mode</span>
-                        <div>
-                            <div>Mặt trời (Mọc / Lặn)</div>
-                            <div id="detail-sun" class="font-bold">--:-- / --:--</div>
-                        </div>
-                    </div>
-
-                    <div class="flex items-center gap-2 p-3 bg-slate-100/70 dark:bg-slate-700/70 rounded-xl">
-                        <span class="material-symbols-rounded text-blue-500">dark_mode</span>
-                        <div>
-                            <div>Mặt trăng (Mọc / Lặn)</div>
-                            <div id="detail-moon" class="font-bold">--:-- / --:--</div>
-                        </div>
-                    </div>
-                    
-                    <!-- Hàng 4 -->
-                    <div class="flex items-center gap-2 p-3 bg-slate-100/70 dark:bg-slate-700/70 rounded-xl">
-                        <span class="material-symbols-rounded text-blue-500">nightlight</span>
-                        <div>
-                            <div>Pha Mặt Trăng</div>
-                            <div id="detail-moon-phase" class="font-bold">...</div>
-                        </div>
-                    </div>
-                    
+                    <div class="glass-item p-4 rounded-2xl flex flex-col justify-between h-full"><div class="flex items-center gap-2 mb-2"><span class="material-symbols-rounded text-blue-500">thermostat</span><span class="text-sm opacity-70">Nhiệt độ</span></div><div id="detail-temp" class="text-2xl font-bold">--</div></div>
+                    <div class="glass-item p-4 rounded-2xl flex flex-col justify-between h-full"><div class="flex items-center gap-2 mb-2"><span class="material-symbols-rounded text-blue-500">device_thermostat</span><span class="text-sm opacity-70">Cảm giác</span></div><div id="detail-feels-like" class="text-2xl font-bold">--</div></div>
+                    <div class="glass-item p-4 rounded-2xl flex flex-col justify-between h-full"><div class="flex items-center gap-2 mb-2"><span class="material-symbols-rounded text-blue-500">cloud</span><span class="text-sm opacity-70">Mây phủ</span></div><div id="detail-cloud-cover" class="text-2xl font-bold">--</div></div>
+                    <div class="glass-item p-4 rounded-2xl flex flex-col justify-between h-full"><div class="flex items-center gap-2 mb-2"><span class="material-symbols-rounded text-blue-500">rainy</span><span class="text-sm opacity-70">Lượng mưa</span></div><div id="detail-precipitation" class="text-2xl font-bold">--</div></div>
+                    <div class="glass-item p-4 rounded-2xl flex flex-col justify-between h-full"><div class="flex items-center gap-2 mb-2"><span class="material-symbols-rounded text-blue-500">air</span><span class="text-sm opacity-70">Tốc độ gió</span></div><div id="detail-wind" class="text-2xl font-bold">--</div></div>
+                    <div class="glass-item p-4 rounded-2xl flex flex-col justify-between h-full"><div class="flex items-center gap-2 mb-2"><span class="material-symbols-rounded text-blue-500">water_drop</span><span class="text-sm opacity-70">Độ ẩm</span></div><div id="detail-humidity" class="text-2xl font-bold">--</div></div>
+                    <div class="glass-item p-4 rounded-2xl flex flex-col justify-between h-full"><div class="flex items-center gap-2 mb-2"><span class="material-symbols-rounded text-orange-500">wb_sunny</span><span class="text-sm opacity-70">Chỉ số UV</span></div><div id="detail-uv" class="text-2xl font-bold">--</div></div>
+                    <div class="glass-item p-4 rounded-2xl flex flex-col justify-between h-full"><div class="flex items-center gap-2 mb-2"><span class="material-symbols-rounded text-green-500">aq_indoor</span><span class="text-sm opacity-70">AQI (KK)</span></div><div id="detail-aqi" class="text-2xl font-bold">--</div></div>
+                    <div class="glass-item p-4 rounded-2xl flex flex-col justify-between h-full"><div class="flex items-center gap-2 mb-2"><span class="material-symbols-rounded text-blue-500">visibility</span><span class="text-sm opacity-70">Tầm nhìn</span></div><div id="detail-visibility" class="text-2xl font-bold">--</div></div>
+                    <div class="glass-item p-4 rounded-2xl flex flex-col justify-between h-full"><div class="flex items-center gap-2 mb-2"><span class="material-symbols-rounded text-blue-500">compress</span><span class="text-sm opacity-70">Áp suất</span></div><div id="detail-pressure" class="text-2xl font-bold">--</div></div>
+                    <div class="glass-item p-4 rounded-2xl flex flex-col justify-between h-full"><div class="flex items-center gap-2 mb-2"><span class="material-symbols-rounded text-yellow-500">light_mode</span><span class="text-sm opacity-70">Mặt trời</span></div><div id="detail-sun" class="text-lg font-bold">-- / --</div></div>
+                    <div class="glass-item p-4 rounded-2xl flex flex-col justify-between h-full"><div class="flex items-center gap-2 mb-2"><span class="material-symbols-rounded text-purple-400">dark_mode</span><span class="text-sm opacity-70">Mặt trăng</span></div><div id="detail-moon" class="text-lg font-bold">N/A</div></div>
                 </div>
             </section>
-
         </main>
         
-        <!-- Thông báo Lỗi -->
-        <div id="error-message" class="hidden fixed top-5 right-5 bg-red-500 text-white p-4 rounded-lg shadow-md z-50">
-            <!-- Icon SVG thay thế -->
-            <div class="w-6 h-6 mr-2 inline-block">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
-                </svg>
-            </div>
-            <span id="error-text"></span>
+        <!-- Error Toast -->
+        <div id="error-message" class="hidden fixed top-6 right-6 bg-red-500/90 backdrop-blur text-white p-4 rounded-xl shadow-2xl z-50 animate-slide-up flex items-center">
+            <span class="material-symbols-rounded mr-2">warning</span><span id="error-text">Lỗi</span>
         </div>
 
-        <!-- Modal Bản đồ toàn màn hình -->
-        <div id="map-modal" class="hidden fixed inset-0 bg-slate-100 dark:bg-slate-900 z-40 flex-col">
-            <header class="flex justify-between items-center p-4 border-b border-slate-200 dark:border-slate-700">
-                <h2 class="text-xl font-bold">Bản đồ thời tiết (Chi tiết)</h2>
-                <button id="map-close-button" class="p-2 rounded-full hover:bg-slate-200 dark:hover:bg-slate-700
-                                                    transition-transform transform active:scale-90">
-                    <!-- Icon SVG thay thế -->
-                    <div class="w-6 h-6 text-slate-800 dark:text-slate-200">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
-                          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
-                        </svg>
-                    </div>
-                </button>
+        <!-- Modal Maps -->
+        <div id="map-modal" class="hidden fixed inset-0 bg-white/80 dark:bg-slate-900/90 backdrop-blur-md z-50 flex-col transition-opacity">
+            <header class="flex justify-between items-center p-6 border-b border-slate-200 dark:border-slate-700">
+                <h2 class="text-2xl font-bold">Bản đồ chi tiết</h2>
+                <button id="map-close-button" class="p-2 rounded-full hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"><span class="material-symbols-rounded text-3xl">close</span></button>
             </header>
-            <main class="flex-1">
-                <iframe id="full-weather-map" class="w-full h-full border-0" 
-                        src="about:blank" 
-                        frameborder="0">
-                </iframe>
-            </main>
+            <main class="flex-1 p-4"><iframe id="full-weather-map" class="w-full h-full rounded-2xl shadow-2xl" src="about:blank" frameborder="0"></iframe></main>
         </div>
 
-        <!-- Modal Cài đặt (Settings) -->
-        <div id="settings-menu-container" class="hidden fixed inset-0 bg-black/30 dark:bg-black/50 z-30">
-            <div id="settings-menu" class="absolute right-8 top-28 w-64 bg-white dark:bg-slate-700 rounded-2xl shadow-lg p-4">
-                
-                <!-- Menu Chính -->
+        <!-- Settings Modal -->
+        <div id="settings-menu-container" class="hidden fixed inset-0 bg-black/40 backdrop-blur-sm z-50 transition-opacity">
+            <div id="settings-menu" class="absolute right-4 bottom-24 md:bottom-auto md:top-24 w-72 bg-white/90 dark:bg-slate-800/90 backdrop-blur-xl rounded-3xl shadow-2xl p-5 border border-white/20">
                 <div id="settings-main-menu">
-                    <h3 class="font-bold mb-3">Cài đặt</h3>
-                    <button id="theme-menu-button" class="w-full flex justify-between items-center p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-600 transition-colors">
-                        <span>Theme</span>
-                        <!-- Icon SVG thay thế -->
-                        <div class="w-5 h-5 text-slate-500">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
-                              <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
-                            </svg>
-                        </div>
+                    <h3 class="font-bold text-lg mb-4 px-2">Cài đặt</h3>
+                    <button id="theme-menu-button" class="w-full flex justify-between items-center p-3 rounded-xl hover:bg-slate-100/50 dark:hover:bg-slate-700/50 transition-colors">
+                        <div class="flex items-center gap-3"><span class="material-symbols-rounded text-slate-500">palette</span><span>Giao diện</span></div>
+                        <span class="material-symbols-rounded text-slate-400">chevron_right</span>
                     </button>
-                    <!-- Thêm các cài đặt khác ở đây -->
                 </div>
-
-                <!-- Menu Con: Theme -->
                 <div id="settings-theme-menu" class="hidden">
-                    <div class="flex items-center mb-3">
-                        <button id="theme-back-button" class="p-1 rounded-full hover:bg-slate-100 dark:hover:bg-slate-600 transition-colors mr-2">
-                            <!-- Icon SVG thay thế -->
-                            <div class="w-5 h-5 text-slate-800 dark:text-slate-200">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
-                                  <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
-                                </svg>
-                            </div>
-                        </button>
-                        <h3 class="font-bold">Theme</h3>
+                    <div class="flex items-center mb-4">
+                        <button id="theme-back-button" class="p-2 -ml-2 rounded-full hover:bg-slate-100/50 dark:hover:bg-slate-700/50 transition-colors"><span class="material-symbols-rounded">arrow_back</span></button>
+                        <h3 class="font-bold text-lg ml-2">Giao diện</h3>
                     </div>
-                    <div class="flex flex-col gap-1">
-                        <button data-theme="light" class="theme-option w-full text-left p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-600 transition-colors">Sáng</button>
-                        <button data-theme="dark" class="theme-option w-full text-left p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-600 transition-colors">Tối</button>
-                        <button data-theme="system" class="theme-option w-full text-left p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-600 transition-colors">Theo hệ thống</button>
-                        <button data-theme="clock" class="theme-option w-full text-left p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-600 transition-colors">Theo đồng hồ</button>
+                    <div class="space-y-1">
+                        <button data-theme="light" class="theme-option w-full text-left p-3 rounded-xl hover:bg-slate-100/50 dark:hover:bg-slate-700/50 transition-colors flex items-center gap-3"><span class="material-symbols-rounded">light_mode</span> Sáng</button>
+                        <button data-theme="dark" class="theme-option w-full text-left p-3 rounded-xl hover:bg-slate-100/50 dark:hover:bg-slate-700/50 transition-colors flex items-center gap-3"><span class="material-symbols-rounded">dark_mode</span> Tối</button>
+                        <button data-theme="system" class="theme-option w-full text-left p-3 rounded-xl hover:bg-slate-100/50 dark:hover:bg-slate-700/50 transition-colors flex items-center gap-3"><span class="material-symbols-rounded">settings_system_daydream</span> Hệ thống</button>
+                        <button data-theme="clock" class="theme-option w-full text-left p-3 rounded-xl hover:bg-slate-100/50 dark:hover:bg-slate-700/50 transition-colors flex items-center gap-3"><span class="material-symbols-rounded">schedule</span> Theo giờ</button>
                     </div>
                 </div>
-
             </div>
         </div>
-
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // --- URL Icon SVG ---
             const GITHUB_BASE_URL = "https://raw.githubusercontent.com/nnam0308/weather/dfbb5f8d2777fdc675d333464f417a4b75c2a3b3/v4/";
-
-            // --- Biến DOM ---
             const searchForm = document.getElementById('search-form');
             const searchInput = document.getElementById('search-input');
             const searchSuggestions = document.getElementById('search-suggestions');
-            
             const headerClock = document.getElementById('header-clock');
             const headerDate = document.getElementById('header-date');
-            
             const currentLocationEl = document.getElementById('current-location');
             const currentTimeDateEl = document.getElementById('current-time-date');
             const currentTempEl = document.getElementById('current-temp');
             const currentConditionEl = document.getElementById('current-condition');
             const currentWeatherIconContainer = document.getElementById('current-weather-icon-container');
-            
-            const currentWindEl = document.getElementById('current-wind');
-            const currentPressureEl = document.getElementById('current-pressure');
-            const currentHumidityEl = document.getElementById('current-humidity');
-            const currentVisibilityEl = document.getElementById('current-visibility');
-            const currentDewpointEl = document.getElementById('current-dewpoint');
-            const currentUvEl = document.getElementById('current-uv');
-            
             const hourlyForecastContainer = document.getElementById('hourly-forecast-container');
             const dailyForecastContainer = document.getElementById('daily-forecast-container');
             const weatherMapEl = document.getElementById('weather-map');
             const loadingSpinner = document.getElementById('loading-spinner');
             const errorMessageEl = document.getElementById('error-message');
             const errorTextEl = document.getElementById('error-text');
-
-            // Chiều cao
-            const currentInfoSection = document.getElementById('current-info-section');
-            const hourlyForecastSection = document.getElementById('hourly-forecast-section');
-            const dailyForecastSection = document.getElementById('daily-forecast-section');
-            const weatherMapSection = document.getElementById('weather-map-section');
-
-            // Modal Bản đồ
             const mapModal = document.getElementById('map-modal');
             const mapDetailsButton = document.getElementById('map-details-button');
             const mapCloseButton = document.getElementById('map-close-button');
             const fullWeatherMap = document.getElementById('full-weather-map');
-
-            // Nút định vị
             const detectLocationButton = document.getElementById('detect-location-button');
-
-            // Modal Cài đặt
             const settingsButton = document.getElementById('settings-button');
-            const settingsMenuContainer = document.getElementById('settings-menu-container');
-            const settingsMenu = document.getElementById('settings-menu');
-            const settingsMainMenu = document.getElementById('settings-main-menu');
-            const themeMenuButton = document.getElementById('theme-menu-button');
-            const settingsThemeMenu = document.getElementById('settings-theme-menu');
-            const themeBackButton = document.getElementById('theme-back-button');
-            const themeOptions = document.querySelectorAll('.theme-option');
+            const weatherEffectsContainer = document.getElementById('weather-effects-container');
 
-            // --- Biến Trạng thái ---
             let currentCity = "Nha Trang";
             let currentLat = 12.2388;
             let currentLon = 109.1967;
             let searchTimeout;
             let currentTheme = localStorage.getItem('theme') || 'system';
 
-            // --- HÀM TIỆN ÍCH: Hiệu ứng đếm số ---
+            function renderWeatherEffects(weatherCode, isDay) {
+                weatherEffectsContainer.innerHTML = ''; 
+                if ((weatherCode >= 51 && weatherCode <= 67) || (weatherCode >= 80 && weatherCode <= 82) || weatherCode >= 95) {
+                    const rainCount = 100; 
+                    for (let i = 0; i < rainCount; i++) {
+                        const drop = document.createElement('div');
+                        drop.classList.add('rain-drop');
+                        drop.style.left = Math.random() * 100 + 'vw';
+                        drop.style.animationDuration = Math.random() * 1 + 0.5 + 's';
+                        drop.style.animationDelay = Math.random() * 2 + 's';
+                        weatherEffectsContainer.appendChild(drop);
+                    }
+                }
+                if (weatherCode >= 95) {
+                    const thunder = document.createElement('div');
+                    thunder.classList.add('thunder-flash');
+                    setInterval(() => {
+                        if(Math.random() > 0.7) {
+                            thunder.style.animation = 'none';
+                            thunder.offsetHeight; 
+                            thunder.style.animation = 'flash 0.5s ease-out';
+                        }
+                    }, 3000);
+                    weatherEffectsContainer.appendChild(thunder);
+                }
+                if (isDay) {
+                    if (weatherCode <= 2) { 
+                         if (weatherCode === 0) { 
+                             const glare = document.createElement('div');
+                             glare.classList.add('sun-glare');
+                             weatherEffectsContainer.appendChild(glare);
+                             const core = document.createElement('div');
+                             core.classList.add('sun-core');
+                             weatherEffectsContainer.appendChild(core);
+                             for (let i = 0; i < 15; i++) {
+                                const drop = document.createElement('div');
+                                drop.classList.add('sweat-drop');
+                                drop.style.left = Math.random() * 100 + 'vw';
+                                drop.style.top = Math.random() * 50 + 'vh';
+                                drop.style.animationDuration = Math.random() * 3 + 2 + 's';
+                                drop.style.animationDelay = Math.random() * 5 + 's';
+                                weatherEffectsContainer.appendChild(drop);
+                             }
+                         } else {
+                             const beam = document.createElement('div');
+                             beam.classList.add('sun-beam');
+                             weatherEffectsContainer.appendChild(beam);
+                         }
+                    }
+                }
+            }
+
             function animateCountUp(el, targetValue, unit = '', duration = 1000) {
                 const target = Math.round(targetValue);
                 if (isNaN(target)) {
-                    if (typeof targetValue === 'string') {
-                         el.textContent = targetValue;
-                    } else {
-                        el.textContent = `${targetValue}${unit}`;
-                    }
+                    el.textContent = typeof targetValue === 'string' ? targetValue : `${targetValue}${unit}`;
                     return;
                 }
-
-                let startValue = 0;
-                const currentText = el.textContent;
-                if (currentText) {
-                    const parsed = parseInt(currentText, 10);
-                    if (!isNaN(parsed)) {
-                        startValue = parsed;
-                    }
-                }
-
+                let startValue = parseInt(el.textContent) || 0;
+                if (isNaN(startValue)) startValue = 0;
                 if (startValue === target) {
                     el.textContent = `${target}${unit}`;
                     return;
                 }
-
                 let startTime = null;
                 const step = (timestamp) => {
                     if (!startTime) startTime = timestamp;
                     const progress = Math.min((timestamp - startTime) / duration, 1);
                     const currentValue = Math.floor(progress * (target - startValue) + startValue);
-                    
                     el.textContent = `${currentValue}${unit}`;
-
-                    if (progress < 1) {
-                        window.requestAnimationFrame(step);
-                    } else {
-                        el.textContent = `${target}${unit}`;
-                    }
+                    if (progress < 1) window.requestAnimationFrame(step);
+                    else el.textContent = `${target}${unit}`;
                 };
                 window.requestAnimationFrame(step);
             }
 
-            // --- Cài đặt & Theme ---
             function applyTheme(theme) {
                 const hour = new Date().getHours();
-                if (theme === 'dark') {
-                    document.documentElement.classList.add('dark');
-                } else if (theme === 'light') {
-                    document.documentElement.classList.remove('dark');
-                } else if (theme === 'system') {
-                    document.documentElement.classList.remove('dark');
-                    if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-                        document.documentElement.classList.add('dark');
-                    }
-                } else if (theme === 'clock') {
-                    if (hour >= 18 || hour < 6) {
-                        document.documentElement.classList.add('dark');
-                    } else {
-                        document.documentElement.classList.remove('dark');
-                    }
-                }
+                const isDark = theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches) || (theme === 'clock' && (hour >= 18 || hour < 6));
+                if (isDark) document.documentElement.classList.add('dark');
+                else document.documentElement.classList.remove('dark');
             }
-
-            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
-                if (currentTheme === 'system') {
-                    applyTheme('system');
-                }
-            });
-            
-            settingsButton.addEventListener('click', () => {
-                settingsMenuContainer.classList.remove('hidden');
-            });
-
-            settingsMenuContainer.addEventListener('click', (e) => {
-                if (e.target === settingsMenuContainer) {
-                    settingsMenuContainer.classList.add('hidden');
-                    settingsMainMenu.classList.remove('hidden');
-                    settingsThemeMenu.classList.add('hidden');
-                }
-            });
-
-            themeMenuButton.addEventListener('click', () => {
-                settingsMainMenu.classList.add('hidden');
-                settingsThemeMenu.classList.remove('hidden');
-            });
-
-            themeBackButton.addEventListener('click', () => {
-                settingsMainMenu.classList.remove('hidden');
-                settingsThemeMenu.classList.add('hidden');
-            });
-
-            themeOptions.forEach(button => {
-                button.addEventListener('click', () => {
-                    const theme = button.getAttribute('data-theme');
-                    currentTheme = theme;
-                    localStorage.setItem('theme', theme);
-                    applyTheme(theme);
-                    settingsMenuContainer.classList.add('hidden');
-                    settingsMainMenu.classList.remove('hidden');
-                    settingsThemeMenu.classList.add('hidden');
-                });
-            });
 
             function updateClock() {
                 const now = new Date();
-                const optionsDate = { weekday: 'long', day: 'numeric', month: 'numeric', year: 'numeric' };
-                const dateString = now.toLocaleDateString('vi-VN', optionsDate);
-                const timeString = now.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
-
-                if (headerClock) headerClock.textContent = timeString;
-                if (headerDate) headerDate.textContent = dateString;
-                if (currentTimeDateEl) currentTimeDateEl.textContent = `${timeString} - ${dateString}`;
-
-                if (currentTheme === 'clock') {
-                    applyTheme('clock');
-                }
+                headerClock.textContent = now.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
+                headerDate.textContent = now.toLocaleDateString('vi-VN', { weekday: 'long', day: 'numeric', month: 'numeric', year: 'numeric' });
+                if (currentTimeDateEl) currentTimeDateEl.textContent = `${headerClock.textContent} - ${headerDate.textContent}`;
+                if (currentTheme === 'clock') applyTheme('clock');
             }
 
-            function adjustSectionHeights() {
-                requestAnimationFrame(() => {
-                    const infoHeight = currentInfoSection.offsetHeight;
-                    
-                    if (window.innerWidth >= 1024) {
-                        dailyForecastSection.style.height = '';
-                        weatherMapSection.style.height = '';
-                        if (infoHeight > 200) {
-                             hourlyForecastSection.style.minHeight = `${infoHeight}px`;
-                        }
-                        const mapTitle = weatherMapSection.querySelector('h2');
-                        if (mapTitle) {
-                            const mapTitleHeight = mapTitle.offsetHeight;
-                            const paddingAndTitleHeight = (24 * 2) + 16 + mapTitleHeight; 
-                            const newMapHeight = 360 - paddingAndTitleHeight;
-                            if (newMapHeight > 100) {
-                                weatherMapEl.style.height = `${newMapHeight}px`;
-                            } else {
-                                weatherMapEl.style.height = `250px`;
-                            }
-                        }
-                    } else {
-                        hourlyForecastSection.style.minHeight = 'auto';
-                        dailyForecastSection.style.height = 'auto';
-                        weatherMapSection.style.height = 'auto';
-                        weatherMapEl.style.height = `250px`;
-                    }
-                });
-            }
-
-            function showError(message) {
-                errorTextEl.textContent = message;
+            function showError(msg) {
+                errorTextEl.textContent = msg;
                 errorMessageEl.classList.remove('hidden');
-                setTimeout(() => {
-                    errorMessageEl.classList.add('hidden');
-                }, 3000);
-            }
-
-            function handleFetchError(error, context) {
-                console.error(`Lỗi trong ${context}:`, error);
-                let userMessage = 'Đã xảy ra lỗi.';
-                
-                if (error.message.includes('Failed to fetch')) {
-                    userMessage = 'Lỗi mạng: Không thể tải dữ liệu. Vui lòng kiểm tra kết nối.';
-                } else if (error.message) {
-                    userMessage = error.message;
-                }
-                showError(userMessage);
-            }
-
-            // --- LOGIC THỜI TIẾT ---
-
-            function getWeatherBackgroundClass(code) {
-                const now = new Date();
-                const hour = now.getHours();
-                let timeOfDay;
-
-                if (hour >= 5 && hour < 10) timeOfDay = 'morning';
-                else if (hour >= 10 && hour < 17) timeOfDay = 'day';
-                else if (hour >= 17 && hour < 20) timeOfDay = 'evening';
-                else timeOfDay = 'night';
-
-                let weatherType;
-                if ([0, 1].includes(code)) weatherType = 'sunny';
-                else if ([2, 3].includes(code)) weatherType = 'cloudy';
-                else if ([45, 48].includes(code)) weatherType = 'foggy';
-                else if (code >= 51 && code <= 67) weatherType = 'rainy';
-                else if (code >= 71 && code <= 77) weatherType = 'snowy';
-                else if (code >= 80) weatherType = 'rainy';
-                else weatherType = 'cloudy';
-
-                if (timeOfDay === 'night' && weatherType === 'sunny') {
-                    weatherType = 'clear';
-                }
-                if (['foggy', 'snowy'].includes(weatherType)) {
-                    weatherType = 'rainy';
-                }
-
-                return `weather-${timeOfDay}-${weatherType}`;
+                setTimeout(() => errorMessageEl.classList.add('hidden'), 4000);
             }
 
             function getWeatherIcon(code, hour) {
-                const isNight = (hour >= 20 || hour < 6);
+                const isNight = (hour >= 18 || hour < 6);
                 const icons = {
                     0: isNight ? 'clear_night.svg' : 'clear_day.svg',
                     1: isNight ? 'mostly_clear_night.svg' : 'mostly_clear_day.svg',
                     2: isNight ? 'partly_cloudy_night.svg' : 'partly_cloudy_day.svg',
-                    3: 'cloudy.svg',
-                    45: 'haze_fog_dust_smoke.svg',
-                    48: 'haze_fog_dust_smoke.svg',
-                    51: 'drizzle.svg',
-                    53: 'drizzle.svg',
-                    55: 'drizzle.svg',
+                    3: 'cloudy.svg', 45: 'haze_fog_dust_smoke.svg', 48: 'haze_fog_dust_smoke.svg',
+                    51: 'drizzle.svg', 53: 'drizzle.svg', 55: 'drizzle.svg',
                     61: isNight ? 'rain_with_cloudy_dark.svg' : 'rain_with_cloudy_light.svg',
-                    63: 'showers_rain.svg',
-                    65: 'heavy_rain.svg',
+                    63: 'showers_rain.svg', 65: 'heavy_rain.svg',
                     71: isNight ? 'snow_with_cloudy_dark.svg' : 'snow_with_cloudy_light.svg',
-                    73: 'showers_snow.svg',
-                    75: 'heavy_snow.svg',
+                    73: 'showers_snow.svg', 75: 'heavy_snow.svg',
                     80: isNight ? 'scattered_showers_night.svg' : 'scattered_showers_day.svg',
-                    81: 'showers_rain.svg',
-                    82: 'heavy_rain.svg',
+                    81: 'showers_rain.svg', 82: 'heavy_rain.svg',
                     95: isNight ? 'isolated_scattered_thunderstorms_night.svg' : 'isolated_scattered_thunderstorms_day.svg',
                 };
                 return GITHUB_BASE_URL + (icons[code] || 'cloudy.svg');
             }
 
             function getWeatherDescription(code) {
-                const descriptions = {
-                    0: 'Trời quang',
-                    1: 'Gần quang',
-                    2: 'Mây rải rác',
-                    3: 'Trời u ám',
-                    45: 'Sương mù',
-                    48: 'Sương mù đọng',
-                    51: 'Mưa phùn nhẹ',
-                    53: 'Mưa phùn vừa',
-                    55: 'Mưa phùn dày',
-                    61: 'Mưa nhẹ',
-                    63: 'Mưa vừa',
-                    65: 'Mưa to',
-                    71: 'Tuyết rơi nhẹ',
-                    73: 'Tuyết rơi vừa',
-                    75: 'Tuyết rơi dày',
-                    80: 'Mưa rào nhẹ',
-                    81: 'Mưa rào vừa',
-                    82: 'Mưa rào dữ dội',
-                    95: 'Dông',
+                const desc = {
+                    0:'Trời quang',1:'Ít mây',2:'Mây rải rác',3:'Nhiều mây',
+                    45:'Sương mù',48:'Sương muối',51:'Mưa phùn nhẹ',53:'Mưa phùn',55:'Mưa phùn dày',
+                    61:'Mưa nhỏ',63:'Mưa vừa',65:'Mưa to',71:'Tuyết rơi nhẹ',73:'Tuyết rơi',75:'Tuyết rơi dày',
+                    80:'Mưa rào nhẹ',81:'Mưa rào',82:'Mưa rất to',95:'Dông',96:'Dông mưa đá',99:'Dông nặng'
                 };
-                return descriptions[code] || 'Không xác định';
+                return desc[code] || 'Không xác định';
             }
 
-            function getUvDescription(uv) {
-                if (uv === null || typeof uv === 'undefined') return '--';
-                if (uv <= 2) return `Thấp (${uv})`;
-                if (uv <= 5) return `Vừa (${uv})`;
-                if (uv <= 7) return `Cao (${uv})`;
-                if (uv <= 10) return `Rất cao (${uv})`;
-                return `Cực cao (${uv})`;
+            function getWeatherBackgroundClass(code) {
+                const hour = new Date().getHours();
+                let time = (hour >= 5 && hour < 10) ? 'morning' : (hour >= 10 && hour < 17) ? 'day' : (hour >= 17 && hour < 20) ? 'evening' : 'night';
+                let type = 'cloudy';
+                if (code <= 1) type = 'sunny';
+                else if (code <= 3) type = 'cloudy';
+                else if (code <= 48) type = 'foggy';
+                else if (code <= 67 || code >= 80) type = 'rainy';
+                else if (code >= 71) type = 'snowy';
+                if (time === 'night' && type === 'sunny') type = 'clear';
+                if (['foggy', 'snowy'].includes(type)) type = 'rainy';
+                return `weather-${time}-${type}`;
             }
 
-            function createWeatherIcon(src) {
-                const img = document.createElement('img');
-                img.className = 'weather-icon';
-                img.src = src;
-                img.alt = "Weather Icon";
-                img.onload = () => img.classList.add('loaded');
-                return img;
+            async function fetchLocationName(lat, lon) {
+                try {
+                    const res = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=vi`);
+                    if(!res.ok) throw new Error();
+                    const data = await res.json();
+                    let name = '';
+                    if (data.localityInfo?.administrative) {
+                        const admin = data.localityInfo.administrative.sort((a, b) => b.adminLevel - a.adminLevel);
+                        const local = admin.find(i => i.adminLevel >= 8) || admin[0];
+                        const district = admin.find(i => i.adminLevel === 6);
+                        const prov = admin.find(i => i.adminLevel === 4);
+                        const parts = [local?.name, district?.name !== local?.name ? district?.name : null, prov?.name !== district?.name ? prov?.name : null].filter(Boolean);
+                        name = parts.length > 2 ? `${parts[0]}, ${parts[1]}` : parts.join(', ');
+                    } else {
+                        name = [data.locality, data.city, data.principalSubdivision].filter(Boolean).join(', ');
+                    }
+                    currentCity = name || "Vị trí không xác định";
+                    currentLat = lat; currentLon = lon;
+                    fetchWeather(lat, lon, currentCity);
+                    fetchAQI(lat, lon);
+                } catch(e) { 
+                    console.error(e);
+                    showError('Không thể lấy tên địa điểm.');
+                    loadingSpinner.classList.add('hidden');
+                }
             }
 
             async function fetchAQI(lat, lon) {
                 try {
-                    const aqiApiUrl = `https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${lat}&longitude=${lon}&current=us_aqi&timezone=auto`;
-                    const response = await fetch(aqiApiUrl);
-                    
-                    if (!response.ok) throw new Error(`Không thể tải dữ liệu AQI.`);
-                    const data = await response.json();
-                    if (data.error) throw new Error(data.reason);
-                    
-                    const aqi = data.current?.us_aqi || 'N/A';
-                    const aqiEl = document.getElementById('detail-aqi');
-                    if (aqiEl) aqiEl.textContent = aqi;
-
-                } catch (error) {
-                    handleFetchError(error, 'fetchAQI');
-                    const aqiEl = document.getElementById('detail-aqi');
-                    if (aqiEl) aqiEl.textContent = 'N/A';
-                }
+                    const res = await fetch(`https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${lat}&longitude=${lon}&current=us_aqi`);
+                    const data = await res.json();
+                    document.getElementById('detail-aqi').textContent = data.current?.us_aqi || '--';
+                } catch(e) { console.error(e); }
             }
 
-            // --- QUAN TRỌNG: ĐỊNH VỊ VÀ TÌM KIẾM ---
-
-            // 1. Reverse Geocoding (BigDataCloud): Chỉ lấy địa danh hành chính
-            async function fetchLocationName(lat, lon) {
-                try {
-                    const apiUrl = `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=vi`;
-                    
-                    const response = await fetch(apiUrl);
-                    if (!response.ok) throw new Error('Không thể lấy tên vị trí từ BigDataCloud.');
-                    
-                    const data = await response.json();
-                    
-                    let locationName = '';
-
-                    // Sử dụng localityInfo để lấy chính xác các cấp hành chính
-                    if (data.localityInfo && data.localityInfo.administrative) {
-                        const adminData = data.localityInfo.administrative;
-                        
-                        // Sắp xếp: Level cao (đơn vị nhỏ) lên đầu (vd: Xã > Huyện > Tỉnh)
-                        adminData.sort((a, b) => b.adminLevel - a.adminLevel);
-
-                        // Tìm các cấp quan trọng
-                        // Level 8-10: Thường là Phường, Xã, Thị trấn
-                        const localLevel = adminData.find(item => item.adminLevel >= 8) || adminData[0]; 
-                        
-                        // Level 6: Quận, Huyện
-                        const districtLevel = adminData.find(item => item.adminLevel === 6);
-                        
-                        // Level 4: Tỉnh, Thành phố TW
-                        const provinceLevel = adminData.find(item => item.adminLevel === 4);
-
-                        const parts = [];
-                        if (localLevel && localLevel.name) parts.push(localLevel.name);
-                        
-                        // Thêm Huyện nếu khác Xã
-                        if (districtLevel && districtLevel.name && districtLevel.name !== localLevel?.name) {
-                            parts.push(districtLevel.name);
-                        }
-                        
-                        // Thêm Tỉnh nếu khác Huyện
-                        if (provinceLevel && provinceLevel.name && provinceLevel.name !== districtLevel?.name) {
-                            parts.push(provinceLevel.name);
-                        }
-                        
-                        // Nếu danh sách quá ngắn (chỉ có 1 cấp), fallback dùng các trường khác
-                        if (parts.length === 0) {
-                             locationName = data.locality || data.city || data.principalSubdivision || "Vị trí không xác định";
-                        } else {
-                             // Chỉ lấy tối đa 2 cấp quan trọng nhất để hiển thị đẹp
-                             // Ví dụ: "Phường X, Quận Y" hoặc "Quận Y, Thành phố Z"
-                             if (parts.length > 2) {
-                                 locationName = `${parts[0]}, ${parts[1]}`; 
-                             } else {
-                                 locationName = parts.join(', ');
-                             }
-                        }
-                    } else {
-                        // Fallback cũ
-                        locationName = [data.locality, data.city, data.principalSubdivision].filter(Boolean).join(', ');
-                    }
-
-                    currentCity = locationName || "Vị trí không xác định";
-                    currentLat = lat;
-                    currentLon = lon;
-
-                    fetchWeather(lat, lon, currentCity);
-                    fetchAQI(lat, lon);
-
-                } catch (error) {
-                    handleFetchError(error, 'fetchLocationName (BDC)');
-                    loadingSpinner.classList.add('hidden');
-                }
-            }
-
-            // 2. Search (Open-Meteo): Lọc bỏ Khách sạn, Sân bay, Địa điểm
-            async function fetchSuggestions(query) {
-                try {
-                    // Sử dụng Open-Meteo Geocoding
-                    // count=20 để lấy nhiều kết quả rồi lọc sau
-                    const apiUrl = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(query)}&count=20&language=vi&format=json`;
-                    
-                    const response = await fetch(apiUrl);
-                    if (!response.ok) throw new Error('Lỗi mạng khi tìm gợi ý.');
-                    
-                    const data = await response.json();
-                    displaySuggestions(data.results || []); 
-
-                } catch (error) {
-                    handleFetchError(error, 'fetchSuggestions (Open-Meteo)');
-                    searchSuggestions.classList.add('hidden');
-                }
-            }
-
-            function displaySuggestions(results) {
-                searchSuggestions.innerHTML = '';
-
-                if (!results || results.length === 0) {
-                    searchSuggestions.classList.add('hidden');
-                    return;
-                }
-
-                // --- BỘ LỌC MỚI (STRICT FILTER) ---
-                const filteredResults = results.filter(item => {
-                    // Kiểm tra feature_code (Mã phân loại địa danh của GeoNames/Open-Meteo)
-                    // P: Populated Place (Thành phố, Thị trấn, Làng mạc...) -> GIỮ
-                    // A: Administrative Division (Tỉnh, Bang, Vùng...) -> GIỮ
-                    // S, L, T, V, R...: Spot, Park, Mountain, Road... -> LOẠI BỎ
-                    if (item.feature_code) {
-                        return item.feature_code.startsWith('P') || item.feature_code.startsWith('A');
-                    }
-                    // Nếu không có feature_code (hiếm), giữ lại an toàn
-                    return true;
-                });
-
-                // Lọc trùng lặp
-                const uniqueResults = [];
-                const seen = new Set();
-
-                filteredResults.forEach(item => {
-                    // Tạo khóa duy nhất: Tên + Tỉnh + Quốc gia
-                    const key = `${item.name}-${item.admin1 || ''}-${item.country || ''}`;
-                    if (!seen.has(key)) {
-                        seen.add(key);
-                        uniqueResults.push(item);
-                    }
-                });
-
-                if (uniqueResults.length === 0) {
-                    // Nếu lọc hết sạch (ví dụ tìm tên khách sạn), ẩn luôn
-                    searchSuggestions.classList.add('hidden');
-                    return;
-                }
-
-                uniqueResults.slice(0, 10).forEach(location => {
-                    const parts = [
-                        location.name,
-                        location.admin1, // Tỉnh/Thành phố
-                        location.country
-                    ].filter(Boolean);
-                    
-                    const displayName = parts.join(', ');
-                    
-                    const suggestionItem = document.createElement('div');
-                    suggestionItem.className = "p-3 hover:bg-slate-100 dark:hover:bg-slate-600 cursor-pointer border-b border-slate-100 dark:border-slate-600 last:border-0";
-                    
-                    suggestionItem.innerHTML = `
-                        <div class="font-medium text-slate-800 dark:text-slate-200">${location.name}</div>
-                        <div class="text-xs text-slate-500 dark:text-slate-400">${[location.admin1, location.country].filter(Boolean).join(', ')}</div>
-                    `;
-                    
-                    suggestionItem.addEventListener('click', () => {
-                        // Khi click
-                        const simpleName = `${location.name}, ${location.admin1 || location.country}`;
-                        
-                        currentCity = simpleName;
-                        currentLat = location.latitude;
-                        currentLon = location.longitude;
-                        
-                        fetchWeather(currentLat, currentLon, currentCity);
-                        fetchAQI(currentLat, currentLon);
-                        
-                        searchSuggestions.classList.add('hidden');
-                        searchInput.value = '';
-                    });
-                    
-                    searchSuggestions.appendChild(suggestionItem);
-                });
-
-                searchSuggestions.classList.remove('hidden');
-            }
-
-            // 3. Fetch Coordinates (Khi Enter): Cũng áp dụng bộ lọc
-            async function fetchCoordinates(city) {
-                loadingSpinner.classList.remove('hidden');
-                try {
-                    const apiUrl = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=10&language=vi&format=json`;
-                    
-                    const response = await fetch(apiUrl);
-                    if (!response.ok) throw new Error('Không thể tìm thấy vị trí.');
-                    
-                    const data = await response.json();
-                    
-                    // Áp dụng cùng bộ lọc như trên
-                    const validResults = (data.results || []).filter(item => {
-                         if (item.feature_code) {
-                            return item.feature_code.startsWith('P') || item.feature_code.startsWith('A');
-                        }
-                        return true;
-                    });
-                    
-                    if (validResults.length > 0) {
-                        const location = validResults[0]; // Lấy kết quả đúng đầu tiên
-                        const simpleName = `${location.name}, ${location.admin1 || location.country}`;
-
-                        currentCity = simpleName;
-                        currentLat = location.latitude;
-                        currentLon = location.longitude;
-                        
-                        fetchWeather(currentLat, currentLon, currentCity);
-                        fetchAQI(currentLat, currentLon);
-                    } else {
-                        throw new Error('Không tìm thấy địa danh hành chính phù hợp.');
-                    }
-
-                } catch (error) {
-                    handleFetchError(error, 'fetchCoordinates');
-                    loadingSpinner.classList.add('hidden');
-                }
-            }
-
-            // --- Fetch Weather (Open-Meteo) ---
             async function fetchWeather(lat, lon, city) {
                 loadingSpinner.classList.remove('hidden');
                 try {
-                    const apiUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relativehumidity_2m,weathercode,windspeed_10m,pressure_msl,dewpoint_2m,visibility,uv_index,apparent_temperature,cloudcover,precipitation&hourly=temperature_2m,weathercode,temperature_80m,precipitation_probability&daily=weathercode,temperature_2m_max,temperature_2m_min,sunrise,sunset&timezone=auto&forecast_days=14`;
-                    
-                    const response = await fetch(apiUrl);
-
-                    if (!response.ok) {
-                        throw new Error(`Không thể tải dữ liệu thời tiết.`);
-                    }
-                    
-                    const data = await response.json();
-                    if (data.error) throw new Error(data.reason);
-                    
-                    updateCurrentWeatherUI(data, city);
-                    updateHourlyForecastUI(data);
-                    updateDailyForecastUI(data);
-                    
-                    // Cập nhật iframe bản đồ Windy
+                    const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relativehumidity_2m,weathercode,windspeed_10m,pressure_msl,dewpoint_2m,visibility,uv_index,apparent_temperature,cloudcover,precipitation&hourly=temperature_2m,weathercode,temperature_80m,precipitation_probability&daily=weathercode,temperature_2m_max,temperature_2m_min,sunrise,sunset&timezone=auto&forecast_days=14`);
+                    if(!res.ok) throw new Error('Lỗi tải thời tiết');
+                    const data = await res.json();
+                    updateUI(data, city);
                     weatherMapEl.src = `https://embed.windy.com/embed.html?type=map&location=coordinates&metricWind=kmh&metricTemp=°C&radarRange=-1&lat=${lat}&lon=${lon}&zoom=9`;
-
-                    adjustSectionHeights();
-
-                } catch (error) {
-                    handleFetchError(error, 'fetchWeather');
+                } catch(e) {
+                    showError(e.message);
                 } finally {
                     loadingSpinner.classList.add('hidden');
                 }
             }
 
-            function updateCurrentWeatherUI(data, city) {
-                const current = data.current;
-                const currentHour = new Date().getHours();
+            function updateUI(data, city) {
+                const cur = data.current;
+                const hour = new Date().getHours();
                 
                 currentLocationEl.textContent = city;
-                animateCountUp(currentTempEl, current.temperature_2m, '°C');
-                currentConditionEl.textContent = getWeatherDescription(current.weathercode);
+                animateCountUp(currentTempEl, cur.temperature_2m, '°');
+                currentConditionEl.textContent = getWeatherDescription(cur.weathercode);
                 
-                currentWeatherIconContainer.innerHTML = '';
-                const iconSrc = getWeatherIcon(current.weathercode, currentHour);
-                currentWeatherIconContainer.appendChild(createWeatherIcon(iconSrc));
+                currentWeatherIconContainer.innerHTML = `<img src="${getWeatherIcon(cur.weathercode, hour)}" class="weather-icon loaded animate-slide-up">`;
                 
-                animateCountUp(currentWindEl, current.windspeed_10m, ' km/h');
-                animateCountUp(currentPressureEl, current.pressure_msl, ' hPa');
-                animateCountUp(currentHumidityEl, current.relativehumidity_2m, '%');
-                animateCountUp(currentVisibilityEl, current.visibility / 1000, ' km');
-                animateCountUp(currentDewpointEl, current.dewpoint_2m, '°C');
-                
-                currentUvEl.textContent = getUvDescription(Math.round(current.uv_index));
-
-                const newBgClass = getWeatherBackgroundClass(current.weathercode);
-                const bodyClasses = document.body.classList;
-                bodyClasses.forEach(cls => {
-                    if (cls.startsWith('weather-')) {
-                        bodyClasses.remove(cls);
-                    }
-                });
-                bodyClasses.add(newBgClass);
-
-                const daily = data.daily;
-                const todayIndex = 0; 
-
-                const formatTime = (dateTimeString) => {
-                    if (!dateTimeString) return '--:--';
-                    try {
-                        return new Date(dateTimeString).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
-                    } catch (e) {
-                        return '--:--';
-                    }
+                const details = {
+                    'current-wind': [cur.windspeed_10m, ' km/h'],
+                    'current-pressure': [cur.pressure_msl, ' hPa'],
+                    'current-humidity': [cur.relativehumidity_2m, '%'],
+                    'current-visibility': [cur.visibility/1000, ' km'],
+                    'current-dewpoint': [cur.dewpoint_2m, '°'],
+                    'current-uv': [Math.round(cur.uv_index), ''],
+                    'detail-temp': [cur.temperature_2m, '°C'],
+                    'detail-feels-like': [cur.apparent_temperature, '°C'],
+                    'detail-cloud-cover': [cur.cloudcover, '%'],
+                    'detail-precipitation': [cur.precipitation, ' mm'],
+                    'detail-wind': [cur.windspeed_10m, ' km/h'],
+                    'detail-humidity': [cur.relativehumidity_2m, '%'],
+                    'detail-uv': [Math.round(cur.uv_index), ''],
+                    'detail-visibility': [cur.visibility/1000, ' km'],
+                    'detail-pressure': [cur.pressure_msl, ' hPa'],
                 };
-                
-                animateCountUp(document.getElementById('detail-temp'), current.temperature_2m, '°C');
-                animateCountUp(document.getElementById('detail-feels-like'), current.apparent_temperature, '°C');
-                animateCountUp(document.getElementById('detail-cloud-cover'), current.cloudcover, '%');
-                animateCountUp(document.getElementById('detail-precipitation'), current.precipitation, ' mm');
-                animateCountUp(document.getElementById('detail-wind'), current.windspeed_10m, ' km/h');
-                animateCountUp(document.getElementById('detail-humidity'), current.relativehumidity_2m, '%');
-                animateCountUp(document.getElementById('detail-visibility'), current.visibility / 1000, ' km');
-                animateCountUp(document.getElementById('detail-pressure'), current.pressure_msl, ' hPa');
+                for(const [id, [val, unit]] of Object.entries(details)) {
+                    const el = document.getElementById(id);
+                    if(el) animateCountUp(el, val, unit);
+                }
 
-                document.getElementById('detail-uv').textContent = getUvDescription(Math.round(current.uv_index));
-                document.getElementById('detail-sun').textContent = `${formatTime(daily.sunrise[todayIndex])} / ${formatTime(daily.sunset[todayIndex])}`;
-                document.getElementById('detail-moon').textContent = 'N/A';
-                document.getElementById('detail-moon-phase').textContent = 'N/A';
-            }
+                const today = data.daily;
+                const sunrise = new Date(today.sunrise[0]).toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit'});
+                const sunset = new Date(today.sunset[0]).toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit'});
+                document.getElementById('detail-sun').textContent = `${sunrise} / ${sunset}`;
 
-            function updateHourlyForecastUI(data) {
+                document.body.className = `text-slate-800 dark:text-slate-200 px-4 md:px-8 pb-28 pt-16 md:pt-28 md:pb-8 min-h-screen ${getWeatherBackgroundClass(cur.weathercode)}`;
+                renderWeatherEffects(cur.weathercode, hour >= 6 && hour < 18);
+
                 hourlyForecastContainer.innerHTML = '';
-                const now = new Date();
-                const currentHour = now.getHours();
-
-                let startIndex = data.hourly.time.findIndex(timeStr => new Date(timeStr).getHours() === currentHour);
-                if (startIndex === -1) startIndex = 0;
-
-                for (let i = startIndex; i < startIndex + 24 && i < data.hourly.time.length; i++) {
+                const startIdx = data.hourly.time.findIndex(t => new Date(t).getHours() === hour) || 0;
+                for(let i=startIdx; i<startIdx+24 && i<data.hourly.time.length; i++) {
                     const time = new Date(data.hourly.time[i]);
-                    const hourString = time.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
-                    const tempLow = data.hourly.temperature_80m[i] ? Math.round(data.hourly.temperature_80m[i]) : Math.round(data.hourly.temperature_2m[i] - 2);
-                    const iconSrc = getWeatherIcon(data.hourly.weathercode[i], time.getHours());
-
-                    const html = `
-                        <div class="text-center flex-shrink-0 p-4 bg-slate-100/70 dark:bg-slate-700/70 backdrop-blur-sm rounded-2xl w-40">
-                            <div class="w-12 h-12 mx-auto">
-                                <img src="${iconSrc}" alt="Icon" class="weather-icon loaded">
-                            </div>
-                            <div class="my-1">
-                                <span class="font-bold">${Math.round(data.hourly.temperature_2m[i])}°</span>
-                                <span class="text-slate-600 dark:text-slate-400">${tempLow}°</span>
-                            </div>
-                            <div class="text-sm text-slate-700 dark:text-slate-300 mb-1 truncate">${getWeatherDescription(data.hourly.weathercode[i])}</div>
-                            <div class="font-bold">${hourString}</div>
-                        </div>
-                    `;
-                    hourlyForecastContainer.innerHTML += html;
+                    const hCode = data.hourly.weathercode[i];
+                    const hTemp = Math.round(data.hourly.temperature_2m[i]);
+                    const hHtml = `
+                        <div class="glass-item min-w-[6rem] p-3 rounded-2xl text-center flex flex-col items-center justify-center">
+                            <div class="text-sm font-bold mb-1">${time.toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit'})}</div>
+                            <div class="w-10 h-10 my-1"><img src="${getWeatherIcon(hCode, time.getHours())}" class="w-full h-full"></div>
+                            <div class="font-bold text-lg">${hTemp}°</div>
+                            <div class="text-xs opacity-80 whitespace-normal leading-tight mb-1">${getWeatherDescription(hCode)}</div>
+                            <div class="text-xs opacity-60">${data.hourly.precipitation_probability[i]}% mưa</div>
+                        </div>`;
+                    hourlyForecastContainer.insertAdjacentHTML('beforeend', hHtml);
                 }
-            }
 
-            function updateDailyForecastUI(data) {
                 dailyForecastContainer.innerHTML = '';
-                for (let i = 0; i < data.daily.time.length; i++) {
+                for(let i=0; i<data.daily.time.length; i++) {
                     const date = new Date(data.daily.time[i]);
-                    const dayMonth = date.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit' });
-                    const weekday = date.toLocaleDateString('vi-VN', { weekday: 'long' });
-                    const iconSrc = getWeatherIcon(data.daily.weathercode[i], 12); 
-
-                    const html = `
-                        <div class="p-4 bg-slate-100/70 dark:bg-slate-700/70 backdrop-blur-sm rounded-2xl 
-                                    flex-shrink-0 w-40 
-                                    lg:w-full lg:flex lg:justify-between lg:items-center">
-                            <div class="text-center lg:text-left">
-                                <div class="font-bold">${dayMonth}</div>
-                                <div class="text-slate-600 dark:text-slate-400 lg:hidden">${weekday}</div>
+                    const dCode = data.daily.weathercode[i];
+                    const max = Math.round(data.daily.temperature_2m_max[i]);
+                    const min = Math.round(data.daily.temperature_2m_min[i]);
+                    const dHtml = `
+                        <div class="glass-item p-3 rounded-2xl flex items-center justify-between gap-3 min-w-[180px]">
+                            <div class="text-center w-14">
+                                <div class="font-bold">${date.toLocaleDateString('vi-VN',{day:'2-digit',month:'2-digit'})}</div>
+                                <div class="text-xs opacity-70">${date.toLocaleDateString('vi-VN',{weekday:'short'})}</div>
                             </div>
-                            <div class="text-slate-600 dark:text-slate-400 hidden lg:block">${weekday}</div>
-                            <div class="w-12 h-12 mx-auto my-1 lg:mx-0 lg:my-0">
-                                <img src="${iconSrc}" alt="Icon" class="weather-icon loaded">
+                            <div class="flex flex-col items-center flex-1">
+                                <div class="w-10 h-10 mb-1"><img src="${getWeatherIcon(dCode, 12)}" class="w-full h-full"></div>
+                                <div class="text-xs text-center font-medium whitespace-normal leading-tight">${getWeatherDescription(dCode)}</div>
                             </div>
-                            <div class="text-center lg:text-right">
-                                <span class="font-bold text-lg">${Math.round(data.daily.temperature_2m_max[i])}°</span>
-                                <span class="text-slate-600 dark:text-slate-400">/ ${Math.round(data.daily.temperature_2m_min[i])}°</span>
+                            <div class="text-right w-12">
+                                <div class="font-bold">${max}°</div>
+                                <div class="text-xs opacity-70">${min}°</div>
                             </div>
-                            <div class="text-sm text-slate-700 dark:text-slate-300 text-center truncate">
-                                ${getWeatherDescription(data.daily.weathercode[i])}
-                            </div>
-                        </div>
-                    `;
-                    dailyForecastContainer.innerHTML += html;
+                        </div>`;
+                    dailyForecastContainer.insertAdjacentHTML('beforeend', dHtml);
                 }
             }
 
-            // --- Xử lý sự kiện ---
             searchForm.addEventListener('submit', (e) => {
                 e.preventDefault();
-                const city = searchInput.value.trim();
-                if (city) {
-                    fetchCoordinates(city);
-                    searchInput.value = '';
-                    searchSuggestions.classList.add('hidden');
-                    searchInput.blur();
-                }
+                const q = searchInput.value.trim();
+                if(q) fetchCoordinates(q);
             });
             
             searchInput.addEventListener('input', () => {
                 clearTimeout(searchTimeout);
-                const query = searchInput.value.trim();
-                if (query.length >= 3) {
-                    searchTimeout = setTimeout(() => {
-                        fetchSuggestions(query);
-                    }, 300);
-                } else {
-                    searchSuggestions.classList.add('hidden');
+                const q = searchInput.value.trim();
+                if(q.length >= 2) searchTimeout = setTimeout(() => fetchSuggestions(q), 400);
+                else searchSuggestions.classList.add('hidden');
+            });
+
+            async function fetchSuggestions(q) {
+                try {
+                    const res = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(q)}&count=20&language=vi&format=json`);
+                    const data = await res.json();
+                    if(!data.results) return searchSuggestions.classList.add('hidden');
+                    
+                    const valid = data.results.filter(i => 
+                        i.feature_code && (i.feature_code.startsWith('P') || i.feature_code.startsWith('A'))
+                    );
+                    const unique = [];
+                    const seen = new Set();
+                    valid.forEach(i => {
+                        const k = `${i.name}-${i.admin1}-${i.country}`;
+                        if(!seen.has(k)) { seen.add(k); unique.push(i); }
+                    });
+                    searchSuggestions.innerHTML = '';
+                    unique.slice(0,8).forEach(loc => {
+                        const div = document.createElement('div');
+                        div.className = "p-3 hover:bg-blue-50 dark:hover:bg-slate-700 cursor-pointer border-b border-slate-100 dark:border-slate-700 last:border-0 text-sm";
+                        div.innerHTML = `<div class="font-bold">${loc.name}</div><div class="text-xs opacity-70">${[loc.admin1, loc.country].filter(Boolean).join(', ')}</div>`;
+                        div.onclick = () => {
+                            currentCity = `${loc.name}, ${loc.admin1 || loc.country}`;
+                            currentLat = loc.latitude; currentLon = loc.longitude;
+                            fetchWeather(currentLat, currentLon, currentCity);
+                            fetchAQI(currentLat, currentLon);
+                            searchSuggestions.classList.add('hidden');
+                            searchInput.value = '';
+                        };
+                        searchSuggestions.appendChild(div);
+                    });
+                    if (unique.length > 0) searchSuggestions.classList.remove('hidden');
+                    else searchSuggestions.classList.add('hidden');
+                } catch(e) { console.error(e); }
+            }
+
+            async function fetchCoordinates(q) {
+                try {
+                    const res = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(q)}&count=10&language=vi&format=json`);
+                    const data = await res.json();
+                    const valid = data.results?.filter(i => 
+                        i.feature_code && (i.feature_code.startsWith('P') || i.feature_code.startsWith('A'))
+                    ) || [];
+                    const loc = valid[0];
+                    if(loc) {
+                        currentCity = `${loc.name}, ${loc.admin1 || loc.country}`;
+                        currentLat = loc.latitude; currentLon = loc.longitude;
+                        fetchWeather(currentLat, currentLon, currentCity);
+                        fetchAQI(currentLat, currentLon);
+                        searchSuggestions.classList.add('hidden');
+                    } else showError('Không tìm thấy địa điểm phù hợp.');
+                } catch(e) { showError('Lỗi tìm kiếm.'); }
+            }
+
+            detectLocationButton.onclick = () => {
+                if('geolocation' in navigator) {
+                    loadingSpinner.classList.remove('hidden');
+                    navigator.geolocation.getCurrentPosition(
+                        pos => fetchLocationName(pos.coords.latitude, pos.coords.longitude),
+                        () => { showError('Lỗi định vị.'); loadingSpinner.classList.add('hidden'); }
+                    );
+                }
+            };
+
+            document.getElementById('settings-menu-container').onclick = (e) => {
+                if(e.target === document.getElementById('settings-menu-container')) {
+                    document.getElementById('settings-menu-container').classList.add('hidden');
+                    document.getElementById('settings-main-menu').classList.remove('hidden');
+                    document.getElementById('settings-theme-menu').classList.add('hidden');
+                }
+            };
+            settingsButton.onclick = () => document.getElementById('settings-menu-container').classList.remove('hidden');
+            document.getElementById('theme-menu-button').onclick = () => {
+                document.getElementById('settings-main-menu').classList.add('hidden');
+                document.getElementById('settings-theme-menu').classList.remove('hidden');
+            };
+            document.getElementById('theme-back-button').onclick = () => {
+                document.getElementById('settings-main-menu').classList.remove('hidden');
+                document.getElementById('settings-theme-menu').classList.add('hidden');
+            };
+            document.querySelectorAll('.theme-option').forEach(btn => {
+                btn.onclick = () => {
+                    currentTheme = btn.dataset.theme;
+                    localStorage.setItem('theme', currentTheme);
+                    applyTheme(currentTheme);
+                    document.getElementById('settings-menu-container').classList.add('hidden');
                 }
             });
 
-            document.addEventListener('click', (e) => {
-                if (!searchForm.contains(e.target)) {
-                    searchSuggestions.classList.add('hidden');
-                }
-            });
-
-            mapDetailsButton.addEventListener('click', () => {
-                const mapUrl = `https://embed.windy.com/embed.html?type=map&location=coordinates&metricRain=default&metricTemp=default&metricWind=default&zoom=5&overlay=wind&product=ecmwf&level=surface&lat=${currentLat}&lon=${currentLon}&detailLat=${currentLat}&detailLon=${currentLon}&detail=true&pressure=true&message=true`;
-                fullWeatherMap.src = mapUrl;
+            mapDetailsButton.onclick = () => {
+                fullWeatherMap.src = weatherMapEl.src.replace('zoom=9', 'zoom=5') + '&detail=true&pressure=true';
                 mapModal.classList.remove('hidden');
                 mapModal.classList.remove('modal-exiting');
                 mapModal.classList.add('modal-entering');
-            });
-
-            mapCloseButton.addEventListener('click', () => {
+            };
+            mapCloseButton.onclick = () => {
                 mapModal.classList.remove('modal-entering');
                 mapModal.classList.add('modal-exiting');
                 setTimeout(() => {
                     mapModal.classList.add('hidden');
                     fullWeatherMap.src = 'about:blank';
                 }, 200);
+            };
+            document.addEventListener('click', (e) => {
+                if(!searchForm.contains(e.target)) searchSuggestions.classList.add('hidden');
             });
 
-            detectLocationButton.addEventListener('click', () => {
-                autoDetectLocation();
-            });
-
-            function autoDetectLocation() {
-                if ('geolocation' in navigator) {
-                    loadingSpinner.classList.remove('hidden');
-                    navigator.geolocation.getCurrentPosition(
-                        (position) => {
-                            const lat = position.coords.latitude;
-                            const lon = position.coords.longitude;
-                            fetchLocationName(lat, lon); // Sử dụng BigDataCloud mới
-                        },
-                        (error) => {
-                            loadingSpinner.classList.add('hidden');
-                            console.error('Lỗi Geolocation:', error.message);
-                            showError('Không thể lấy vị trí. Đang tải mặc định.');
-                            fetchWeather(currentLat, currentLon, currentCity);
-                            fetchAQI(currentLat, currentLon);
-                        }
-                    );
-                } else {
-                    showError('Trình duyệt không hỗ trợ định vị.');
-                    fetchWeather(currentLat, currentLon, currentCity);
-                    fetchAQI(currentLat, currentLon);
-                }
-            }
-
-            // --- Khởi tạo ---
             applyTheme(currentTheme);
             setInterval(updateClock, 1000);
             updateClock();
-            autoDetectLocation();
-            window.addEventListener('resize', adjustSectionHeights);
+            detectLocationButton.click(); 
         });
     </script>
-
 </body>
 </html>
