@@ -983,32 +983,43 @@
                 }
             }
 
-            // --- HÀM MỚI: Lấy tên vị trí từ tọa độ (Reverse Geocoding) ---
+            // --- THAY ĐỔI: Lấy tên vị trí từ tọa độ (Dùng Nominatim) ---
             async function fetchLocationName(lat, lon) {
                 // loadingSpinner đã được hiển thị bởi event listener
                 try {
-                    // SỬA LỖI: Đã xóa &language=vi
-                    // SỬA LỖI LẦN 2: Xóa &format=json (vì nó là mặc định)
-                    const apiUrl = `https://geocoding-api.open-meteo.com/v1/reverse?latitude=${lat}&longitude=${lon}`;
+                    // Sử dụng Nominatim API
+                    const apiUrl = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&accept-language=vi`;
                     
                     const response = await fetch(apiUrl);
-                    if (!response.ok) throw new Error('Không thể lấy tên vị trí.');
+                    if (!response.ok) throw new Error('Không thể lấy tên vị trí từ Nominatim.');
                     
                     const data = await response.json();
+
+                    if (!data || !data.address) {
+                        throw new Error('Không nhận được dữ liệu địa chỉ hợp lệ từ Nominatim.');
+                    }
                     
-                    // Ưu tiên 'locality' (thành phố lớn) hoặc 'city', fallback về 'town'
-                    // CẬP NHẬT: Thêm fallback 'name' và 'administrative' để hiển thị tên tốt hơn
-                    const city = data.locality || data.city || data.town || data.name || 'Vị trí không xác định';
-                    const admin1 = data.admin1 || data.administrative || '';
+                    const address = data.address;
                     
-                    // Ghép tên, tránh trùng lặp (ví dụ: "San Francisco, San Francisco")
-                    let locationName = city;
-                    if (admin1 && city !== admin1) {
-                        locationName = `${city}, ${admin1}`;
+                    // Xây dựng tên vị trí theo yêu cầu: xã/phường – thành phố – tỉnh – quốc gia
+                    // Ưu tiên 'suburb' (phường), fallback về 'village' (xã) hoặc 'hamlet' (thôn)
+                    const suburb = address.suburb || address.village || address.hamlet || ''; 
+                    const city = address.city || address.town || ''; // Thành phố hoặc thị xã
+                    const state = address.state || ''; // Tỉnh
+                    const country = address.country || ''; // Quốc gia
+
+                    // Ghép chuỗi, loại bỏ các phần trống và dấu phẩy thừa
+                    // Lọc ra các phần có giá trị (không rỗng)
+                    const parts = [suburb, city, state, country].filter(part => part && part.trim() !== ''); 
+                    let locationName = parts.join(', '); // Nối các phần bằng dấu phẩy
+
+                    if (!locationName) {
+                        // Fallback nếu không có phần nào
+                        locationName = data.display_name || 'Vị trí không xác định';
                     }
 
                     // Cập nhật trạng thái global
-                    currentCity = locationName;
+                    currentCity = locationName; // Hiển thị tên đầy đủ
                     currentLat = lat;
                     currentLon = lon;
 
@@ -1077,17 +1088,21 @@
                 } finally {
                     loadingSpinner.classList.add('hidden');
                 }
-            }
+            } // <-- SỬA LỖI: THÊM DẤU NGOẶC } CÒN THIẾU
 
-            // --- Lấy gợi ý địa điểm ---
+            // --- Lấy gợi ý địa điểm (THAY ĐỔI: Dùng Nominatim, tăng limit và thêm filter) ---
             async function fetchSuggestions(query) {
                 try {
-                    const apiUrl = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(query)}&count=10&language=vi&format=json`;
+                    // Sử dụng Nominatim Search API
+                    // Tăng limit lên 20 để có nhiều kết quả hơn để lọc
+                    // Thêm addressdetails=1 để lấy thông tin chi tiết địa chỉ
+                    const apiUrl = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=20&accept-language=vi&addressdetails=1`;
+                    
                     const response = await fetch(apiUrl);
-                    if (!response.ok) throw new Error('Lỗi mạng khi tìm gợi ý.');
+                    if (!response.ok) throw new Error('Lỗi mạng khi tìm gợi ý từ Nominatim.');
                     
                     const data = await response.json();
-                    displaySuggestions(data.results || []);
+                    displaySuggestions(data || []); // data là một mảng các results
 
                 } catch (error) {
                     // CẬP NHẬT: Sử dụng handleFetchError
@@ -1098,27 +1113,113 @@
 
             function displaySuggestions(results) {
                 searchSuggestions.innerHTML = '';
-                if (results.length === 0) {
+
+                // --- BỘ LỌC MỚI: Chỉ giữ lại các đơn vị hành chính ---
+                const allowedTypes = [
+                    'administrative', 'city', 'town', 'village', 
+                    'suburb', 'hamlet', 'state', 'country', 'county'
+                ];
+                
+                const filteredResults = results.filter(location => {
+                    // Giữ lại nếu 'class' là 'boundary' (ranh giới, ví dụ: tỉnh, huyện)
+                    if (location.class === 'boundary') return true;
+                    
+                    // Giữ lại nếu 'class' là 'place' VÀ 'type' nằm trong danh sách cho phép
+                    if (location.class === 'place' && allowedTypes.includes(location.type)) {
+                        return true;
+                    }
+                    
+                    // Lọc bỏ các loại khác (amenity, shop, tourism, v.v.)
+                    return false;
+                }).slice(0, 10); // Lấy 10 kết quả hàng đầu SAU khi lọc
+
+                // --- BỘ LỌC TRÙNG LẶP MỚI ---
+                const uniqueDisplayNames = new Set();
+                const uniqueResults = filteredResults.filter(location => {
+                    const displayName = location.display_name || '';
+                    if (!uniqueDisplayNames.has(displayName)) {
+                        uniqueDisplayNames.add(displayName);
+                        return true;
+                    }
+                    return false;
+                });
+                // --- KẾT THÚC BỘ LỌC TRÙNG LẶP ---
+
+                if (uniqueResults.length === 0) { // Sửa: Dùng uniqueResults
                     searchSuggestions.classList.add('hidden');
                     return;
                 }
 
-                results.forEach(location => {
-                    const admin1 = location.admin1 ? `, ${location.admin1}` : '';
-                    const country = location.country ? `, ${location.country}` : '';
-                    const displayName = `${location.name}${admin1}${country}`;
+                uniqueResults.forEach(location => { // Sửa: Dùng uniqueResults
+                    
+                    // ### SỬA LỖI HIỂN THỊ (BẮT ĐẦU) ###
+                    // Logic làm sạch tên hiển thị
+                    let displayName = '';
+                    if (location.address) {
+                        // Ưu tiên lấy tên chính (thành phố, thị xã, đơn vị HC, phường, v.v.)
+                        const name = location.address.city || location.address.town || location.address.administrative || location.address.suburb || location.address.village || location.address.hamlet;
+                        // Lấy tỉnh/huyện
+                        const state = location.address.state || location.address.county || '';
+                        // Lấy quốc gia
+                        const country = location.address.country || '';
+
+                        // Ghép các phần lại, lọc bỏ giá trị rỗng
+                        const parts = [name, state, country].filter(Boolean);
+                        let uniqueParts = [];
+                        
+                        // Xây dựng mảng tên duy nhất, loại bỏ trùng lặp
+                        // (Ví dụ: "Hà Nội, Hà Nội, Việt Nam" -> "Hà Nội, Việt Nam")
+                        if (parts.length > 0) uniqueParts.push(parts[0]);
+                        if (parts.length > 1 && parts[1] !== parts[0]) {
+                            uniqueParts.push(parts[1]);
+                        }
+                        if (parts.length > 2 && parts[2] !== parts[1] && parts[2] !== parts[0]) {
+                            uniqueParts.push(parts[2]);
+                        }
+                        
+                        displayName = uniqueParts.join(', ');
+                    }
+
+                    // Fallback: nếu logic trên thất bại, dùng display_name gốc
+                    if (!displayName) {
+                        displayName = location.display_name || 'Vị trí không xác định';
+                    }
+                    // ### SỬA LỖI HIỂN THỊ (KẾT THÚC) ###
                     
                     const suggestionItem = document.createElement('div');
                     suggestionItem.className = "p-3 hover:bg-slate-100 dark:hover:bg-slate-600 cursor-pointer";
-                    suggestionItem.textContent = displayName;
+                    suggestionItem.textContent = displayName; // Dùng tên đã làm sạch
                     
                     suggestionItem.addEventListener('click', () => {
-                        currentCity = `${location.name}${admin1}`; // Tên ngắn gọn hơn
-                        currentLat = location.latitude;
-                        currentLon = location.longitude;
                         
-                        fetchWeather(location.latitude, location.longitude, currentCity);
-                        fetchAQI(location.latitude, location.longitude); // Lấy AQI cho vị trí mới
+                        // ### SỬA LỖI TÊN KHI CLICK (BẮT ĐẦU) ###
+                        let simpleName = '';
+                        if (location.address) {
+                            // Ưu tiên tên chính
+                            const name = location.address.city || location.address.town || location.address.administrative || location.address.suburb || location.address.village || location.address.hamlet;
+                            // Tên tỉnh/huyện
+                            const state = location.address.state || location.address.county || '';
+                            
+                            // Ghép tên, lọc bỏ phần rỗng và trùng lặp
+                            const parts = [name, state].filter(Boolean);
+                            if (parts.length === 2 && parts[0] === parts[1]) {
+                                parts.pop(); // Bỏ bớt 1 nếu trùng (ví dụ: Hà Nội, Hà Nội)
+                            }
+                            simpleName = parts.join(', ');
+                        }
+                        
+                        // Fallback nếu logic trên thất bại
+                        if (!simpleName) {
+                            simpleName = location.display_name.split(',').slice(0, 2).join(', ');
+                        }
+                        // ### SỬA LỖI TÊN KHI CLICK (KẾT THÚC) ###
+
+                        currentCity = simpleName;
+                        currentLat = parseFloat(location.lat);
+                        currentLon = parseFloat(location.lon);
+                        
+                        fetchWeather(currentLat, currentLon, currentCity);
+                        fetchAQI(currentLat, currentLon); // Lấy AQI cho vị trí mới
                         
                         searchSuggestions.classList.add('hidden');
                         searchInput.value = '';
@@ -1130,22 +1231,46 @@
                 searchSuggestions.classList.remove('hidden');
             }
 
-            // --- Thêm hàm fetchCoordinates (SỬA LỖI) ---
+            // --- Thêm hàm fetchCoordinates (THAY ĐỔI: Dùng Nominatim, thêm addressdetails) ---
             async function fetchCoordinates(city) {
                 loadingSpinner.classList.remove('hidden');
                 try {
-                    const apiUrl = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1&language=vi&format=json`;
+                    // Sử dụng Nominatim Search API
+                    // Thêm addressdetails=1 để lấy thông tin địa chỉ
+                    const apiUrl = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(city)}&format=json&limit=1&accept-language=vi&addressdetails=1`;
+                    
                     const response = await fetch(apiUrl);
-                    if (!response.ok) throw new Error('Không thể tìm thấy vị trí.');
+                    if (!response.ok) throw new Error('Không thể tìm thấy vị trí từ Nominatim.');
                     
                     const data = await response.json();
-                    if (data.results && data.results.length > 0) {
-                        const location = data.results[0];
+                    if (data && data.length > 0) {
+                        const location = data[0];
                         
-                        const admin1 = location.admin1 ? `, ${location.admin1}` : '';
-                        currentCity = `${location.name}${admin1}`; // Cập nhật tên
-                        currentLat = location.latitude;
-                        currentLon = location.longitude;
+                        // ### SỬA LỖI TÊN KHI SUBMIT (BẮT ĐẦU) ###
+                        let simpleName = '';
+                        if (location.address) {
+                            // Ưu tiên tên chính
+                            const name = location.address.city || location.address.town || location.address.administrative || location.address.suburb || location.address.village || location.address.hamlet;
+                            // Tên tỉnh/huyện
+                            const state = location.address.state || location.address.county || '';
+                            
+                            // Ghép tên, lọc bỏ phần rỗng và trùng lặp
+                            const parts = [name, state].filter(Boolean);
+                            if (parts.length === 2 && parts[0] === parts[1]) {
+                                parts.pop(); // Bỏ bớt 1 nếu trùng (ví dụ: Hà Nội, Hà Nội)
+                            }
+                            simpleName = parts.join(', ');
+                        }
+                        
+                        // Fallback nếu logic trên thất bại
+                        if (!simpleName) {
+                            simpleName = location.display_name.split(',').slice(0, 2).join(', ');
+                        }
+                        // ### SỬA LỖI TÊN KHI SUBMIT (KẾT THÚC) ###
+
+                        currentCity = simpleName; // Cập nhật tên
+                        currentLat = parseFloat(location.lat);
+                        currentLon = parseFloat(location.lon);
                         
                         fetchWeather(currentLat, currentLon, currentCity);
                         fetchAQI(currentLat, currentLon); // Lấy AQI cho vị trí mới
@@ -1372,6 +1497,12 @@
 
             // THÊM MỚI: Xử lý sự kiện định vị
             detectLocationButton.addEventListener('click', () => {
+                // Sửa đổi: Chỉ cần gọi hàm autoDetectLocation
+                autoDetectLocation();
+            });
+
+            // --- HÀM MỚI: Tự động định vị ---
+            function autoDetectLocation() {
                 if ('geolocation' in navigator) {
                     loadingSpinner.classList.remove('hidden'); // Hiện spinner ngay
                     navigator.geolocation.getCurrentPosition(
@@ -1384,13 +1515,10 @@
                         (error) => {
                             loadingSpinner.classList.add('hidden'); // Ẩn spinner nếu lỗi
                             
-                            // SỬA LỖI: Log 'error.message' và 'error.code'
                             console.error('Lỗi Geolocation:', error.message, `(Code: ${error.code})`);
                             
-                            // Cải thiện thông báo cho người dùng
                             let userMessage = 'Không thể lấy vị trí.';
                             if (error.code === 1) { // PERMISSION_DENIED
-                                // SỬA LỖI: Kiểm tra lỗi do policy
                                 if (error.message.includes('permissions policy')) {
                                     userMessage = 'Định vị đã bị tắt bởi chính sách của môi trường này.';
                                 } else {
@@ -1401,20 +1529,29 @@
                             } else if (error.code === 3) { // TIMEOUT
                                 userMessage = 'Hết thời gian chờ khi lấy vị trí.';
                             }
-                            showError(userMessage);
+                            
+                            // Thông báo lỗi VÀ tải dữ liệu mặc định
+                            showError(userMessage + ' Đang tải dữ liệu cho vị trí mặc định.');
+                            fetchWeather(currentLat, currentLon, currentCity);
+                            fetchAQI(currentLat, currentLon);
                         }
                     );
                 } else {
-                    showError('Trình duyệt của bạn không hỗ trợ định vị.');
+                    showError('Trình duyệt không hỗ trợ định vị. Đang tải dữ liệu mặc định.');
+                    // Tải dữ liệu mặc định nếu không có geolocation
+                    fetchWeather(currentLat, currentLon, currentCity);
+                    fetchAQI(currentLat, currentLon);
                 }
-            });
+            }
 
             // --- Khởi tạo ---
             applyTheme(currentTheme); // Áp dụng theme đã lưu
             setInterval(updateClock, 1000);
             updateClock();
-            fetchWeather(currentLat, currentLon, currentCity); // Tải dữ liệu ban đầu
-            fetchAQI(currentLat, currentLon); // Tải AQI ban đầu
+            
+            // --- THAY ĐỔI: Tự động dò vị trí khi tải ---
+            autoDetectLocation(); // Thay thế 2 lệnh fetch cũ
+            
             window.addEventListener('resize', adjustSectionHeights);
         });
     </script>
