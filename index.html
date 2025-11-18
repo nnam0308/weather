@@ -1,37 +1,58 @@
 <!DOCTYPE html>
-<html lang="vi" class=""> 
+<html lang="vi" class="">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="format-detection" content="telephone=no">
     <title>Ứng dụng Thời tiết</title>
     
-    <!-- Fonts -->
+    <!-- jsDelivr CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.0/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/material-symbols@0.14.1/index.min.css" rel="stylesheet">
+    <!-- Google Fonts (giữ nguyên vì jsDelivr không có fonts) -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet" />
-
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
     
     <!-- Tailwind Config -->
     <script>
-        window.onload = function() {
-            if (typeof tailwind !== 'undefined') {
-                tailwind.config = {
-                    darkMode: 'class',
-                    theme: {
-                        extend: {
-                            fontFamily: { sans: ['Inter', 'sans-serif'] },
-                            animation: { 'spin-slow': 'spin 10s linear infinite' }
-                        },
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { 
+                        sans: ['Inter', 'system-ui', 'sans-serif'] 
                     },
-                }
-            }
+                    animation: { 
+                        'spin-slow': 'spin 10s linear infinite',
+                        'slideUp': 'slideUp 0.5s ease-out forwards',
+                        'fall': 'fall linear infinite'
+                    },
+                    keyframes: {
+                        slideUp: {
+                            'from': { opacity: '0', transform: 'translateY(20px)' },
+                            'to': { opacity: '1', transform: 'translateY(0)' }
+                        },
+                        fall: {
+                            'to': { transform: 'translateY(110vh)' }
+                        }
+                    }
+                },
+            },
         }
     </script>
     
     <style>
+        /* CSS Reset */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
             transition: background 0.5s ease-in-out;
             position: relative;
             overflow-x: hidden;
@@ -63,10 +84,11 @@
         .weather-night-cloudy { background: linear-gradient(to bottom, #2F4F4F, #1E1E1E); }
         .weather-night-rainy, .weather-night-snowy, .weather-night-foggy { background: linear-gradient(to bottom, #0f2027, #203a43, #2c5364); }
 
-        /* Glassmorphism */
+        /* Glassmorphism với vendor prefixes */
         .glass-panel {
             background: rgba(255, 255, 255, 0.25); 
-            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            backdrop-filter: blur(12px); 
             border: 1px solid rgba(255, 255, 255, 0.3);
             box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
             transition: all 0.3s ease;
@@ -84,29 +106,148 @@
             border: 1px solid rgba(255, 255, 255, 0.05);
         }
 
-        /* Effects - Fix Black Artifacts */
-        #weather-effects-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; overflow: hidden; }
+        /* Effects */
+        #weather-effects-container { 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            pointer-events: none; 
+            z-index: 0; 
+            overflow: hidden; 
+        }
         
         .rain-drop { 
-            position: absolute; background: rgba(255,255,255,0.6); 
-            width: 2px; height: 25px; top: -25px; animation: fall linear infinite; 
-        }
-        @keyframes fall { to { transform: translateY(110vh); } }
-
-        /* Simplified Sun Effects to avoid black rendering */
-        .sun-glare {
-            position: absolute; top: -100px; right: -100px; width: 600px; height: 600px;
-            background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 70%);
-            border-radius: 50%; pointer-events: none;
+            position: absolute; 
+            background: rgba(255,255,255,0.6); 
+            width: 2px; 
+            height: 25px; 
+            top: -25px; 
+            -webkit-animation: fall linear infinite;
+            animation: fall linear infinite; 
         }
         
-        /* Animations */
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        .animate-slide-up { animation: slideUp 0.5s ease-out forwards; opacity: 0; }
-        .modal-entering { animation: modalZoomIn 0.2s ease-out forwards; }
-        .modal-exiting { animation: modalZoomOut 0.2s ease-out forwards; }
-        @keyframes modalZoomIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
-        @keyframes modalZoomOut { from { opacity: 1; transform: scale(1); } to { opacity: 0; transform: scale(0.95); } }
+        @-webkit-keyframes fall { 
+            to { 
+                -webkit-transform: translateY(110vh); 
+                transform: translateY(110vh); 
+            } 
+        }
+        
+        @keyframes fall { 
+            to { 
+                -webkit-transform: translateY(110vh); 
+                transform: translateY(110vh); 
+            } 
+        }
+
+        /* Sun Effects */
+        .sun-glare {
+            position: absolute; 
+            top: -100px; 
+            right: -100px; 
+            width: 600px; 
+            height: 600px;
+            background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 70%);
+            border-radius: 50%; 
+            pointer-events: none;
+        }
+        
+        /* Animations với vendor prefixes */
+        @-webkit-keyframes slideUp { 
+            from { 
+                opacity: 0; 
+                -webkit-transform: translateY(20px); 
+                transform: translateY(20px); 
+            } 
+            to { 
+                opacity: 1; 
+                -webkit-transform: translateY(0); 
+                transform: translateY(0); 
+            } 
+        }
+        
+        @keyframes slideUp { 
+            from { 
+                opacity: 0; 
+                -webkit-transform: translateY(20px); 
+                transform: translateY(20px); 
+            } 
+            to { 
+                opacity: 1; 
+                -webkit-transform: translateY(0); 
+                transform: translateY(0); 
+            } 
+        }
+        
+        .animate-slide-up {
+            -webkit-animation: slideUp 0.5s ease-out forwards;
+            animation: slideUp 0.5s ease-out forwards;
+            opacity: 0;
+        }
+        
+        .modal-entering { 
+            -webkit-animation: modalZoomIn 0.2s ease-out forwards;
+            animation: modalZoomIn 0.2s ease-out forwards; 
+        }
+        
+        .modal-exiting { 
+            -webkit-animation: modalZoomOut 0.2s ease-out forwards;
+            animation: modalZoomOut 0.2s ease-out forwards; 
+        }
+        
+        @-webkit-keyframes modalZoomIn { 
+            from { 
+                opacity: 0; 
+                -webkit-transform: scale(0.95); 
+                transform: scale(0.95); 
+            } 
+            to { 
+                opacity: 1; 
+                -webkit-transform: scale(1); 
+                transform: scale(1); 
+            } 
+        }
+        
+        @keyframes modalZoomIn { 
+            from { 
+                opacity: 0; 
+                -webkit-transform: scale(0.95); 
+                transform: scale(0.95); 
+            } 
+            to { 
+                opacity: 1; 
+                -webkit-transform: scale(1); 
+                transform: scale(1); 
+            } 
+        }
+        
+        @-webkit-keyframes modalZoomOut { 
+            from { 
+                opacity: 1; 
+                -webkit-transform: scale(1); 
+                transform: scale(1); 
+            } 
+            to { 
+                opacity: 0; 
+                -webkit-transform: scale(0.95); 
+                transform: scale(0.95); 
+            } 
+        }
+        
+        @keyframes modalZoomOut { 
+            from { 
+                opacity: 1; 
+                -webkit-transform: scale(1); 
+                transform: scale(1); 
+            } 
+            to { 
+                opacity: 0; 
+                -webkit-transform: scale(0.95); 
+                transform: scale(0.95); 
+            } 
+        }
     </style>
 </head>
 
@@ -224,7 +365,6 @@
             <section class="lg:col-span-2 glass-panel rounded-[2rem] p-8 shadow-lg animate-slide-up delay-500">
                 <h2 class="text-xl font-bold mb-6 flex items-center gap-2"><span class="material-symbols-rounded">tune</span> Chỉ số chi tiết</h2>
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <!-- Items detail... (Giữ nguyên cấu trúc cũ nhưng làm gọn code cho bạn dễ nhìn) -->
                     <div class="glass-item p-4 rounded-2xl flex flex-col justify-between h-full"><div class="flex items-center gap-2 mb-2"><span class="material-symbols-rounded text-blue-500">thermostat</span><span class="text-sm opacity-70">Nhiệt độ</span></div><div id="detail-temp" class="text-2xl font-bold">--</div></div>
                     <div class="glass-item p-4 rounded-2xl flex flex-col justify-between h-full"><div class="flex items-center gap-2 mb-2"><span class="material-symbols-rounded text-blue-500">device_thermostat</span><span class="text-sm opacity-70">Cảm giác</span></div><div id="detail-feels-like" class="text-2xl font-bold">--</div></div>
                     <div class="glass-item p-4 rounded-2xl flex flex-col justify-between h-full"><div class="flex items-center gap-2 mb-2"><span class="material-symbols-rounded text-blue-500">cloud</span><span class="text-sm opacity-70">Mây phủ</span></div><div id="detail-cloud-cover" class="text-2xl font-bold">--</div></div>
@@ -282,8 +422,7 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // --- CẤU HÌNH CDN ỔN ĐỊNH (Fix lỗi Vercel/Github) ---
-            // Sử dụng jsDelivr để proxy file từ GitHub, tránh bị chặn hotlink
+            // --- CẤU HÌNH CDN ỔN ĐỊNH (jsDelivr) ---
             const WEATHER_ICON_BASE = "https://cdn.jsdelivr.net/gh/nnam0308/weather@dfbb5f8d2777fdc675d333464f417a4b75c2a3b3/v4/";
 
             const searchForm = document.getElementById('search-form');
@@ -312,6 +451,8 @@
 
             let currentCity = "Nha Trang";
             let currentTheme = localStorage.getItem('theme') || 'system';
+            let currentLat = 12.238791;
+            let currentLon = 109.196749;
             let searchTimeout;
 
             // --- ICON LOGIC (SỬ DỤNG ẢNH SVG TỪ CDN) ---
@@ -347,7 +488,7 @@
                 weatherEffectsContainer.innerHTML = ''; 
                 // Rain
                 if ((weatherCode >= 51 && weatherCode <= 67) || (weatherCode >= 80 && weatherCode <= 82) || weatherCode >= 95) {
-                    const rainCount = 60; // Reduced count for performance
+                    const rainCount = 60;
                     for (let i = 0; i < rainCount; i++) {
                         const drop = document.createElement('div');
                         drop.classList.add('rain-drop');
@@ -356,19 +497,6 @@
                         drop.style.animationDelay = Math.random() * 2 + 's';
                         weatherEffectsContainer.appendChild(drop);
                     }
-                }
-                // Thunder
-                if (weatherCode >= 95) {
-                    const thunder = document.createElement('div');
-                    thunder.classList.add('thunder-flash');
-                    setInterval(() => {
-                        if(Math.random() > 0.7) {
-                            thunder.style.animation = 'none';
-                            thunder.offsetHeight; 
-                            thunder.style.animation = 'flash 0.5s ease-out';
-                        }
-                    }, 5000); // Slower interval
-                    weatherEffectsContainer.appendChild(thunder);
                 }
                 // Sun Glare (Only Day & Clear)
                 if (isDay && weatherCode <= 1) {
@@ -490,7 +618,6 @@
                 animateCountUp(currentTempEl, cur.temperature_2m, '°');
                 currentConditionEl.textContent = getWeatherDescription(cur.weathercode);
                 
-                // CẬP NHẬT: Dùng thẻ IMG thay vì Inline SVG để hiện ảnh gốc đẹp hơn
                 currentWeatherIconContainer.innerHTML = `<img src="${getWeatherIconURL(cur.weathercode, hour)}" class="w-full h-full object-contain drop-shadow-lg animate-slide-up" alt="Weather Icon">`;
                 
                 const details = {
@@ -530,7 +657,6 @@
                     const hCode = data.hourly.weathercode[i];
                     const hTemp = Math.round(data.hourly.temperature_2m[i]);
                     
-                    // Create element with IMG tag
                     const div = document.createElement('div');
                     div.className = "glass-item min-w-[6rem] p-3 rounded-2xl text-center flex flex-col items-center justify-center";
                     div.innerHTML = `
