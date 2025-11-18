@@ -167,7 +167,6 @@
             </div>
             
             <!-- Giữa: Detect & Search -->
-            <!-- THAY ĐỔI: Thêm flex, items-center, gap-2 -->
             <div class="col-span-1 flex justify-center items-center gap-2">
                 
                 <!-- NÚT MỚI: Định vị -->
@@ -180,7 +179,7 @@
                     </span>
                 </button>
 
-                <!-- Thanh Search (giữ nguyên) -->
+                <!-- Thanh Search -->
                 <form id="search-form" class="w-full max-w-md relative">
                     <div class="relative">
                         <!-- Icon SVG thay thế -->
@@ -341,7 +340,7 @@
                     <iframe 
                         id="weather-map"
                         class="w-full flex-1 rounded-2xl border border-slate-200 dark:border-slate-700"
-                        src="https://embed.windy.com/embed.html?type=map&location=coordinates&metricWind=kmh&metricTemp=°C&radarRange=-1&lat=12.2388&lon=109.1967&zoom=9" 
+                        src="about:blank" 
                         frameborder="0">
                     </iframe>
                 </section>
@@ -351,7 +350,7 @@
             <section id="weather-details-section" 
                      class="lg:col-span-2 bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm p-6 rounded-3xl shadow-lg animate-slide-up" 
                      style="animation-delay: 0.5s;">
-                <h2 class="text-xl font-bold mb-4">Weather Details</h2>
+                <h2 class="text-xl font-bold mb-4">Chi tiết thời tiết</h2>
                 
                 <!-- Grid 4 cột -->
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -417,7 +416,7 @@
                     <div class="flex items-center gap-2 p-3 bg-slate-100/70 dark:bg-slate-700/70 rounded-xl">
                         <span class="material-symbols-rounded text-blue-500">aq_indoor</span>
                         <div>
-                            <div>Chỉ số chất lượng không khí (AQI)</div>
+                            <div>Chỉ số không khí (AQI)</div>
                             <div id="detail-aqi" class="font-bold">--</div>
                         </div>
                     </div>
@@ -442,7 +441,7 @@
                     <div class="flex items-center gap-2 p-3 bg-slate-100/70 dark:bg-slate-700/70 rounded-xl">
                         <span class="material-symbols-rounded text-blue-500">light_mode</span>
                         <div>
-                            <div>Mặt trời (Giờ mọc / Giờ lặn)</div>
+                            <div>Mặt trời (Mọc / Lặn)</div>
                             <div id="detail-sun" class="font-bold">--:-- / --:--</div>
                         </div>
                     </div>
@@ -450,7 +449,7 @@
                     <div class="flex items-center gap-2 p-3 bg-slate-100/70 dark:bg-slate-700/70 rounded-xl">
                         <span class="material-symbols-rounded text-blue-500">dark_mode</span>
                         <div>
-                            <div>Mặt trăng (Giờ mọc / Giờ lặn)</div>
+                            <div>Mặt trăng (Mọc / Lặn)</div>
                             <div id="detail-moon" class="font-bold">--:-- / --:--</div>
                         </div>
                     </div>
@@ -550,7 +549,6 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             // --- URL Icon SVG ---
-            // Đã cập nhật với đường dẫn của bạn
             const GITHUB_BASE_URL = "https://raw.githubusercontent.com/nnam0308/weather/dfbb5f8d2777fdc675d333464f417a4b75c2a3b3/v4/";
 
             // --- Biến DOM ---
@@ -593,7 +591,7 @@
             const mapCloseButton = document.getElementById('map-close-button');
             const fullWeatherMap = document.getElementById('full-weather-map');
 
-            // THÊM MỚI: Nút định vị
+            // Nút định vị
             const detectLocationButton = document.getElementById('detect-location-button');
 
             // Modal Cài đặt
@@ -613,13 +611,10 @@
             let searchTimeout;
             let currentTheme = localStorage.getItem('theme') || 'system';
 
-            // --- HÀM MỚI: Hiệu ứng đếm số ---
+            // --- HÀM TIỆN ÍCH: Hiệu ứng đếm số ---
             function animateCountUp(el, targetValue, unit = '', duration = 1000) {
-                // Đảm bảo targetValue là một số hợp lệ
                 const target = Math.round(targetValue);
                 if (isNaN(target)) {
-                    // Nếu target không phải số (ví dụ: '--'), chỉ cần gán
-                    // Kiểm tra giá trị không hợp lệ (ví dụ: UV)
                     if (typeof targetValue === 'string') {
                          el.textContent = targetValue;
                     } else {
@@ -628,18 +623,15 @@
                     return;
                 }
 
-                // Lấy giá trị bắt đầu từ textContent
                 let startValue = 0;
                 const currentText = el.textContent;
                 if (currentText) {
-                    // Thử parse số từ text (ví dụ: "10°C" -> 10)
                     const parsed = parseInt(currentText, 10);
                     if (!isNaN(parsed)) {
                         startValue = parsed;
                     }
                 }
 
-                // Nếu giá trị bắt đầu và kết thúc giống nhau, không cần đếm
                 if (startValue === target) {
                     el.textContent = `${target}${unit}`;
                     return;
@@ -649,8 +641,6 @@
                 const step = (timestamp) => {
                     if (!startTime) startTime = timestamp;
                     const progress = Math.min((timestamp - startTime) / duration, 1);
-                    
-                    // Tính toán giá trị hiện tại
                     const currentValue = Math.floor(progress * (target - startValue) + startValue);
                     
                     el.textContent = `${currentValue}${unit}`;
@@ -658,17 +648,13 @@
                     if (progress < 1) {
                         window.requestAnimationFrame(step);
                     } else {
-                        // Đảm bảo giá trị cuối cùng chính xác
                         el.textContent = `${target}${unit}`;
                     }
                 };
                 window.requestAnimationFrame(step);
             }
 
-
             // --- Cài đặt & Theme ---
-            
-            // Hàm áp dụng theme
             function applyTheme(theme) {
                 const hour = new Date().getHours();
                 if (theme === 'dark') {
@@ -676,13 +662,11 @@
                 } else if (theme === 'light') {
                     document.documentElement.classList.remove('dark');
                 } else if (theme === 'system') {
-                    // Xóa class cũ, lắng nghe thay đổi của hệ thống
                     document.documentElement.classList.remove('dark');
                     if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
                         document.documentElement.classList.add('dark');
                     }
                 } else if (theme === 'clock') {
-                    // 6 PM (18) -> 6 AM (6) là ban đêm
                     if (hour >= 18 || hour < 6) {
                         document.documentElement.classList.add('dark');
                     } else {
@@ -691,23 +675,19 @@
                 }
             }
 
-            // Lắng nghe thay đổi theme hệ thống
             window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
                 if (currentTheme === 'system') {
                     applyTheme('system');
                 }
             });
             
-            // Xử lý logic menu cài đặt
             settingsButton.addEventListener('click', () => {
                 settingsMenuContainer.classList.remove('hidden');
             });
 
             settingsMenuContainer.addEventListener('click', (e) => {
-                // Đóng khi nhấp ra ngoài
                 if (e.target === settingsMenuContainer) {
                     settingsMenuContainer.classList.add('hidden');
-                    // Reset về menu chính
                     settingsMainMenu.classList.remove('hidden');
                     settingsThemeMenu.classList.add('hidden');
                 }
@@ -730,13 +710,11 @@
                     localStorage.setItem('theme', theme);
                     applyTheme(theme);
                     settingsMenuContainer.classList.add('hidden');
-                    // Reset về menu chính
                     settingsMainMenu.classList.remove('hidden');
                     settingsThemeMenu.classList.add('hidden');
                 });
             });
 
-            // --- Cập nhật Đồng hồ ---
             function updateClock() {
                 const now = new Date();
                 const optionsDate = { weekday: 'long', day: 'numeric', month: 'numeric', year: 'numeric' };
@@ -747,52 +725,41 @@
                 if (headerDate) headerDate.textContent = dateString;
                 if (currentTimeDateEl) currentTimeDateEl.textContent = `${timeString} - ${dateString}`;
 
-                // Tự động cập nhật theme nếu ở chế độ "Theo đồng hồ"
                 if (currentTheme === 'clock') {
                     applyTheme('clock');
                 }
             }
 
-            // --- Điều chỉnh Chiều cao ---
             function adjustSectionHeights() {
                 requestAnimationFrame(() => {
                     const infoHeight = currentInfoSection.offsetHeight;
                     
-                    if (window.innerWidth >= 1024) { // lg
-                        // Xóa style 'height' cũ (nếu có) để Tailwind hoạt động
+                    if (window.innerWidth >= 1024) {
                         dailyForecastSection.style.height = '';
                         weatherMapSection.style.height = '';
-
-                        // Set mục hàng giờ = mục thông tin
-                        if (infoHeight > 200) { // Đảm bảo có chiều cao hợp lý
+                        if (infoHeight > 200) {
                              hourlyForecastSection.style.minHeight = `${infoHeight}px`;
                         }
-
-                        // Cập nhật chiều cao iframe bản đồ (đã bị cố định bởi 360px)
                         const mapTitle = weatherMapSection.querySelector('h2');
                         if (mapTitle) {
                             const mapTitleHeight = mapTitle.offsetHeight;
-                            const paddingAndTitleHeight = (24 * 2) + 16 + mapTitleHeight; // p-6, mb-4
+                            const paddingAndTitleHeight = (24 * 2) + 16 + mapTitleHeight; 
                             const newMapHeight = 360 - paddingAndTitleHeight;
-                            
                             if (newMapHeight > 100) {
                                 weatherMapEl.style.height = `${newMapHeight}px`;
                             } else {
-                                weatherMapEl.style.height = `250px`; // Fallback
+                                weatherMapEl.style.height = `250px`;
                             }
                         }
-
                     } else {
-                        // Xóa chiều cao cố định trên di động
                         hourlyForecastSection.style.minHeight = 'auto';
                         dailyForecastSection.style.height = 'auto';
                         weatherMapSection.style.height = 'auto';
-                        weatherMapEl.style.height = `250px`; // Reset
+                        weatherMapEl.style.height = `250px`;
                     }
                 });
             }
 
-            // --- Hiển thị Lỗi ---
             function showError(message) {
                 errorTextEl.textContent = message;
                 errorMessageEl.classList.remove('hidden');
@@ -801,50 +768,43 @@
                 }, 3000);
             }
 
-            // --- HÀM MỚI: Xử lý lỗi Fetch ---
             function handleFetchError(error, context) {
                 console.error(`Lỗi trong ${context}:`, error);
                 let userMessage = 'Đã xảy ra lỗi.';
                 
-                // Cải thiện thông báo lỗi "Failed to fetch"
                 if (error.message.includes('Failed to fetch')) {
-                    userMessage = 'Lỗi mạng: Không thể tải dữ liệu. Vui lòng kiểm tra kết nối và đảm bảo bạn đang dùng HTTPS.';
+                    userMessage = 'Lỗi mạng: Không thể tải dữ liệu. Vui lòng kiểm tra kết nối.';
                 } else if (error.message) {
-                    // Hiển thị các lỗi khác (ví dụ: 'Không thể tìm thấy vị trí.')
                     userMessage = error.message;
                 }
                 showError(userMessage);
             }
 
-            // --- Hàm trợ giúp (Nền, Icon, Mô tả) ---
+            // --- LOGIC THỜI TIẾT ---
 
             function getWeatherBackgroundClass(code) {
                 const now = new Date();
                 const hour = now.getHours();
                 let timeOfDay;
 
-                // 1. Xác định thời gian trong ngày
-                if (hour >= 5 && hour < 10) timeOfDay = 'morning';    // 5:00 - 9:59
-                else if (hour >= 10 && hour < 17) timeOfDay = 'day';  // 10:00 - 16:59
-                else if (hour >= 17 && hour < 20) timeOfDay = 'evening'; // 17:00 - 19:59
-                else timeOfDay = 'night';                              // 20:00 - 4:59
+                if (hour >= 5 && hour < 10) timeOfDay = 'morning';
+                else if (hour >= 10 && hour < 17) timeOfDay = 'day';
+                else if (hour >= 17 && hour < 20) timeOfDay = 'evening';
+                else timeOfDay = 'night';
 
-                // 2. Xác định loại thời tiết
                 let weatherType;
-                if ([0, 1].includes(code)) weatherType = 'sunny'; // Nắng
-                else if ([2, 3].includes(code)) weatherType = 'cloudy'; // Mây
-                else if ([45, 48].includes(code)) weatherType = 'foggy'; // Sương mù
-                else if (code >= 51 && code <= 67) weatherType = 'rainy'; // Mưa
-                else if (code >= 71 && code <= 77) weatherType = 'snowy'; // Tuyết
-                else if (code >= 80) weatherType = 'rainy'; // Mưa rào/Dông (tính là mưa)
-                else weatherType = 'cloudy'; // Mặc định
+                if ([0, 1].includes(code)) weatherType = 'sunny';
+                else if ([2, 3].includes(code)) weatherType = 'cloudy';
+                else if ([45, 48].includes(code)) weatherType = 'foggy';
+                else if (code >= 51 && code <= 67) weatherType = 'rainy';
+                else if (code >= 71 && code <= 77) weatherType = 'snowy';
+                else if (code >= 80) weatherType = 'rainy';
+                else weatherType = 'cloudy';
 
-                // 3. Xử lý trường hợp đặc biệt
                 if (timeOfDay === 'night' && weatherType === 'sunny') {
-                    weatherType = 'clear'; // Trời quang ban đêm
+                    weatherType = 'clear';
                 }
                 if (['foggy', 'snowy'].includes(weatherType)) {
-                     // Sương mù và tuyết dùng chung màu với mưa
                     weatherType = 'rainy';
                 }
 
@@ -852,32 +812,29 @@
             }
 
             function getWeatherIcon(code, hour) {
-                // Mặc định là ban ngày (nếu không cung cấp giờ)
                 const isNight = (hour >= 20 || hour < 6);
-
-                // Mã WMO -> Tên file SVG của bạn
                 const icons = {
-                    0: isNight ? 'clear_night.svg' : 'clear_day.svg', // Trời quang
-                    1: isNight ? 'mostly_clear_night.svg' : 'mostly_clear_day.svg', // Gần quang
-                    2: isNight ? 'partly_cloudy_night.svg' : 'partly_cloudy_day.svg', // Mây rải rác
-                    3: 'cloudy.svg', // Trời u ám
-                    45: 'haze_fog_dust_smoke.svg', // Sương mù
-                    48: 'haze_fog_dust_smoke.svg', // Sương mù đọng
-                    51: 'drizzle.svg', // Mưa phùn nhẹ
-                    53: 'drizzle.svg', // Mưa phùn vừa
-                    55: 'drizzle.svg', // Mưa phùn dày
-                    61: isNight ? 'rain_with_cloudy_dark.svg' : 'rain_with_cloudy_light.svg', // Mưa nhẹ
-                    63: 'showers_rain.svg', // Mưa vừa
-                    65: 'heavy_rain.svg', // Mưa to
-                    71: isNight ? 'snow_with_cloudy_dark.svg' : 'snow_with_cloudy_light.svg', // Tuyết rơi nhẹ
-                    73: 'showers_snow.svg', // Tuyết rơi vừa
-                    75: 'heavy_snow.svg', // Tuyết rơi dày
-                    80: isNight ? 'scattered_showers_night.svg' : 'scattered_showers_day.svg', // Mưa rào nhẹ
-                    81: 'showers_rain.svg', // Mưa rào vừa
-                    82: 'heavy_rain.svg', // Mưa rào dữ dội
-                    95: isNight ? 'isolated_scattered_thunderstorms_night.svg' : 'isolated_scattered_thunderstorms_day.svg', // Dông
+                    0: isNight ? 'clear_night.svg' : 'clear_day.svg',
+                    1: isNight ? 'mostly_clear_night.svg' : 'mostly_clear_day.svg',
+                    2: isNight ? 'partly_cloudy_night.svg' : 'partly_cloudy_day.svg',
+                    3: 'cloudy.svg',
+                    45: 'haze_fog_dust_smoke.svg',
+                    48: 'haze_fog_dust_smoke.svg',
+                    51: 'drizzle.svg',
+                    53: 'drizzle.svg',
+                    55: 'drizzle.svg',
+                    61: isNight ? 'rain_with_cloudy_dark.svg' : 'rain_with_cloudy_light.svg',
+                    63: 'showers_rain.svg',
+                    65: 'heavy_rain.svg',
+                    71: isNight ? 'snow_with_cloudy_dark.svg' : 'snow_with_cloudy_light.svg',
+                    73: 'showers_snow.svg',
+                    75: 'heavy_snow.svg',
+                    80: isNight ? 'scattered_showers_night.svg' : 'scattered_showers_day.svg',
+                    81: 'showers_rain.svg',
+                    82: 'heavy_rain.svg',
+                    95: isNight ? 'isolated_scattered_thunderstorms_night.svg' : 'isolated_scattered_thunderstorms_day.svg',
                 };
-                return GITHUB_BASE_URL + (icons[code] || 'cloudy.svg'); // Mặc định
+                return GITHUB_BASE_URL + (icons[code] || 'cloudy.svg');
             }
 
             function getWeatherDescription(code) {
@@ -905,22 +862,6 @@
                 return descriptions[code] || 'Không xác định';
             }
 
-            // Hàm mô tả Giai đoạn Mặt trăng (MỚI)
-            function getMoonPhaseDescription(value) {
-                if (value === null || typeof value === 'undefined' || value === 'N/A') return 'N/A';
-                
-                if (value === 0) return 'Trăng non';
-                if (value > 0 && value < 0.25) return 'Trăng lưỡi liềm đầu tháng';
-                if (value === 0.25) return 'Trăng bán nguyệt đầu tháng';
-                if (value > 0.25 && value < 0.5) return 'Trăng khuyết đầu tháng';
-                if (value === 0.5) return 'Trăng tròn';
-                if (value > 0.5 && value < 0.75) return 'Trăng khuyết cuối tháng';
-                if (value === 0.75) return 'Trăng bán nguyệt cuối tháng';
-                if (value > 0.75 && value < 1) return 'Trăng lưỡi liềm cuối tháng';
-                return 'Trăng non'; // Gần 1 là quay về 0
-            }
-            
-            // --- SỬA LỖI: Hoàn thiện lại hàm này ---
             function getUvDescription(uv) {
                 if (uv === null || typeof uv === 'undefined') return '--';
                 if (uv <= 2) return `Thấp (${uv})`;
@@ -930,183 +871,124 @@
                 return `Cực cao (${uv})`;
             }
 
-            // Hàm tạo và chèn thẻ <img>
             function createWeatherIcon(src) {
                 const img = document.createElement('img');
                 img.className = 'weather-icon';
                 img.src = src;
                 img.alt = "Weather Icon";
-                img.onload = () => img.classList.add('loaded'); // Thêm class khi tải xong
+                img.onload = () => img.classList.add('loaded');
                 return img;
             }
 
-            // --- Lấy dữ liệu AQI (MỚI) ---
             async function fetchAQI(lat, lon) {
                 try {
                     const aqiApiUrl = `https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${lat}&longitude=${lon}&current=us_aqi&timezone=auto`;
                     const response = await fetch(aqiApiUrl);
                     
-                    // --- SỬA LỖI: Thêm log chi tiết ---
-                    if (!response.ok) {
-                        let errorDetails = `Lỗi ${response.status}: ${response.statusText}`;
-                         try {
-                            const errorData = await response.json();
-                            if (errorData && errorData.reason) {
-                                errorDetails = errorData.reason;
-                            }
-                        } catch (e) { /* Bỏ qua */ }
-                        console.error('Lỗi khi gọi API Air-Quality (fetchAQI):', errorDetails, 'URL:', aqiApiUrl);
-                        // Không ném lỗi, chỉ log và set N/A
-                        throw new Error(`Không thể tải dữ liệu AQI. ${errorDetails}`);
-                    }
-                    // --- KẾT THÚC SỬA LỖI ---
-
+                    if (!response.ok) throw new Error(`Không thể tải dữ liệu AQI.`);
                     const data = await response.json();
+                    if (data.error) throw new Error(data.reason);
                     
-                    // --- SỬA LỖI: Kiểm tra data.error ---
-                    if (data.error) {
-                        console.error('Lỗi API AQI (data.error):', data.reason);
-                        throw new Error(data.reason || 'Lỗi không xác định từ API chất lượng không khí');
-                    }
-                    // --- KẾT THÚC SỬA LỖI ---
-                    
-                    // Cập nhật UI ngay lập tức
                     const aqi = data.current?.us_aqi || 'N/A';
                     const aqiEl = document.getElementById('detail-aqi');
                     if (aqiEl) aqiEl.textContent = aqi;
 
                 } catch (error) {
-                    // CẬP NHẬT: Sử dụng handleFetchError
                     handleFetchError(error, 'fetchAQI');
                     const aqiEl = document.getElementById('detail-aqi');
                     if (aqiEl) aqiEl.textContent = 'N/A';
                 }
             }
 
-            // --- THAY ĐỔI: Lấy tên vị trí từ tọa độ (Dùng Nominatim) ---
+            // --- QUAN TRỌNG: ĐỊNH VỊ VÀ TÌM KIẾM ---
+
+            // 1. Reverse Geocoding (BigDataCloud): Chỉ lấy địa danh hành chính
             async function fetchLocationName(lat, lon) {
-                // loadingSpinner đã được hiển thị bởi event listener
                 try {
-                    // Sử dụng Nominatim API
-                    const apiUrl = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&accept-language=vi`;
+                    const apiUrl = `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=vi`;
                     
                     const response = await fetch(apiUrl);
-                    if (!response.ok) throw new Error('Không thể lấy tên vị trí từ Nominatim.');
+                    if (!response.ok) throw new Error('Không thể lấy tên vị trí từ BigDataCloud.');
                     
                     const data = await response.json();
-
-                    if (!data || !data.address) {
-                        throw new Error('Không nhận được dữ liệu địa chỉ hợp lệ từ Nominatim.');
-                    }
                     
-                    const address = data.address;
-                    
-                    // Xây dựng tên vị trí theo yêu cầu: xã/phường – thành phố – tỉnh – quốc gia
-                    // Ưu tiên 'suburb' (phường), fallback về 'village' (xã) hoặc 'hamlet' (thôn)
-                    const suburb = address.suburb || address.village || address.hamlet || ''; 
-                    const city = address.city || address.town || ''; // Thành phố hoặc thị xã
-                    const state = address.state || ''; // Tỉnh
-                    const country = address.country || ''; // Quốc gia
+                    let locationName = '';
 
-                    // Ghép chuỗi, loại bỏ các phần trống và dấu phẩy thừa
-                    // Lọc ra các phần có giá trị (không rỗng)
-                    const parts = [suburb, city, state, country].filter(part => part && part.trim() !== ''); 
-                    let locationName = parts.join(', '); // Nối các phần bằng dấu phẩy
+                    // Sử dụng localityInfo để lấy chính xác các cấp hành chính
+                    if (data.localityInfo && data.localityInfo.administrative) {
+                        const adminData = data.localityInfo.administrative;
+                        
+                        // Sắp xếp: Level cao (đơn vị nhỏ) lên đầu (vd: Xã > Huyện > Tỉnh)
+                        adminData.sort((a, b) => b.adminLevel - a.adminLevel);
 
-                    if (!locationName) {
-                        // Fallback nếu không có phần nào
-                        locationName = data.display_name || 'Vị trí không xác định';
+                        // Tìm các cấp quan trọng
+                        // Level 8-10: Thường là Phường, Xã, Thị trấn
+                        const localLevel = adminData.find(item => item.adminLevel >= 8) || adminData[0]; 
+                        
+                        // Level 6: Quận, Huyện
+                        const districtLevel = adminData.find(item => item.adminLevel === 6);
+                        
+                        // Level 4: Tỉnh, Thành phố TW
+                        const provinceLevel = adminData.find(item => item.adminLevel === 4);
+
+                        const parts = [];
+                        if (localLevel && localLevel.name) parts.push(localLevel.name);
+                        
+                        // Thêm Huyện nếu khác Xã
+                        if (districtLevel && districtLevel.name && districtLevel.name !== localLevel?.name) {
+                            parts.push(districtLevel.name);
+                        }
+                        
+                        // Thêm Tỉnh nếu khác Huyện
+                        if (provinceLevel && provinceLevel.name && provinceLevel.name !== districtLevel?.name) {
+                            parts.push(provinceLevel.name);
+                        }
+                        
+                        // Nếu danh sách quá ngắn (chỉ có 1 cấp), fallback dùng các trường khác
+                        if (parts.length === 0) {
+                             locationName = data.locality || data.city || data.principalSubdivision || "Vị trí không xác định";
+                        } else {
+                             // Chỉ lấy tối đa 2 cấp quan trọng nhất để hiển thị đẹp
+                             // Ví dụ: "Phường X, Quận Y" hoặc "Quận Y, Thành phố Z"
+                             if (parts.length > 2) {
+                                 locationName = `${parts[0]}, ${parts[1]}`; 
+                             } else {
+                                 locationName = parts.join(', ');
+                             }
+                        }
+                    } else {
+                        // Fallback cũ
+                        locationName = [data.locality, data.city, data.principalSubdivision].filter(Boolean).join(', ');
                     }
 
-                    // Cập nhật trạng thái global
-                    currentCity = locationName; // Hiển thị tên đầy đủ
+                    currentCity = locationName || "Vị trí không xác định";
                     currentLat = lat;
                     currentLon = lon;
 
-                    // Gọi các hàm fetch khác với tên và tọa độ mới
-                    fetchWeather(lat, lon, locationName);
+                    fetchWeather(lat, lon, currentCity);
                     fetchAQI(lat, lon);
 
                 } catch (error) {
-                    // CẬP NHẬT: Sử dụng handleFetchError
-                    handleFetchError(error, 'fetchLocationName');
-                    loadingSpinner.classList.add('hidden'); // Phải ẩn spinner ở đây nếu lỗi
-                }
-                // fetchWeather() sẽ tự ẩn spinner nếu nó chạy thành công
-            }
-
-            // --- Lấy dữ liệu thời tiết ---
-            async function fetchWeather(lat, lon, city) {
-                loadingSpinner.classList.remove('hidden');
-                try {
-                    // --- SỬA LỖI v2: Đã loại bỏ moon_phase khỏi URL ---
-                    const apiUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relativehumidity_2m,weathercode,windspeed_10m,pressure_msl,dewpoint_2m,visibility,uv_index,apparent_temperature,cloudcover,precipitation&hourly=temperature_2m,weathercode,temperature_80m,precipitation_probability&daily=weathercode,temperature_2m_max,temperature_2m_min,sunrise,sunset&timezone=auto&forecast_days=14`;
-                    
-                    const response = await fetch(apiUrl);
-
-                    // --- SỬA LỖI: Thêm log chi tiết ---
-                    if (!response.ok) {
-                        let errorDetails = `Lỗi ${response.status}: ${response.statusText}`;
-                        try {
-                            // Thử đọc chi tiết lỗi từ API (nếu có)
-                            const errorData = await response.json();
-                            if (errorData && errorData.reason) {
-                                errorDetails = errorData.reason;
-                            }
-                        } catch (e) {
-                            // Bỏ qua nếu không thể parse JSON
-                        }
-                        // Log lỗi chi tiết vào console
-                        console.error('Lỗi khi gọi API Open-Meteo (fetchWeather):', errorDetails, 'URL:', apiUrl);
-                        // Ném lỗi với thông báo chi tiết hơn
-                        throw new Error(`Không thể tải dữ liệu thời tiết. ${errorDetails}`);
-                    }
-                    // --- KẾT THÚC SỬA LỖI ---
-                    
-                    const data = await response.json();
-
-                    // --- SỬA LỖI: Kiểm tra data.error ---
-                    if (data.error) {
-                        console.error('Lỗi API Thời tiết (data.error):', data.reason);
-                        throw new Error(data.reason || 'Lỗi không xác định từ API thời tiết');
-                    }
-                    // --- KẾT THÚC SỬA LỖI ---
-                    
-                    updateCurrentWeatherUI(data, city);
-                    updateHourlyForecastUI(data);
-                    updateDailyForecastUI(data);
-                    
-                    // Cập nhật bản đồ
-                    weatherMapEl.src = `https://embed.windy.com/embed.html?type=map&location=coordinates&metricWind=kmh&metricTemp=°C&radarRange=-1&lat=${lat}&lon=${lon}&zoom=9`;
-
-                    // Điều chỉnh chiều cao sau khi có dữ liệu
-                    adjustSectionHeights();
-
-                } catch (error) {
-                    // CẬP NHẬT: Sử dụng handleFetchError
-                    handleFetchError(error, 'fetchWeather');
-                } finally {
+                    handleFetchError(error, 'fetchLocationName (BDC)');
                     loadingSpinner.classList.add('hidden');
                 }
-            } // <-- SỬA LỖI: THÊM DẤU NGOẶC } CÒN THIẾU
+            }
 
-            // --- Lấy gợi ý địa điểm (THAY ĐỔI: Dùng Nominatim, tăng limit và thêm filter) ---
+            // 2. Search (Open-Meteo): Lọc bỏ Khách sạn, Sân bay, Địa điểm
             async function fetchSuggestions(query) {
                 try {
-                    // Sử dụng Nominatim Search API
-                    // Tăng limit lên 20 để có nhiều kết quả hơn để lọc
-                    // Thêm addressdetails=1 để lấy thông tin chi tiết địa chỉ
-                    const apiUrl = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=20&accept-language=vi&addressdetails=1`;
+                    // Sử dụng Open-Meteo Geocoding
+                    // count=20 để lấy nhiều kết quả rồi lọc sau
+                    const apiUrl = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(query)}&count=20&language=vi&format=json`;
                     
                     const response = await fetch(apiUrl);
-                    if (!response.ok) throw new Error('Lỗi mạng khi tìm gợi ý từ Nominatim.');
+                    if (!response.ok) throw new Error('Lỗi mạng khi tìm gợi ý.');
                     
                     const data = await response.json();
-                    displaySuggestions(data || []); // data là một mảng các results
+                    displaySuggestions(data.results || []); 
 
                 } catch (error) {
-                    // CẬP NHẬT: Sử dụng handleFetchError
-                    handleFetchError(error, 'fetchSuggestions');
+                    handleFetchError(error, 'fetchSuggestions (Open-Meteo)');
                     searchSuggestions.classList.add('hidden');
                 }
             }
@@ -1114,112 +996,70 @@
             function displaySuggestions(results) {
                 searchSuggestions.innerHTML = '';
 
-                // --- BỘ LỌC MỚI: Chỉ giữ lại các đơn vị hành chính ---
-                const allowedTypes = [
-                    'administrative', 'city', 'town', 'village', 
-                    'suburb', 'hamlet', 'state', 'country', 'county'
-                ];
-                
-                const filteredResults = results.filter(location => {
-                    // Giữ lại nếu 'class' là 'boundary' (ranh giới, ví dụ: tỉnh, huyện)
-                    if (location.class === 'boundary') return true;
-                    
-                    // Giữ lại nếu 'class' là 'place' VÀ 'type' nằm trong danh sách cho phép
-                    if (location.class === 'place' && allowedTypes.includes(location.type)) {
-                        return true;
-                    }
-                    
-                    // Lọc bỏ các loại khác (amenity, shop, tourism, v.v.)
-                    return false;
-                }).slice(0, 10); // Lấy 10 kết quả hàng đầu SAU khi lọc
-
-                // --- BỘ LỌC TRÙNG LẶP MỚI ---
-                const uniqueDisplayNames = new Set();
-                const uniqueResults = filteredResults.filter(location => {
-                    const displayName = location.display_name || '';
-                    if (!uniqueDisplayNames.has(displayName)) {
-                        uniqueDisplayNames.add(displayName);
-                        return true;
-                    }
-                    return false;
-                });
-                // --- KẾT THÚC BỘ LỌC TRÙNG LẶP ---
-
-                if (uniqueResults.length === 0) { // Sửa: Dùng uniqueResults
+                if (!results || results.length === 0) {
                     searchSuggestions.classList.add('hidden');
                     return;
                 }
 
-                uniqueResults.forEach(location => { // Sửa: Dùng uniqueResults
+                // --- BỘ LỌC MỚI (STRICT FILTER) ---
+                const filteredResults = results.filter(item => {
+                    // Kiểm tra feature_code (Mã phân loại địa danh của GeoNames/Open-Meteo)
+                    // P: Populated Place (Thành phố, Thị trấn, Làng mạc...) -> GIỮ
+                    // A: Administrative Division (Tỉnh, Bang, Vùng...) -> GIỮ
+                    // S, L, T, V, R...: Spot, Park, Mountain, Road... -> LOẠI BỎ
+                    if (item.feature_code) {
+                        return item.feature_code.startsWith('P') || item.feature_code.startsWith('A');
+                    }
+                    // Nếu không có feature_code (hiếm), giữ lại an toàn
+                    return true;
+                });
+
+                // Lọc trùng lặp
+                const uniqueResults = [];
+                const seen = new Set();
+
+                filteredResults.forEach(item => {
+                    // Tạo khóa duy nhất: Tên + Tỉnh + Quốc gia
+                    const key = `${item.name}-${item.admin1 || ''}-${item.country || ''}`;
+                    if (!seen.has(key)) {
+                        seen.add(key);
+                        uniqueResults.push(item);
+                    }
+                });
+
+                if (uniqueResults.length === 0) {
+                    // Nếu lọc hết sạch (ví dụ tìm tên khách sạn), ẩn luôn
+                    searchSuggestions.classList.add('hidden');
+                    return;
+                }
+
+                uniqueResults.slice(0, 10).forEach(location => {
+                    const parts = [
+                        location.name,
+                        location.admin1, // Tỉnh/Thành phố
+                        location.country
+                    ].filter(Boolean);
                     
-                    // ### SỬA LỖI HIỂN THỊ (BẮT ĐẦU) ###
-                    // Logic làm sạch tên hiển thị
-                    let displayName = '';
-                    if (location.address) {
-                        // Ưu tiên lấy tên chính (thành phố, thị xã, đơn vị HC, phường, v.v.)
-                        const name = location.address.city || location.address.town || location.address.administrative || location.address.suburb || location.address.village || location.address.hamlet;
-                        // Lấy tỉnh/huyện
-                        const state = location.address.state || location.address.county || '';
-                        // Lấy quốc gia
-                        const country = location.address.country || '';
-
-                        // Ghép các phần lại, lọc bỏ giá trị rỗng
-                        const parts = [name, state, country].filter(Boolean);
-                        let uniqueParts = [];
-                        
-                        // Xây dựng mảng tên duy nhất, loại bỏ trùng lặp
-                        // (Ví dụ: "Hà Nội, Hà Nội, Việt Nam" -> "Hà Nội, Việt Nam")
-                        if (parts.length > 0) uniqueParts.push(parts[0]);
-                        if (parts.length > 1 && parts[1] !== parts[0]) {
-                            uniqueParts.push(parts[1]);
-                        }
-                        if (parts.length > 2 && parts[2] !== parts[1] && parts[2] !== parts[0]) {
-                            uniqueParts.push(parts[2]);
-                        }
-                        
-                        displayName = uniqueParts.join(', ');
-                    }
-
-                    // Fallback: nếu logic trên thất bại, dùng display_name gốc
-                    if (!displayName) {
-                        displayName = location.display_name || 'Vị trí không xác định';
-                    }
-                    // ### SỬA LỖI HIỂN THỊ (KẾT THÚC) ###
+                    const displayName = parts.join(', ');
                     
                     const suggestionItem = document.createElement('div');
-                    suggestionItem.className = "p-3 hover:bg-slate-100 dark:hover:bg-slate-600 cursor-pointer";
-                    suggestionItem.textContent = displayName; // Dùng tên đã làm sạch
+                    suggestionItem.className = "p-3 hover:bg-slate-100 dark:hover:bg-slate-600 cursor-pointer border-b border-slate-100 dark:border-slate-600 last:border-0";
+                    
+                    suggestionItem.innerHTML = `
+                        <div class="font-medium text-slate-800 dark:text-slate-200">${location.name}</div>
+                        <div class="text-xs text-slate-500 dark:text-slate-400">${[location.admin1, location.country].filter(Boolean).join(', ')}</div>
+                    `;
                     
                     suggestionItem.addEventListener('click', () => {
+                        // Khi click
+                        const simpleName = `${location.name}, ${location.admin1 || location.country}`;
                         
-                        // ### SỬA LỖI TÊN KHI CLICK (BẮT ĐẦU) ###
-                        let simpleName = '';
-                        if (location.address) {
-                            // Ưu tiên tên chính
-                            const name = location.address.city || location.address.town || location.address.administrative || location.address.suburb || location.address.village || location.address.hamlet;
-                            // Tên tỉnh/huyện
-                            const state = location.address.state || location.address.county || '';
-                            
-                            // Ghép tên, lọc bỏ phần rỗng và trùng lặp
-                            const parts = [name, state].filter(Boolean);
-                            if (parts.length === 2 && parts[0] === parts[1]) {
-                                parts.pop(); // Bỏ bớt 1 nếu trùng (ví dụ: Hà Nội, Hà Nội)
-                            }
-                            simpleName = parts.join(', ');
-                        }
-                        
-                        // Fallback nếu logic trên thất bại
-                        if (!simpleName) {
-                            simpleName = location.display_name.split(',').slice(0, 2).join(', ');
-                        }
-                        // ### SỬA LỖI TÊN KHI CLICK (KẾT THÚC) ###
-
                         currentCity = simpleName;
-                        currentLat = parseFloat(location.lat);
-                        currentLon = parseFloat(location.lon);
+                        currentLat = location.latitude;
+                        currentLon = location.longitude;
                         
                         fetchWeather(currentLat, currentLon, currentCity);
-                        fetchAQI(currentLat, currentLon); // Lấy AQI cho vị trí mới
+                        fetchAQI(currentLat, currentLon);
                         
                         searchSuggestions.classList.add('hidden');
                         searchInput.value = '';
@@ -1231,90 +1071,96 @@
                 searchSuggestions.classList.remove('hidden');
             }
 
-            // --- Thêm hàm fetchCoordinates (THAY ĐỔI: Dùng Nominatim, thêm addressdetails) ---
+            // 3. Fetch Coordinates (Khi Enter): Cũng áp dụng bộ lọc
             async function fetchCoordinates(city) {
                 loadingSpinner.classList.remove('hidden');
                 try {
-                    // Sử dụng Nominatim Search API
-                    // Thêm addressdetails=1 để lấy thông tin địa chỉ
-                    const apiUrl = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(city)}&format=json&limit=1&accept-language=vi&addressdetails=1`;
+                    const apiUrl = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=10&language=vi&format=json`;
                     
                     const response = await fetch(apiUrl);
-                    if (!response.ok) throw new Error('Không thể tìm thấy vị trí từ Nominatim.');
+                    if (!response.ok) throw new Error('Không thể tìm thấy vị trí.');
                     
                     const data = await response.json();
-                    if (data && data.length > 0) {
-                        const location = data[0];
-                        
-                        // ### SỬA LỖI TÊN KHI SUBMIT (BẮT ĐẦU) ###
-                        let simpleName = '';
-                        if (location.address) {
-                            // Ưu tiên tên chính
-                            const name = location.address.city || location.address.town || location.address.administrative || location.address.suburb || location.address.village || location.address.hamlet;
-                            // Tên tỉnh/huyện
-                            const state = location.address.state || location.address.county || '';
-                            
-                            // Ghép tên, lọc bỏ phần rỗng và trùng lặp
-                            const parts = [name, state].filter(Boolean);
-                            if (parts.length === 2 && parts[0] === parts[1]) {
-                                parts.pop(); // Bỏ bớt 1 nếu trùng (ví dụ: Hà Nội, Hà Nội)
-                            }
-                            simpleName = parts.join(', ');
+                    
+                    // Áp dụng cùng bộ lọc như trên
+                    const validResults = (data.results || []).filter(item => {
+                         if (item.feature_code) {
+                            return item.feature_code.startsWith('P') || item.feature_code.startsWith('A');
                         }
-                        
-                        // Fallback nếu logic trên thất bại
-                        if (!simpleName) {
-                            simpleName = location.display_name.split(',').slice(0, 2).join(', ');
-                        }
-                        // ### SỬA LỖI TÊN KHI SUBMIT (KẾT THÚC) ###
+                        return true;
+                    });
+                    
+                    if (validResults.length > 0) {
+                        const location = validResults[0]; // Lấy kết quả đúng đầu tiên
+                        const simpleName = `${location.name}, ${location.admin1 || location.country}`;
 
-                        currentCity = simpleName; // Cập nhật tên
-                        currentLat = parseFloat(location.lat);
-                        currentLon = parseFloat(location.lon);
+                        currentCity = simpleName;
+                        currentLat = location.latitude;
+                        currentLon = location.longitude;
                         
                         fetchWeather(currentLat, currentLon, currentCity);
-                        fetchAQI(currentLat, currentLon); // Lấy AQI cho vị trí mới
+                        fetchAQI(currentLat, currentLon);
                     } else {
-                        throw new Error('Không tìm thấy vị trí cho tên đã nhập.');
+                        throw new Error('Không tìm thấy địa danh hành chính phù hợp.');
                     }
 
                 } catch (error) {
-                    // CẬP NHẬT: Sử dụng handleFetchError
                     handleFetchError(error, 'fetchCoordinates');
-                    loadingSpinner.classList.add('hidden'); // Ẩn spinner nếu lỗi
+                    loadingSpinner.classList.add('hidden');
                 }
-                // `fetchWeather` sẽ ẩn spinner khi nó thành công
             }
 
+            // --- Fetch Weather (Open-Meteo) ---
+            async function fetchWeather(lat, lon, city) {
+                loadingSpinner.classList.remove('hidden');
+                try {
+                    const apiUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relativehumidity_2m,weathercode,windspeed_10m,pressure_msl,dewpoint_2m,visibility,uv_index,apparent_temperature,cloudcover,precipitation&hourly=temperature_2m,weathercode,temperature_80m,precipitation_probability&daily=weathercode,temperature_2m_max,temperature_2m_min,sunrise,sunset&timezone=auto&forecast_days=14`;
+                    
+                    const response = await fetch(apiUrl);
 
-            // --- Cập nhật Giao diện ---
+                    if (!response.ok) {
+                        throw new Error(`Không thể tải dữ liệu thời tiết.`);
+                    }
+                    
+                    const data = await response.json();
+                    if (data.error) throw new Error(data.reason);
+                    
+                    updateCurrentWeatherUI(data, city);
+                    updateHourlyForecastUI(data);
+                    updateDailyForecastUI(data);
+                    
+                    // Cập nhật iframe bản đồ Windy
+                    weatherMapEl.src = `https://embed.windy.com/embed.html?type=map&location=coordinates&metricWind=kmh&metricTemp=°C&radarRange=-1&lat=${lat}&lon=${lon}&zoom=9`;
+
+                    adjustSectionHeights();
+
+                } catch (error) {
+                    handleFetchError(error, 'fetchWeather');
+                } finally {
+                    loadingSpinner.classList.add('hidden');
+                }
+            }
+
             function updateCurrentWeatherUI(data, city) {
                 const current = data.current;
                 const currentHour = new Date().getHours();
                 
-                // Cập nhật thẻ thông tin chính
                 currentLocationEl.textContent = city;
-                
-                // CẬP NHẬT: Sử dụng animateCountUp
                 animateCountUp(currentTempEl, current.temperature_2m, '°C');
-                
                 currentConditionEl.textContent = getWeatherDescription(current.weathercode);
                 
-                currentWeatherIconContainer.innerHTML = ''; // Xóa icon cũ
+                currentWeatherIconContainer.innerHTML = '';
                 const iconSrc = getWeatherIcon(current.weathercode, currentHour);
                 currentWeatherIconContainer.appendChild(createWeatherIcon(iconSrc));
                 
-                // CẬP NHẬT: Sử dụng animateCountUp
                 animateCountUp(currentWindEl, current.windspeed_10m, ' km/h');
                 animateCountUp(currentPressureEl, current.pressure_msl, ' hPa');
                 animateCountUp(currentHumidityEl, current.relativehumidity_2m, '%');
                 animateCountUp(currentVisibilityEl, current.visibility / 1000, ' km');
                 animateCountUp(currentDewpointEl, current.dewpoint_2m, '°C');
                 
-                // UV là text mô tả, không phải số đếm
                 currentUvEl.textContent = getUvDescription(Math.round(current.uv_index));
 
-                // Cập nhật Nền (Gradient)
                 const newBgClass = getWeatherBackgroundClass(current.weathercode);
                 const bodyClasses = document.body.classList;
                 bodyClasses.forEach(cls => {
@@ -1324,11 +1170,9 @@
                 });
                 bodyClasses.add(newBgClass);
 
-                // --- CẬP NHẬT MỤC WEATHER DETAILS (Sử dụng animateCountUp) ---
                 const daily = data.daily;
-                const todayIndex = 0; // Luôn là hôm nay
+                const todayIndex = 0; 
 
-                // Hàm trợ giúp định dạng thời gian (ví dụ: 2024-11-18T06:30 -> 06:30)
                 const formatTime = (dateTimeString) => {
                     if (!dateTimeString) return '--:--';
                     try {
@@ -1338,7 +1182,6 @@
                     }
                 };
                 
-                // Cập nhật các mục chi tiết
                 animateCountUp(document.getElementById('detail-temp'), current.temperature_2m, '°C');
                 animateCountUp(document.getElementById('detail-feels-like'), current.apparent_temperature, '°C');
                 animateCountUp(document.getElementById('detail-cloud-cover'), current.cloudcover, '%');
@@ -1348,16 +1191,9 @@
                 animateCountUp(document.getElementById('detail-visibility'), current.visibility / 1000, ' km');
                 animateCountUp(document.getElementById('detail-pressure'), current.pressure_msl, ' hPa');
 
-                // UV là text, không đếm
                 document.getElementById('detail-uv').textContent = getUvDescription(Math.round(current.uv_index));
-                
-                // Sun & Moon (từ daily) - Đây là text, không đếm
                 document.getElementById('detail-sun').textContent = `${formatTime(daily.sunrise[todayIndex])} / ${formatTime(daily.sunset[todayIndex])}`;
-                
-                // --- SỬA LỖI: Cập nhật mục Moon ---
                 document.getElementById('detail-moon').textContent = 'N/A';
-                
-                // --- SỬA LỖI v2: Cập nhật mục Moon Phase ---
                 document.getElementById('detail-moon-phase').textContent = 'N/A';
             }
 
@@ -1371,16 +1207,12 @@
 
                 for (let i = startIndex; i < startIndex + 24 && i < data.hourly.time.length; i++) {
                     const time = new Date(data.hourly.time[i]);
-                    const hour = time.getHours();
                     const hourString = time.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
-                    
                     const tempLow = data.hourly.temperature_80m[i] ? Math.round(data.hourly.temperature_80m[i]) : Math.round(data.hourly.temperature_2m[i] - 2);
-
-                    const iconSrc = getWeatherIcon(data.hourly.weathercode[i], hour);
+                    const iconSrc = getWeatherIcon(data.hourly.weathercode[i], time.getHours());
 
                     const html = `
                         <div class="text-center flex-shrink-0 p-4 bg-slate-100/70 dark:bg-slate-700/70 backdrop-blur-sm rounded-2xl w-40">
-                            <!-- Icon SVG -->
                             <div class="w-12 h-12 mx-auto">
                                 <img src="${iconSrc}" alt="Icon" class="weather-icon loaded">
                             </div>
@@ -1402,38 +1234,24 @@
                     const date = new Date(data.daily.time[i]);
                     const dayMonth = date.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit' });
                     const weekday = date.toLocaleDateString('vi-VN', { weekday: 'long' });
-                    
-                    // Dùng icon ban ngày (giữa trưa) cho dự báo
                     const iconSrc = getWeatherIcon(data.daily.weathercode[i], 12); 
 
-                    // HTML này dùng cho cả 2 chế độ (ngang/dọc)
                     const html = `
-                        <!-- Desktop: flex, Mobile: w-40 -->
                         <div class="p-4 bg-slate-100/70 dark:bg-slate-700/70 backdrop-blur-sm rounded-2xl 
                                     flex-shrink-0 w-40 
                                     lg:w-full lg:flex lg:justify-between lg:items-center">
-                            
-                            <!-- Cột 1 (Mobile: Chính) -->
                             <div class="text-center lg:text-left">
                                 <div class="font-bold">${dayMonth}</div>
                                 <div class="text-slate-600 dark:text-slate-400 lg:hidden">${weekday}</div>
                             </div>
-                            
-                            <!-- Cột 2 (Mobile: Ẩn) -->
                             <div class="text-slate-600 dark:text-slate-400 hidden lg:block">${weekday}</div>
-
-                            <!-- Cột 3 (Mobile: Chính) -->
                             <div class="w-12 h-12 mx-auto my-1 lg:mx-0 lg:my-0">
                                 <img src="${iconSrc}" alt="Icon" class="weather-icon loaded">
                             </div>
-
-                            <!-- Cột 4 (Mobile: Chính) -->
                             <div class="text-center lg:text-right">
                                 <span class="font-bold text-lg">${Math.round(data.daily.temperature_2m_max[i])}°</span>
                                 <span class="text-slate-600 dark:text-slate-400">/ ${Math.round(data.daily.temperature_2m_min[i])}°</span>
                             </div>
-                            
-                            <!-- Cột 5 (Mobile: Chính, Desktop: Hiển thị) -->
                             <div class="text-sm text-slate-700 dark:text-slate-300 text-center truncate">
                                 ${getWeatherDescription(data.daily.weathercode[i])}
                             </div>
@@ -1461,24 +1279,21 @@
                 if (query.length >= 3) {
                     searchTimeout = setTimeout(() => {
                         fetchSuggestions(query);
-                    }, 300); // Debounce 300ms
+                    }, 300);
                 } else {
                     searchSuggestions.classList.add('hidden');
                 }
             });
 
-            // Ẩn gợi ý khi nhấp ra ngoài
             document.addEventListener('click', (e) => {
                 if (!searchForm.contains(e.target)) {
                     searchSuggestions.classList.add('hidden');
                 }
             });
 
-            // Modal Bản đồ
             mapDetailsButton.addEventListener('click', () => {
                 const mapUrl = `https://embed.windy.com/embed.html?type=map&location=coordinates&metricRain=default&metricTemp=default&metricWind=default&zoom=5&overlay=wind&product=ecmwf&level=surface&lat=${currentLat}&lon=${currentLon}&detailLat=${currentLat}&detailLon=${currentLon}&detail=true&pressure=true&message=true`;
                 fullWeatherMap.src = mapUrl;
-                
                 mapModal.classList.remove('hidden');
                 mapModal.classList.remove('modal-exiting');
                 mapModal.classList.add('modal-entering');
@@ -1487,71 +1302,45 @@
             mapCloseButton.addEventListener('click', () => {
                 mapModal.classList.remove('modal-entering');
                 mapModal.classList.add('modal-exiting');
-                
-                // Chờ animation kết thúc rồi mới ẩn
                 setTimeout(() => {
                     mapModal.classList.add('hidden');
-                    fullWeatherMap.src = 'about:blank'; // Tiết kiệm tài nguyên
+                    fullWeatherMap.src = 'about:blank';
                 }, 200);
             });
 
-            // THÊM MỚI: Xử lý sự kiện định vị
             detectLocationButton.addEventListener('click', () => {
-                // Sửa đổi: Chỉ cần gọi hàm autoDetectLocation
                 autoDetectLocation();
             });
 
-            // --- HÀM MỚI: Tự động định vị ---
             function autoDetectLocation() {
                 if ('geolocation' in navigator) {
-                    loadingSpinner.classList.remove('hidden'); // Hiện spinner ngay
+                    loadingSpinner.classList.remove('hidden');
                     navigator.geolocation.getCurrentPosition(
                         (position) => {
                             const lat = position.coords.latitude;
                             const lon = position.coords.longitude;
-                            // Gọi hàm mới để lấy tên vị trí
-                            fetchLocationName(lat, lon);
+                            fetchLocationName(lat, lon); // Sử dụng BigDataCloud mới
                         },
                         (error) => {
-                            loadingSpinner.classList.add('hidden'); // Ẩn spinner nếu lỗi
-                            
-                            console.error('Lỗi Geolocation:', error.message, `(Code: ${error.code})`);
-                            
-                            let userMessage = 'Không thể lấy vị trí.';
-                            if (error.code === 1) { // PERMISSION_DENIED
-                                if (error.message.includes('permissions policy')) {
-                                    userMessage = 'Định vị đã bị tắt bởi chính sách của môi trường này.';
-                                } else {
-                                    userMessage = 'Bạn đã từ chối quyền truy cập vị trí.';
-                                }
-                            } else if (error.code === 2) { // POSITION_UNAVAILABLE
-                                userMessage = 'Không thể xác định vị trí của bạn.';
-                            } else if (error.code === 3) { // TIMEOUT
-                                userMessage = 'Hết thời gian chờ khi lấy vị trí.';
-                            }
-                            
-                            // Thông báo lỗi VÀ tải dữ liệu mặc định
-                            showError(userMessage + ' Đang tải dữ liệu cho vị trí mặc định.');
+                            loadingSpinner.classList.add('hidden');
+                            console.error('Lỗi Geolocation:', error.message);
+                            showError('Không thể lấy vị trí. Đang tải mặc định.');
                             fetchWeather(currentLat, currentLon, currentCity);
                             fetchAQI(currentLat, currentLon);
                         }
                     );
                 } else {
-                    showError('Trình duyệt không hỗ trợ định vị. Đang tải dữ liệu mặc định.');
-                    // Tải dữ liệu mặc định nếu không có geolocation
+                    showError('Trình duyệt không hỗ trợ định vị.');
                     fetchWeather(currentLat, currentLon, currentCity);
                     fetchAQI(currentLat, currentLon);
                 }
             }
 
             // --- Khởi tạo ---
-            applyTheme(currentTheme); // Áp dụng theme đã lưu
+            applyTheme(currentTheme);
             setInterval(updateClock, 1000);
             updateClock();
-            
-            // --- THAY ĐỔI: Tự động dò vị trí khi tải ---
-            autoDetectLocation(); // Thay thế 2 lệnh fetch cũ
-            
+            autoDetectLocation();
             window.addEventListener('resize', adjustSectionHeights);
         });
     </script>
