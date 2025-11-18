@@ -1,90 +1,70 @@
 <!DOCTYPE html>
-<!-- SỬA: Thêm class="dark" sẽ được quản lý bởi JS -->
-<html lang="vi">
+<html lang="vi" class=""> <!-- Bắt đầu với class trống để JS xử lý theme -->
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ứng dụng Thời tiết</title>
     
-    <!-- SỬA LỖI: Tải Tailwind CSS TRƯỚC khi cấu hình nó -->
+    <!-- Tải Google Fonts (Inter) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Tải Material Symbols Rounded -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet" />
+
     <!-- Tải Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- THÊM: Cấu hình Tailwind cho Dark Mode -->
+    
+    <!-- Cấu hình Tailwind cho Chế độ Tối (PHẢI nằm sau script chính) -->
     <script>
         tailwind.config = {
             darkMode: 'class', // Kích hoạt chế độ tối bằng class 'dark'
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                },
+            },
         }
     </script>
-    
-    <!-- Tải Google Fonts (Inter) & Material Icons -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
-    <!-- SỬA: Đổi sang Material Symbols Rounded -->
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet" />
     
     <style>
         /* Áp dụng font Inter làm font chữ mặc định */
         body {
             font-family: 'Inter', sans-serif;
-            /* THÊM: transition cho background */
+            /* Hiệu ứng chuyển đổi nền mượt mà */
             transition: background 0.5s ease-in-out;
         }
 
-        /* Tùy chỉnh thanh cuộn cho phần dự báo */
-        .hourly-forecast::-webkit-scrollbar {
-            height: 8px; /* Cho thanh ngang */
-            width: 8px;  /* Cho thanh dọc */
+        /* Tùy chỉnh thanh cuộn (cho cả 2 mục cuộn) */
+        ::-webkit-scrollbar {
+            height: 8px; /* Cho cuộn ngang */
+            width: 8px;  /* Cho cuộn dọc */
         }
-        .hourly-forecast::-webkit-scrollbar-track {
+        ::-webkit-scrollbar-track {
             background: #f1f5f9; /* slate-100 */
             border-radius: 10px;
         }
-        .hourly-forecast::-webkit-scrollbar-thumb {
+        ::-webkit-scrollbar-thumb {
             background: #94a3b8; /* slate-400 */
             border-radius: 10px;
         }
-        .hourly-forecast::-webkit-scrollbar-thumb:hover {
+        ::-webkit-scrollbar-thumb:hover {
             background: #64748b; /* slate-500 */
         }
 
-        /* THÊM: Tùy chỉnh thanh cuộn cho chế độ TỐI */
-        html.dark .hourly-forecast::-webkit-scrollbar-track {
-            background: #334155; /* slate-700 */
+        /* Tùy chỉnh thanh cuộn ở CHẾ ĐỘ TỐI */
+        html.dark ::-webkit-scrollbar-track {
+            background: #1e293b; /* slate-800 */
         }
-        html.dark .hourly-forecast::-webkit-scrollbar-thumb {
+        html.dark ::-webkit-scrollbar-thumb {
+            background: #475569; /* slate-600 */
+        }
+        html.dark ::-webkit-scrollbar-thumb:hover {
             background: #64748b; /* slate-500 */
         }
-        html.dark .hourly-forecast::-webkit-scrollbar-thumb:hover {
-            background: #94a3b8; /* slate-400 */
-        }
 
-        /* Lớp tiện ích cho biểu tượng material */
-        .icon {
-            /* SỬA: Đổi font-family */
-            font-family: 'Material Symbols Rounded';
-            font-weight: normal;
-            font-style: normal;
-            font-size: 24px; /* Kích thước mặc định */
-            line-height: 1;
-            letter-spacing: normal;
-            text-transform: none;
-            display: inline-block;
-            white-space: nowrap;
-            word-wrap: normal;
-            direction: ltr;
-            -webkit-font-smoothing: antialiased;
-            text-rendering: optimizeLegibility;
-            -moz-osx-font-smoothing: grayscale;
-            font-feature-settings: 'liga';
-            
-            /* THÊM: Tùy chỉnh cho Material Symbols */
-            font-variation-settings:
-                'FILL' 0,
-                'wght' 400,
-                'GRAD' 0,
-                'opsz' 24;
-        }
-
-        /* THÊM: CSS cho các lớp nền (gradient) */
+        /* CSS cho các lớp nền (gradient) */
         .weather-default {
             background: linear-gradient(to top, #d2d6db, #f9fafb); /* Default */
         }
@@ -117,7 +97,7 @@
             background: linear-gradient(to bottom, #303030, #101010);
         }
 
-        /* THÊM: Animation khi tải trang */
+        /* Animation khi tải trang */
         @keyframes slideUpFadeIn {
             from {
                 opacity: 0;
@@ -128,34 +108,52 @@
                 transform: translateY(0);
             }
         }
-        .load-animate {
-            opacity: 0; /* Bắt đầu ẩn */
+        .animate-slide-up {
             animation: slideUpFadeIn 0.5s ease-out forwards;
         }
-        /* THÊM: Animation-delay cho các mục */
-        #current-info-section { animation-delay: 0.1s; }
-        #hourly-forecast-section { animation-delay: 0.2s; }
-        #daily-forecast-section { animation-delay: 0.3s; }
-        #weather-map-section { animation-delay: 0.4s; }
 
-        /* THÊM: Animation cho Modal (thay thế 'hidden') */
-        #map-modal {
-            transition: opacity 0.3s ease-out, transform 0.3s ease-out, visibility 0.3s;
+        /* Animation cho Modal */
+        @keyframes modalZoomIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        @keyframes modalZoomOut {
+            from {
+                opacity: 1;
+                transform: scale(1);
+            }
+            to {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+        }
+        .modal-entering {
+            animation: modalZoomIn 0.2s ease-out forwards;
+        }
+        .modal-exiting {
+            animation: modalZoomOut 0.2s ease-out forwards;
+        }
+
+        /* Ẩn icon SVG khi chưa tải xong (tránh lỗi kích thước) */
+        .weather-icon {
+            width: 100%;
+            height: 100%;
             opacity: 0;
-            transform: scale(0.95);
-            visibility: hidden; /* Ẩn đi nhưng vẫn cho phép transition */
-            display: flex; /* Luôn là flex để căn giữa */
+            transition: opacity 0.3s ease;
         }
-        #map-modal.modal-open {
+        .weather-icon.loaded {
             opacity: 1;
-            transform: scale(1);
-            visibility: visible;
         }
-
+        
     </style>
 </head>
-<!-- SỬA: Bỏ bg-slate-100, thêm class weather-default làm mặc định -->
-<body class="text-slate-800 dark:text-slate-200 p-4 md:p-8 min-h-screen weather-default">
+<body class="weather-default text-slate-800 dark:text-slate-200 p-4 md:p-8 min-h-screen">
 
     <div class="max-w-screen-2xl mx-auto">
         
@@ -163,82 +161,59 @@
         <header class="grid grid-cols-3 items-center gap-4 mb-6">
             <!-- Trái: Clock & Date -->
             <div classs="col-span-1">
-                <!-- SỬA: Thêm lớp text-white -->
-                <div id="header-clock" class="text-2xl font-bold text-white">14:30</div>
-                <!-- SỬA: Xóa lớp text-slate-*, thêm text-white và một chút opacity -->
-                <div id="header-date" class="text-sm text-white opacity-80">Thứ Hai, 17/11/2025</div>
+                <!-- Màu trắng cố định -->
+                <div id="header-clock" class="text-2xl font-bold text-white">00:00</div>
+                <div id="header-date" class="text-sm text-white opacity-80">Đang tải...</div>
             </div>
             
-            <!-- Giữa: Search Box -->
-            <div class="col-span-1 flex justify-center">
-                <form id="search-form" class="w-full max-w-md">
+            <!-- Giữa: Detect & Search -->
+            <!-- THAY ĐỔI: Thêm flex, items-center, gap-2 -->
+            <div class="col-span-1 flex justify-center items-center gap-2">
+                
+                <!-- NÚT MỚI: Định vị -->
+                <button id="detect-location-button" class="bg-white dark:bg-slate-700 p-3 rounded-full shadow-sm 
+                                                           hover:bg-slate-100 dark:hover:bg-slate-600 
+                                                           transition-transform transform active:scale-90 flex-shrink-0"
+                                                           title="Xác định vị trí của bạn">
+                    <span class="material-symbols-rounded w-6 h-6 text-slate-800 dark:text-slate-200">
+                        my_location
+                    </span>
+                </button>
+
+                <!-- Thanh Search (giữ nguyên) -->
+                <form id="search-form" class="w-full max-w-md relative">
                     <div class="relative">
-                        <span class="icon absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">search</span>
-                        <!-- SỬA: Thêm hiệu ứng đàn hồi khi focus -->
-                        <input type="text" id="search-input" placeholder="Tìm kiếm vị trí..." class="w-full bg-white dark:bg-slate-700 shadow-sm rounded-full py-3 px-12 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-transform duration-100 ease-out focus:scale-[1.02]"> <!-- SỬA: dark: -->
-                        <!-- Thùng chứa gợi ý -->
-                        <div id="search-suggestions" class="hidden absolute top-full mt-2 w-full bg-white dark:bg-slate-700 rounded-2xl shadow-lg z-10 overflow-hidden"> <!-- SỬA: dark: -->
-                            <!-- Gợi ý sẽ được chèn vào đây -->
+                        <!-- Icon SVG thay thế -->
+                        <div class="absolute left-3 top-1/2 -translate-y-1/2 w-6 h-6 text-slate-400 dark:text-slate-500">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                              <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+                            </svg>
                         </div>
+
+                        <input type="text" id="search-input" placeholder="Tìm kiếm vị trí..." 
+                               class="w-full bg-white dark:bg-slate-700 shadow-sm rounded-full py-3 px-12 
+                                      focus:outline-none focus:ring-2 focus:ring-blue-500
+                                      transition-transform transform active:scale-[.98]">
+                    </div>
+                    <!-- Mục Gợi ý Tìm kiếm -->
+                    <div id="search-suggestions" class="hidden absolute z-10 w-full mt-2 bg-white dark:bg-slate-700 rounded-2xl shadow-lg overflow-hidden">
+                        <!-- Gợi ý sẽ được chèn vào đây bởi JS -->
                     </div>
                 </form>
             </div>
             
             <!-- Phải: Settings -->
-            <div class="col-span-1 flex justify-end relative"> <!-- SỬA: Thêm relative -->
-                <!-- SỬA: Thêm hiệu ứng đàn hồi -->
-                <button id="settings-button" class="bg-white dark:bg-slate-700 dark:hover:bg-slate-600 p-3 rounded-full shadow-sm hover:bg-slate-200 transition-colors transition-transform duration-100 ease-out active:scale-95"> <!-- SỬA: Thêm id, dark: -->
-                    <span class="icon">settings</span>
+            <div class="col-span-1 flex justify-end">
+                <button id="settings-button" class="bg-white dark:bg-slate-700 p-3 rounded-full shadow-sm 
+                                                   hover:bg-slate-100 dark:hover:bg-slate-600 
+                                                   transition-transform transform active:scale-90">
+                    <!-- Icon SVG thay thế -->
+                    <div class="w-6 h-6 text-slate-800 dark:text-slate-200">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m3-6h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5" />
+                        </svg>
+                    </div>
                 </button>
-
-                <!-- THÊM MỚI: Menu Cài đặt -->
-                <div id="settings-menu" class="hidden absolute top-full right-0 mt-2 w-64 bg-white dark:bg-slate-800 rounded-2xl shadow-lg z-20 overflow-hidden border dark:border-slate-700">
-                    <!-- Menu chính -->
-                    <div id="settings-main-view">
-                        <div class="p-4 border-b dark:border-slate-700">
-                            <h3 class="font-bold text-lg">Cài đặt</h3>
-                        </div>
-                        <!-- SỬA: Thêm hiệu ứng đàn hồi -->
-                        <button id="theme-menu-button" class="w-full flex justify-between items-center p-4 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors transition-transform duration-100 ease-out active:scale-95">
-                            <div class="flex items-center gap-3">
-                                <span class="icon">brightness_6</span>
-                                <span>Giao diện (Theme)</span>
-                            </div>
-                            <span id="current-theme-label" class="text-sm text-slate-500 dark:text-slate-400">Hệ thống</span>
-                        </button>
-                        <!-- Thêm các cài đặt khác ở đây sau này -->
-                    </div>
-                    
-                    <!-- Menu con (Theme) -->
-                    <div id="theme-submenu" class="hidden">
-                        <!-- SỬA: Thêm hiệu ứng đàn hồi -->
-                        <button id="theme-menu-back" class="w-full flex items-center gap-3 p-4 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors transition-transform duration-100 ease-out active:scale-95">
-                            <span class="icon text-sm">arrow_back_ios</span>
-                            <span>Giao diện</span>
-                        </button>
-                        <hr class="border-slate-200 dark:border-slate-700">
-                        <!-- SỬA: Thêm hiệu ứng đàn hồi -->
-                        <button data-theme="light" class="theme-option-button w-full text-left p-4 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors transition-transform duration-100 ease-out active:scale-95 flex justify-between items-center">
-                            <span>Sáng</span>
-                            <span class="icon text-blue-500 hidden">check</span>
-                        </button>
-                        <!-- SỬA: Thêm hiệu ứng đàn hồi -->
-                        <button data-theme="dark" class="theme-option-button w-full text-left p-4 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors transition-transform duration-100 ease-out active:scale-95 flex justify-between items-center">
-                            <span>Tối</span>
-                            <span class="icon text-blue-500 hidden">check</span>
-                        </button>
-                        <!-- SỬA: Thêm hiệu ứng đàn hồi -->
-                        <button data-theme="system" class="theme-option-button w-full text-left p-4 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors transition-transform duration-100 ease-out active:scale-95 flex justify-between items-center">
-                            <span>Theo hệ thống</span>
-                            <span class="icon text-blue-500 hidden">check</span>
-                        </button>
-                        <!-- SỬA: Thêm hiệu ứng đàn hồi -->
-                        <button data-theme="auto" class="theme-option-button w-full text-left p-4 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors transition-transform duration-100 ease-out active:scale-95 flex justify-between items-center">
-                            <span>Theo đồng hồ (Tự động)</span>
-                            <span class="icon text-blue-500 hidden">check</span>
-                        </button>
-                    </div>
-                </div>
             </div>
         </header>
 
@@ -249,90 +224,80 @@
             <div class="lg:col-span-1 flex flex-col gap-6">
                 
                 <!-- Mục Hiện thông tin -->
-                <!-- SỬA: Thêm class animation -->
-                <section id="current-info-section" class="bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-lg load-animate"> <!-- SỬA: dark: -->
+                <section id="current-info-section" class="bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm p-6 rounded-3xl shadow-lg animate-slide-up" style="animation-delay: 0.1s;">
                     <!-- Dòng 1 & 2 -->
                     <div class="flex justify-between items-start mb-4">
                         <div>
-                            <h1 id="current-location" class="text-3xl font-bold">Nha Trang, Khánh Hòa</h1>
-                            <p id="current-time-date" class="text-slate-600 dark:text-slate-400">14:30 - Thứ Hai, 17/11/2025</p> <!-- SỬA: dark: -->
+                            <h1 id="current-location" class="text-3xl font-bold">Đang tải...</h1>
+                            <p id="current-time-date" class="text-slate-600 dark:text-slate-400">...</p>
                         </div>
                         <div id="loading-spinner" class="hidden animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
                     </div>
                     
                     <!-- Dòng 3 -->
                     <div class="flex items-center gap-4 mb-6">
-                        <span id="current-weather-icon" class="icon text-8xl text-blue-500">sunny</span>
+                        <!-- Icon SVG (Container) -->
+                        <div id="current-weather-icon-container" class="w-24 h-24 text-blue-500">
+                             <!-- <img> sẽ được chèn bởi JS -->
+                        </div>
                         <div>
-                            <div id="current-temp" class="text-7xl font-bold">29°C</div>
-                            <div id="current-condition" class="text-xl text-slate-700 dark:text-slate-300">Trời quang</div> <!-- SỬA: dark: -->
+                            <div id="current-temp" class="text-7xl font-bold">--°C</div>
+                            <div id="current-condition" class="text-xl text-slate-700 dark:text-slate-300">...</div>
                         </div>
                     </div>
                     
                     <!-- Dòng 4: Thông tin chi tiết -->
                     <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
                         <div class="flex items-center gap-2">
-                            <span class="icon text-blue-500">air</span>
+                            <span class="material-symbols-rounded text-blue-500">air</span>
                             <div>
                                 <div>Gió</div>
-                                <div id="current-wind" class="font-bold">12 km/h</div>
+                                <div id="current-wind" class="font-bold">-- km/h</div>
                             </div>
                         </div>
                         <div class="flex items-center gap-2">
-                            <span class="icon text-blue-500">compress</span>
+                            <span class="material-symbols-rounded text-blue-500">compress</span>
                             <div>
                                 <div>Áp suất</div>
-                                <div id="current-pressure" class="font-bold">1012 hPa</div>
+                                <div id="current-pressure" class="font-bold">-- hPa</div>
                             </div>
                         </div>
                         <div class="flex items-center gap-2">
-                            <span class="icon text-blue-500">water_drop</span>
+                            <span class="material-symbols-rounded text-blue-500">water_drop</span>
                             <div>
                                 <div>Độ ẩm</div>
-                                <div id="current-humidity" class="font-bold">75%</div>
+                                <div id="current-humidity" class="font-bold">--%</div>
                             </div>
                         </div>
                         <div class="flex items-center gap-2">
-                            <span class="icon text-blue-500">visibility</span>
+                            <span class="material-symbols-rounded text-blue-500">visibility</span>
                             <div>
                                 <div>Tầm nhìn</div>
-                                <div id="current-visibility" class="font-bold">10 km</div>
+                                <div id="current-visibility" class="font-bold">-- km</div>
                             </div>
                         </div>
                         <div class="flex items-center gap-2">
-                            <span class="icon text-blue-500">ac_unit</span>
+                            <span class="material-symbols-rounded text-blue-500">dew_point</span>
                             <div>
                                 <div>Điểm sương</div>
-                                <div id="current-dewpoint" class="font-bold">22°C</div>
+                                <div id="current-dewpoint" class="font-bold">--°C</div>
                             </div>
                         </div>
                         <div class="flex items-center gap-2">
-                            <span class="icon text-blue-500">wb_sunny</span>
+                            <span class="material-symbols-rounded text-blue-500">wb_sunny</span>
                             <div>
                                 <div>Chỉ số UV</div>
-                                <div id="current-uv" class="font-bold">Cao (7)</div>
+                                <div id="current-uv" class="font-bold">--</div>
                             </div>
                         </div>
                     </div>
                 </section>
                 
                 <!-- Mục Dự báo hàng giờ -->
-                <!-- SỬA: Thêm class animation -->
-                <section id="hourly-forecast-section" class="bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-lg load-animate"> <!-- SỬA: dark: -->
+                <section id="hourly-forecast-section" class="bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm p-6 rounded-3xl shadow-lg animate-slide-up" style="animation-delay: 0.2s;">
                     <h2 class="text-xl font-bold mb-4">Dự báo hàng giờ</h2>
                     <div id="hourly-forecast-container" class="hourly-forecast flex gap-4 overflow-x-auto pb-4">
                         <!-- Dữ liệu hàng giờ sẽ được chèn vào đây bởi JS -->
-                        <!-- SỬA: p-12 -> p-4 và w-33 -> w-40 -->
-                        <div class="text-center flex-shrink-0 p-4 bg-slate-100 dark:bg-slate-700 rounded-2xl w-40"> <!-- SỬA: dark: -->
-                            <span class="icon text-3xl text-blue-500">sunny</span>
-                            <div class="my-1">
-                                <span class="font-bold">30°</span>
-                                <span class="text-slate-600 dark:text-slate-400">28°</span> <!-- SỬA: dark: -->
-                            </div>
-                            <div class="text-sm text-slate-700 dark:text-slate-300 mb-1 truncate">Quang</div> <!-- SỬA: dark: -->
-                            <div class="font-bold">13:00</div>
-                        </div>
-                        <!-- ... các giờ khác ... -->
                     </div>
                 </section>
             </div>
@@ -341,104 +306,257 @@
             <div class="lg:col-span-1 flex flex-col gap-6">
                 
                 <!-- Mục Dự báo hàng ngày -->
-                <!-- SỬA: Thêm class animation -->
-                <section id="daily-forecast-section" class="bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-lg lg:h-[360px] lg:flex lg:flex-col load-animate"> <!-- SỬA: dark: -->
+                <section id="daily-forecast-section" 
+                         class="bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm p-6 rounded-3xl shadow-lg 
+                                lg:h-[360px] lg:flex lg:flex-col animate-slide-up" 
+                         style="animation-delay: 0.3s;">
                     <h2 class="text-xl font-bold mb-4">Dự báo 14 ngày</h2>
-                    <!-- SỬA: Thêm các lớp để cuộn ngang trên di động, cuộn dọc trên desktop + sửa lỗi flexbox -->
-                    <div id="daily-forecast-container" class="flex gap-4 overflow-x-auto pb-4 hourly-forecast lg:flex-col lg:overflow-x-hidden lg:overflow-y-auto lg:pb-0 lg:flex-1 lg:min-h-0">
+                    <div id="daily-forecast-container" 
+                         class="flex gap-4 overflow-x-auto pb-4 
+                                lg:flex-col lg:overflow-y-auto lg:flex-1 lg:min-h-0">
                         <!-- Dữ liệu hàng ngày sẽ được chèn vào đây bởi JS -->
-                        <!-- SỬA: Cập nhật HTML mẫu để khớp với JS -->
-                        <div class="flex-shrink-0 w-40 p-4 bg-slate-100 dark:bg-slate-700 rounded-2xl lg:w-full"> <!-- SỬA: dark: -->
-                            <!-- Bố cục DI ĐỘNG -->
-                            <div class="flex flex-col items-center text-center lg:hidden">
-                                <span class="icon text-3xl text-blue-500">partly_cloudy_day</span>
-                                <div class="my-1">
-                                    <span class="font-bold">30°</span>
-                                    <span class="text-slate-600 dark:text-slate-400">/ 25°</span> <!-- SỬA: dark: -->
-                                </div>
-                                <div class="text-sm text-slate-700 dark:text-slate-300 truncate">Nhiều mây</div> <!-- SỬA: dark: -->
-                                <div class="font-bold mt-1">17/11</div>
-                            </div>
-                            <!-- Bố cục DESKTOP -->
-                            <div class="hidden lg:block">
-                                <div class="flex justify-between items-center mb-1">
-                                    <div class="font-bold">17/11</div>
-                                    <div class="text-slate-600 dark:text-slate-400">Thứ Hai</div> <!-- SỬA: dark: -->
-                                </div>
-                                <div class="flex justify-between items-center mb-1">
-                                    <span class="icon text-3xl text-blue-500">partly_cloudy_day</span>
-                                    <div>
-                                        <span class="font-bold text-lg">30°</span>
-                                        <span class="text-slate-600 dark:text-slate-400">/ 25°</span> <!-- SỬA: dark: -->
-                                    </div>
-                                </div>
-                                <div class="text-sm text-slate-700 dark:text-slate-300">Nhiều mây</div> <!-- SỬA: dark: -->
-                            </div>
-                        </div>
-                        <!-- ... các ngày khác ... -->
                     </div>
                 </section>
                 
                 <!-- Mục Weather Map -->
-                <!-- SỬA: Thêm class animation -->
-                <section id="weather-map-section" class="bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-lg lg:h-[360px] load-animate"> <!-- SỬA: dark: -->
-                    <!-- SỬA: Thêm flex container để chứa nút "Chi tiết" -->
+                <section id="weather-map-section" 
+                         class="bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm p-6 rounded-3xl shadow-lg 
+                                lg:h-[360px] flex flex-col animate-slide-up" 
+                         style="animation-delay: 0.4s;">
                     <div class="flex justify-between items-center mb-4">
                         <h2 class="text-xl font-bold">Bản đồ thời tiết</h2>
-                        <!-- THÊM MỚI: Nút mở Modal -->
-                        <!-- SỬA: Thêm hiệu ứng đàn hồi -->
-                        <button id="open-map-modal" class="text-sm text-blue-600 font-medium hover:text-blue-800 transition-colors flex items-center transition-transform duration-100 ease-out active:scale-95">
+                        <button id="map-details-button" class="flex items-center text-sm text-blue-500 font-medium
+                                                               hover:text-blue-700 dark:hover:text-blue-400
+                                                               transition-transform transform active:scale-95">
                             Chi tiết
-                            <span class="icon align-middle text-base">arrow_forward_ios</span>
+                            <!-- Icon SVG thay thế -->
+                            <div class="w-5 h-5 ml-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                                  <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 19.5 15-15m0 0H8.25m11.25 0v11.25" />
+                                </svg>
+                            </div>
                         </button>
                     </div>
                     <!-- Sử dụng iframe từ một dịch vụ bản đồ (ví dụ: Windy) -->
                     <iframe 
                         id="weather-map"
-                        class="w-full h-[250px] rounded-2xl border border-slate-200"
+                        class="w-full flex-1 rounded-2xl border border-slate-200 dark:border-slate-700"
                         src="https://embed.windy.com/embed.html?type=map&location=coordinates&metricWind=kmh&metricTemp=°C&radarRange=-1&lat=12.2388&lon=109.1967&zoom=9" 
                         frameborder="0">
                     </iframe>
                 </section>
             </div>
             
+            <!-- MỤC MỚI: WEATHER DETAILS -->
+            <section id="weather-details-section" 
+                     class="lg:col-span-2 bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm p-6 rounded-3xl shadow-lg animate-slide-up" 
+                     style="animation-delay: 0.5s;">
+                <h2 class="text-xl font-bold mb-4">Weather Details</h2>
+                
+                <!-- Grid 4 cột -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    
+                    <!-- Hàng 1 -->
+                    <div class="flex items-center gap-2 p-3 bg-slate-100/70 dark:bg-slate-700/70 rounded-xl">
+                        <span class="material-symbols-rounded text-blue-500">thermostat</span>
+                        <div>
+                            <div>Nhiệt độ</div>
+                            <div id="detail-temp" class="font-bold">--°C</div>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-2 p-3 bg-slate-100/70 dark:bg-slate-700/70 rounded-xl">
+                        <span class="material-symbols-rounded text-blue-500">device_thermostat</span>
+                        <div>
+                            <div>Cảm giác như</div>
+                            <div id="detail-feels-like" class="font-bold">--°C</div>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-2 p-3 bg-slate-100/70 dark:bg-slate-700/70 rounded-xl">
+                        <span class="material-symbols-rounded text-blue-500">cloud</span>
+                        <div>
+                            <div>Độ che phủ mây</div>
+                            <div id="detail-cloud-cover" class="font-bold">--%</div>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-2 p-3 bg-slate-100/70 dark:bg-slate-700/70 rounded-xl">
+                        <span class="material-symbols-rounded text-blue-500">rainy</span>
+                        <div>
+                            <div>Lượng mưa</div>
+                            <div id="detail-precipitation" class="font-bold">-- mm</div>
+                        </div>
+                    </div>
+
+                    <!-- Hàng 2 -->
+                    <div class="flex items-center gap-2 p-3 bg-slate-100/70 dark:bg-slate-700/70 rounded-xl">
+                        <span class="material-symbols-rounded text-blue-500">air</span>
+                        <div>
+                            <div>Gió</div>
+                            <div id="detail-wind" class="font-bold">-- km/h</div>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-2 p-3 bg-slate-100/70 dark:bg-slate-700/70 rounded-xl">
+                        <span class="material-symbols-rounded text-blue-500">water_drop</span>
+                        <div>
+                            <div>Độ ẩm</div>
+                            <div id="detail-humidity" class="font-bold">--%</div>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-2 p-3 bg-slate-100/70 dark:bg-slate-700/70 rounded-xl">
+                        <span class="material-symbols-rounded text-blue-500">wb_sunny</span>
+                        <div>
+                            <div>Chỉ số UV</div>
+                            <div id="detail-uv" class="font-bold">--</div>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-2 p-3 bg-slate-100/70 dark:bg-slate-700/70 rounded-xl">
+                        <span class="material-symbols-rounded text-blue-500">aq_indoor</span>
+                        <div>
+                            <div>Chỉ số chất lượng không khí (AQI)</div>
+                            <div id="detail-aqi" class="font-bold">--</div>
+                        </div>
+                    </div>
+
+                    <!-- Hàng 3 -->
+                    <div class="flex items-center gap-2 p-3 bg-slate-100/70 dark:bg-slate-700/70 rounded-xl">
+                        <span class="material-symbols-rounded text-blue-500">visibility</span>
+                        <div>
+                            <div>Tầm nhìn</div>
+                            <div id="detail-visibility" class="font-bold">-- km</div>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-2 p-3 bg-slate-100/70 dark:bg-slate-700/70 rounded-xl">
+                        <span class="material-symbols-rounded text-blue-500">compress</span>
+                        <div>
+                            <div>Áp suất</div>
+                            <div id="detail-pressure" class="font-bold">-- hPa</div>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-2 p-3 bg-slate-100/70 dark:bg-slate-700/70 rounded-xl">
+                        <span class="material-symbols-rounded text-blue-500">light_mode</span>
+                        <div>
+                            <div>Mặt trời (Giờ mọc / Giờ lặn)</div>
+                            <div id="detail-sun" class="font-bold">--:-- / --:--</div>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-2 p-3 bg-slate-100/70 dark:bg-slate-700/70 rounded-xl">
+                        <span class="material-symbols-rounded text-blue-500">dark_mode</span>
+                        <div>
+                            <div>Mặt trăng (Giờ mọc / Giờ lặn)</div>
+                            <div id="detail-moon" class="font-bold">--:-- / --:--</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Hàng 4 -->
+                    <div class="flex items-center gap-2 p-3 bg-slate-100/70 dark:bg-slate-700/70 rounded-xl">
+                        <span class="material-symbols-rounded text-blue-500">nightlight</span>
+                        <div>
+                            <div>Pha Mặt Trăng</div>
+                            <div id="detail-moon-phase" class="font-bold">...</div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </section>
+
         </main>
         
         <!-- Thông báo Lỗi -->
-        <div id="error-message" class="hidden fixed top-5 right-5 bg-red-500 text-white p-4 rounded-lg shadow-md">
-            <span class="icon mr-2">error_outline</span>
+        <div id="error-message" class="hidden fixed top-5 right-5 bg-red-500 text-white p-4 rounded-lg shadow-md z-50">
+            <!-- Icon SVG thay thế -->
+            <div class="w-6 h-6 mr-2 inline-block">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
+                </svg>
+            </div>
             <span id="error-text"></span>
         </div>
 
-        <!-- THÊM MỚI: Modal Bản đồ chi tiết -->
-        <!-- SỬA: Bỏ 'hidden', CSS sẽ tự xử lý -->
-        <div id="map-modal" class="fixed inset-0 bg-white dark:bg-slate-900 z-50 p-6 md:p-8 flex flex-col"> <!-- SỬA: dark: -->
-            <!-- Header Modal -->
-            <div class="flex justify-between items-center mb-4 flex-shrink-0">
-                <h2 class="text-xl font-bold">Bản đồ thời tiết</h2>
-                <!-- SỬA: Thêm hiệu ứng đàn hồi -->
-                <button id="close-map-modal" class="p-2 rounded-full hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors transition-transform duration-100 ease-out active:scale-95"> <!-- SỬA: dark: -->
-                    <span class="icon">close</span>
+        <!-- Modal Bản đồ toàn màn hình -->
+        <div id="map-modal" class="hidden fixed inset-0 bg-slate-100 dark:bg-slate-900 z-40 flex-col">
+            <header class="flex justify-between items-center p-4 border-b border-slate-200 dark:border-slate-700">
+                <h2 class="text-xl font-bold">Bản đồ thời tiết (Chi tiết)</h2>
+                <button id="map-close-button" class="p-2 rounded-full hover:bg-slate-200 dark:hover:bg-slate-700
+                                                    transition-transform transform active:scale-90">
+                    <!-- Icon SVG thay thế -->
+                    <div class="w-6 h-6 text-slate-800 dark:text-slate-200">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                        </svg>
+                    </div>
                 </button>
-            </div>
-            <!-- Nội dung Modal (Iframe) -->
-            <div class="flex-1 w-full h-full">
-                <iframe 
-                    id="full-weather-map"
-                    class="w-full h-full rounded-2xl border border-slate-200"
-                    src="" <!-- Để trống, JS sẽ điền vào -->
-                    frameborder="0">
+            </header>
+            <main class="flex-1">
+                <iframe id="full-weather-map" class="w-full h-full border-0" 
+                        src="about:blank" 
+                        frameborder="0">
                 </iframe>
+            </main>
+        </div>
+
+        <!-- Modal Cài đặt (Settings) -->
+        <div id="settings-menu-container" class="hidden fixed inset-0 bg-black/30 dark:bg-black/50 z-30">
+            <div id="settings-menu" class="absolute right-8 top-28 w-64 bg-white dark:bg-slate-700 rounded-2xl shadow-lg p-4">
+                
+                <!-- Menu Chính -->
+                <div id="settings-main-menu">
+                    <h3 class="font-bold mb-3">Cài đặt</h3>
+                    <button id="theme-menu-button" class="w-full flex justify-between items-center p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-600 transition-colors">
+                        <span>Theme</span>
+                        <!-- Icon SVG thay thế -->
+                        <div class="w-5 h-5 text-slate-500">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                              <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+                            </svg>
+                        </div>
+                    </button>
+                    <!-- Thêm các cài đặt khác ở đây -->
+                </div>
+
+                <!-- Menu Con: Theme -->
+                <div id="settings-theme-menu" class="hidden">
+                    <div class="flex items-center mb-3">
+                        <button id="theme-back-button" class="p-1 rounded-full hover:bg-slate-100 dark:hover:bg-slate-600 transition-colors mr-2">
+                            <!-- Icon SVG thay thế -->
+                            <div class="w-5 h-5 text-slate-800 dark:text-slate-200">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                                  <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+                                </svg>
+                            </div>
+                        </button>
+                        <h3 class="font-bold">Theme</h3>
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <button data-theme="light" class="theme-option w-full text-left p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-600 transition-colors">Sáng</button>
+                        <button data-theme="dark" class="theme-option w-full text-left p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-600 transition-colors">Tối</button>
+                        <button data-theme="system" class="theme-option w-full text-left p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-600 transition-colors">Theo hệ thống</button>
+                        <button data-theme="clock" class="theme-option w-full text-left p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-600 transition-colors">Theo đồng hồ</button>
+                    </div>
+                </div>
+
             </div>
         </div>
-        
+
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // --- URL Icon SVG ---
+            // Đã cập nhật với đường dẫn của bạn
+            const GITHUB_BASE_URL = "https://raw.githubusercontent.com/nnam0308/weather/dfbb5f8d2777fdc675d333464f417a4b75c2a3b3/v4/";
+
+            // --- Biến DOM ---
             const searchForm = document.getElementById('search-form');
             const searchInput = document.getElementById('search-input');
-            const searchSuggestionsEl = document.getElementById('search-suggestions'); // THÊM
+            const searchSuggestions = document.getElementById('search-suggestions');
             
             const headerClock = document.getElementById('header-clock');
             const headerDate = document.getElementById('header-date');
@@ -447,7 +565,7 @@
             const currentTimeDateEl = document.getElementById('current-time-date');
             const currentTempEl = document.getElementById('current-temp');
             const currentConditionEl = document.getElementById('current-condition');
-            const currentWeatherIconEl = document.getElementById('current-weather-icon');
+            const currentWeatherIconContainer = document.getElementById('current-weather-icon-container');
             
             const currentWindEl = document.getElementById('current-wind');
             const currentPressureEl = document.getElementById('current-pressure');
@@ -463,98 +581,160 @@
             const errorMessageEl = document.getElementById('error-message');
             const errorTextEl = document.getElementById('error-text');
 
+            // Chiều cao
             const currentInfoSection = document.getElementById('current-info-section');
             const hourlyForecastSection = document.getElementById('hourly-forecast-section');
             const dailyForecastSection = document.getElementById('daily-forecast-section');
             const weatherMapSection = document.getElementById('weather-map-section');
 
-            // THÊM MỚI: Các biến cho Modal Bản đồ
-            const openMapModalBtn = document.getElementById('open-map-modal');
-            const closeMapModalBtn = document.getElementById('close-map-modal');
+            // Modal Bản đồ
             const mapModal = document.getElementById('map-modal');
-            const fullWeatherMapEl = document.getElementById('full-weather-map');
+            const mapDetailsButton = document.getElementById('map-details-button');
+            const mapCloseButton = document.getElementById('map-close-button');
+            const fullWeatherMap = document.getElementById('full-weather-map');
 
-            // THÊM MỚI: Các biến cho Menu Cài đặt
+            // THÊM MỚI: Nút định vị
+            const detectLocationButton = document.getElementById('detect-location-button');
+
+            // Modal Cài đặt
             const settingsButton = document.getElementById('settings-button');
+            const settingsMenuContainer = document.getElementById('settings-menu-container');
             const settingsMenu = document.getElementById('settings-menu');
-            const settingsMainView = document.getElementById('settings-main-view');
+            const settingsMainMenu = document.getElementById('settings-main-menu');
             const themeMenuButton = document.getElementById('theme-menu-button');
-            const themeSubmenu = document.getElementById('theme-submenu');
-            const themeMenuBack = document.getElementById('theme-menu-back');
-            const themeOptionButtons = document.querySelectorAll('.theme-option-button');
-            const currentThemeLabel = document.getElementById('current-theme-label');
+            const settingsThemeMenu = document.getElementById('settings-theme-menu');
+            const themeBackButton = document.getElementById('theme-back-button');
+            const themeOptions = document.querySelectorAll('.theme-option');
 
-
+            // --- Biến Trạng thái ---
             let currentCity = "Nha Trang";
             let currentLat = 12.2388;
             let currentLon = 109.1967;
-            let debounceTimer; // THÊM: Biến cho debounce
-            let lastHourCheck = -1; // THÊM: Biến kiểm tra giờ cho theme 'auto'
-
-            // --- THÊM MỚI: Logic xử lý Theme (Giao diện) ---
+            let searchTimeout;
             let currentTheme = localStorage.getItem('theme') || 'system';
-            const systemThemeMatcher = window.matchMedia('(prefers-color-scheme: dark)');
-            const themeLabels = {
-                'light': 'Sáng',
-                'dark': 'Tối',
-                'system': 'Hệ thống',
-                'auto': 'Theo đồng hồ'
-            };
 
-            // Cập nhật dấu check và nhãn
-            function updateThemeUI(selectedTheme) {
-                currentThemeLabel.textContent = themeLabels[selectedTheme];
-                themeOptionButtons.forEach(button => {
-                    const checkIcon = button.querySelector('.icon');
-                    if (button.dataset.theme === selectedTheme) {
-                        checkIcon.classList.remove('hidden');
+            // --- HÀM MỚI: Hiệu ứng đếm số ---
+            function animateCountUp(el, targetValue, unit = '', duration = 1000) {
+                // Đảm bảo targetValue là một số hợp lệ
+                const target = Math.round(targetValue);
+                if (isNaN(target)) {
+                    // Nếu target không phải số (ví dụ: '--'), chỉ cần gán
+                    // Kiểm tra giá trị không hợp lệ (ví dụ: UV)
+                    if (typeof targetValue === 'string') {
+                         el.textContent = targetValue;
                     } else {
-                        checkIcon.classList.add('hidden');
+                        el.textContent = `${targetValue}${unit}`;
                     }
-                });
+                    return;
+                }
+
+                // Lấy giá trị bắt đầu từ textContent
+                let startValue = 0;
+                const currentText = el.textContent;
+                if (currentText) {
+                    // Thử parse số từ text (ví dụ: "10°C" -> 10)
+                    const parsed = parseInt(currentText, 10);
+                    if (!isNaN(parsed)) {
+                        startValue = parsed;
+                    }
+                }
+
+                // Nếu giá trị bắt đầu và kết thúc giống nhau, không cần đếm
+                if (startValue === target) {
+                    el.textContent = `${target}${unit}`;
+                    return;
+                }
+
+                let startTime = null;
+                const step = (timestamp) => {
+                    if (!startTime) startTime = timestamp;
+                    const progress = Math.min((timestamp - startTime) / duration, 1);
+                    
+                    // Tính toán giá trị hiện tại
+                    const currentValue = Math.floor(progress * (target - startValue) + startValue);
+                    
+                    el.textContent = `${currentValue}${unit}`;
+
+                    if (progress < 1) {
+                        window.requestAnimationFrame(step);
+                    } else {
+                        // Đảm bảo giá trị cuối cùng chính xác
+                        el.textContent = `${target}${unit}`;
+                    }
+                };
+                window.requestAnimationFrame(step);
             }
 
-            // Áp dụng theme (cốt lõi)
-            function runThemeUpdate() {
-                let themeToApply = currentTheme;
 
-                if (currentTheme === 'system') {
-                    themeToApply = systemThemeMatcher.matches ? 'dark' : 'light';
-                }
-                
-                if (currentTheme === 'auto') {
-                    const hour = new Date().getHours();
-                    // 18:00 (6 PM) -> 5:59 (AM) là ban đêm
-                    themeToApply = (hour >= 18 || hour < 6) ? 'dark' : 'light';
-                }
-
-                // Áp dụng class 'dark' vào thẻ <html>
-                if (themeToApply === 'dark') {
-                    document.documentElement.classList.add('dark');
-                } else {
-                    document.documentElement.classList.remove('dark');
-                }
-            }
-
-            // Hàm chính khi chọn theme
+            // --- Cài đặt & Theme ---
+            
+            // Hàm áp dụng theme
             function applyTheme(theme) {
-                currentTheme = theme;
-                localStorage.setItem('theme', theme);
-                updateThemeUI(theme);
-
-                // Hủy listener cũ
-                systemThemeMatcher.removeEventListener('change', runThemeUpdate);
-                
-                // Chạy cập nhật
-                runThemeUpdate(); 
-                
-                // Thêm listener mới nếu là 'system'
-                if (theme === 'system') {
-                    systemThemeMatcher.addEventListener('change', runThemeUpdate);
+                const hour = new Date().getHours();
+                if (theme === 'dark') {
+                    document.documentElement.classList.add('dark');
+                } else if (theme === 'light') {
+                    document.documentElement.classList.remove('dark');
+                } else if (theme === 'system') {
+                    // Xóa class cũ, lắng nghe thay đổi của hệ thống
+                    document.documentElement.classList.remove('dark');
+                    if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                        document.documentElement.classList.add('dark');
+                    }
+                } else if (theme === 'clock') {
+                    // 6 PM (18) -> 6 AM (6) là ban đêm
+                    if (hour >= 18 || hour < 6) {
+                        document.documentElement.classList.add('dark');
+                    } else {
+                        document.documentElement.classList.remove('dark');
+                    }
                 }
             }
-            // --- Kết thúc Logic Theme ---
 
+            // Lắng nghe thay đổi theme hệ thống
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+                if (currentTheme === 'system') {
+                    applyTheme('system');
+                }
+            });
+            
+            // Xử lý logic menu cài đặt
+            settingsButton.addEventListener('click', () => {
+                settingsMenuContainer.classList.remove('hidden');
+            });
+
+            settingsMenuContainer.addEventListener('click', (e) => {
+                // Đóng khi nhấp ra ngoài
+                if (e.target === settingsMenuContainer) {
+                    settingsMenuContainer.classList.add('hidden');
+                    // Reset về menu chính
+                    settingsMainMenu.classList.remove('hidden');
+                    settingsThemeMenu.classList.add('hidden');
+                }
+            });
+
+            themeMenuButton.addEventListener('click', () => {
+                settingsMainMenu.classList.add('hidden');
+                settingsThemeMenu.classList.remove('hidden');
+            });
+
+            themeBackButton.addEventListener('click', () => {
+                settingsMainMenu.classList.remove('hidden');
+                settingsThemeMenu.classList.add('hidden');
+            });
+
+            themeOptions.forEach(button => {
+                button.addEventListener('click', () => {
+                    const theme = button.getAttribute('data-theme');
+                    currentTheme = theme;
+                    localStorage.setItem('theme', theme);
+                    applyTheme(theme);
+                    settingsMenuContainer.classList.add('hidden');
+                    // Reset về menu chính
+                    settingsMainMenu.classList.remove('hidden');
+                    settingsThemeMenu.classList.add('hidden');
+                });
+            });
 
             // --- Cập nhật Đồng hồ ---
             function updateClock() {
@@ -567,38 +747,35 @@
                 if (headerDate) headerDate.textContent = dateString;
                 if (currentTimeDateEl) currentTimeDateEl.textContent = `${timeString} - ${dateString}`;
 
-                // THÊM: Logic cập nhật theme "Theo đồng hồ"
-                const currentHour = now.getHours();
-                if (currentTheme === 'auto' && currentHour !== lastHourCheck) {
-                    runThemeUpdate();
-                    lastHourCheck = currentHour;
+                // Tự động cập nhật theme nếu ở chế độ "Theo đồng hồ"
+                if (currentTheme === 'clock') {
+                    applyTheme('clock');
                 }
             }
 
             // --- Điều chỉnh Chiều cao ---
             function adjustSectionHeights() {
-                // SỬA: Toàn bộ hàm này đã được cập nhật
                 requestAnimationFrame(() => {
                     const infoHeight = currentInfoSection.offsetHeight;
                     
-                    if (window.innerWidth >= 1024) { // Chỉ áp dụng cho màn hình lg trở lên
-                        const minHeight = `${infoHeight}px`;
-                        hourlyForecastSection.style.minHeight = minHeight; // Sửa thành minHeight
-
-                        // Reset style 'height' để Tailwind (lg:h-[360px]) có thể hoạt động
+                    if (window.innerWidth >= 1024) { // lg
+                        // Xóa style 'height' cũ (nếu có) để Tailwind hoạt động
                         dailyForecastSection.style.height = '';
                         weatherMapSection.style.height = '';
 
-                        // Điều chỉnh chiều cao của iframe bản đồ cho vừa vặn 360px
+                        // Set mục hàng giờ = mục thông tin
+                        if (infoHeight > 200) { // Đảm bảo có chiều cao hợp lý
+                             hourlyForecastSection.style.minHeight = `${infoHeight}px`;
+                        }
+
+                        // Cập nhật chiều cao iframe bản đồ (đã bị cố định bởi 360px)
                         const mapTitle = weatherMapSection.querySelector('h2');
                         if (mapTitle) {
                             const mapTitleHeight = mapTitle.offsetHeight;
-                            // p-6 (24px) padding top/bottom, mb-4 (16px) margin bottom h2
-                            const paddingAndTitleHeight = (24 * 2) + 16 + mapTitleHeight; 
-                            // Chiều cao cố định 360px trừ đi padding và tiêu đề
+                            const paddingAndTitleHeight = (24 * 2) + 16 + mapTitleHeight; // p-6, mb-4
                             const newMapHeight = 360 - paddingAndTitleHeight;
                             
-                            if (newMapHeight > 100) { // Đảm bảo chiều cao hợp lý
+                            if (newMapHeight > 100) {
                                 weatherMapEl.style.height = `${newMapHeight}px`;
                             } else {
                                 weatherMapEl.style.height = `250px`; // Fallback
@@ -607,7 +784,7 @@
 
                     } else {
                         // Xóa chiều cao cố định trên di động
-                        hourlyForecastSection.style.minHeight = 'auto'; // Sửa thành minHeight
+                        hourlyForecastSection.style.minHeight = 'auto';
                         dailyForecastSection.style.height = 'auto';
                         weatherMapSection.style.height = 'auto';
                         weatherMapEl.style.height = `250px`; // Reset
@@ -624,31 +801,83 @@
                 }, 3000);
             }
 
-            // --- Lấy Biểu tượng & Mô tả Thời tiết ---
-            function getWeatherIcon(code) {
-                // Mã WMO -> Material Icons
+            // --- HÀM MỚI: Xử lý lỗi Fetch ---
+            function handleFetchError(error, context) {
+                console.error(`Lỗi trong ${context}:`, error);
+                let userMessage = 'Đã xảy ra lỗi.';
+                
+                // Cải thiện thông báo lỗi "Failed to fetch"
+                if (error.message.includes('Failed to fetch')) {
+                    userMessage = 'Lỗi mạng: Không thể tải dữ liệu. Vui lòng kiểm tra kết nối và đảm bảo bạn đang dùng HTTPS.';
+                } else if (error.message) {
+                    // Hiển thị các lỗi khác (ví dụ: 'Không thể tìm thấy vị trí.')
+                    userMessage = error.message;
+                }
+                showError(userMessage);
+            }
+
+            // --- Hàm trợ giúp (Nền, Icon, Mô tả) ---
+
+            function getWeatherBackgroundClass(code) {
+                const now = new Date();
+                const hour = now.getHours();
+                let timeOfDay;
+
+                // 1. Xác định thời gian trong ngày
+                if (hour >= 5 && hour < 10) timeOfDay = 'morning';    // 5:00 - 9:59
+                else if (hour >= 10 && hour < 17) timeOfDay = 'day';  // 10:00 - 16:59
+                else if (hour >= 17 && hour < 20) timeOfDay = 'evening'; // 17:00 - 19:59
+                else timeOfDay = 'night';                              // 20:00 - 4:59
+
+                // 2. Xác định loại thời tiết
+                let weatherType;
+                if ([0, 1].includes(code)) weatherType = 'sunny'; // Nắng
+                else if ([2, 3].includes(code)) weatherType = 'cloudy'; // Mây
+                else if ([45, 48].includes(code)) weatherType = 'foggy'; // Sương mù
+                else if (code >= 51 && code <= 67) weatherType = 'rainy'; // Mưa
+                else if (code >= 71 && code <= 77) weatherType = 'snowy'; // Tuyết
+                else if (code >= 80) weatherType = 'rainy'; // Mưa rào/Dông (tính là mưa)
+                else weatherType = 'cloudy'; // Mặc định
+
+                // 3. Xử lý trường hợp đặc biệt
+                if (timeOfDay === 'night' && weatherType === 'sunny') {
+                    weatherType = 'clear'; // Trời quang ban đêm
+                }
+                if (['foggy', 'snowy'].includes(weatherType)) {
+                     // Sương mù và tuyết dùng chung màu với mưa
+                    weatherType = 'rainy';
+                }
+
+                return `weather-${timeOfDay}-${weatherType}`;
+            }
+
+            function getWeatherIcon(code, hour) {
+                // Mặc định là ban ngày (nếu không cung cấp giờ)
+                const isNight = (hour >= 20 || hour < 6);
+
+                // Mã WMO -> Tên file SVG của bạn
                 const icons = {
-                    0: 'sunny', // Clear sky
-                    1: 'partly_cloudy_day', // Mainly clear
-                    2: 'partly_cloudy_day', // Partly cloudy
-                    3: 'cloud', // Overcast
-                    45: 'foggy', // Fog
-                    48: 'foggy', // Depositing rime fog
-                    51: 'rainy_light', // Drizzle light
-                    53: 'rainy', // Drizzle moderate
-                    55: 'rainy', // Drizzle dense
-                    61: 'rainy', // Rain slight
-                    63: 'rainy', // Rain moderate
-                    65: 'rainy_heavy', // Rain heavy
-                    71: 'weather_snowy', // Snow fall slight
-                    73: 'weather_snowy', // Snow fall moderate
-                    75: 'weather_snowy', // Snow fall heavy
-                    80: 'thunderstorm', // Rain showers slight
-                    81: 'thunderstorm', // Rain showers moderate
-                    82: 'thunderstorm', // Rain showers violent
-                    95: 'thunderstorm', // Thunderstorm
+                    0: isNight ? 'clear_night.svg' : 'clear_day.svg', // Trời quang
+                    1: isNight ? 'mostly_clear_night.svg' : 'mostly_clear_day.svg', // Gần quang
+                    2: isNight ? 'partly_cloudy_night.svg' : 'partly_cloudy_day.svg', // Mây rải rác
+                    3: 'cloudy.svg', // Trời u ám
+                    45: 'haze_fog_dust_smoke.svg', // Sương mù
+                    48: 'haze_fog_dust_smoke.svg', // Sương mù đọng
+                    51: 'drizzle.svg', // Mưa phùn nhẹ
+                    53: 'drizzle.svg', // Mưa phùn vừa
+                    55: 'drizzle.svg', // Mưa phùn dày
+                    61: isNight ? 'rain_with_cloudy_dark.svg' : 'rain_with_cloudy_light.svg', // Mưa nhẹ
+                    63: 'showers_rain.svg', // Mưa vừa
+                    65: 'heavy_rain.svg', // Mưa to
+                    71: isNight ? 'snow_with_cloudy_dark.svg' : 'snow_with_cloudy_light.svg', // Tuyết rơi nhẹ
+                    73: 'showers_snow.svg', // Tuyết rơi vừa
+                    75: 'heavy_snow.svg', // Tuyết rơi dày
+                    80: isNight ? 'scattered_showers_night.svg' : 'scattered_showers_day.svg', // Mưa rào nhẹ
+                    81: 'showers_rain.svg', // Mưa rào vừa
+                    82: 'heavy_rain.svg', // Mưa rào dữ dội
+                    95: isNight ? 'isolated_scattered_thunderstorms_night.svg' : 'isolated_scattered_thunderstorms_day.svg', // Dông
                 };
-                return icons[code] || 'thermostat'; // Mặc định
+                return GITHUB_BASE_URL + (icons[code] || 'cloudy.svg'); // Mặc định
             }
 
             function getWeatherDescription(code) {
@@ -675,8 +904,25 @@
                 };
                 return descriptions[code] || 'Không xác định';
             }
+
+            // Hàm mô tả Giai đoạn Mặt trăng (MỚI)
+            function getMoonPhaseDescription(value) {
+                if (value === null || typeof value === 'undefined' || value === 'N/A') return 'N/A';
+                
+                if (value === 0) return 'Trăng non';
+                if (value > 0 && value < 0.25) return 'Trăng lưỡi liềm đầu tháng';
+                if (value === 0.25) return 'Trăng bán nguyệt đầu tháng';
+                if (value > 0.25 && value < 0.5) return 'Trăng khuyết đầu tháng';
+                if (value === 0.5) return 'Trăng tròn';
+                if (value > 0.5 && value < 0.75) return 'Trăng khuyết cuối tháng';
+                if (value === 0.75) return 'Trăng bán nguyệt cuối tháng';
+                if (value > 0.75 && value < 1) return 'Trăng lưỡi liềm cuối tháng';
+                return 'Trăng non'; // Gần 1 là quay về 0
+            }
             
+            // --- SỬA LỖI: Hoàn thiện lại hàm này ---
             function getUvDescription(uv) {
+                if (uv === null || typeof uv === 'undefined') return '--';
                 if (uv <= 2) return `Thấp (${uv})`;
                 if (uv <= 5) return `Vừa (${uv})`;
                 if (uv <= 7) return `Cao (${uv})`;
@@ -684,61 +930,136 @@
                 return `Cực cao (${uv})`;
             }
 
-            // --- THÊM: Lấy lớp nền (background) theo thời tiết ---
-            // SỬA: Cập nhật hàm này để bao gồm thời gian trong ngày
-            function getWeatherBackgroundClass(code) {
-                const hour = new Date().getHours();
-                let timeOfDay;
-                let weatherType;
+            // Hàm tạo và chèn thẻ <img>
+            function createWeatherIcon(src) {
+                const img = document.createElement('img');
+                img.className = 'weather-icon';
+                img.src = src;
+                img.alt = "Weather Icon";
+                img.onload = () => img.classList.add('loaded'); // Thêm class khi tải xong
+                return img;
+            }
 
-                // 1. Xác định thời gian trong ngày
-                if (hour >= 5 && hour < 10) {
-                    timeOfDay = 'morning'; // 5:00 - 9:59
-                } else if (hour >= 10 && hour < 17) {
-                    timeOfDay = 'day';     // 10:00 - 16:59
-                } else if (hour >= 17 && hour < 20) {
-                    timeOfDay = 'evening'; // 17:00 - 19:59
-                } else {
-                    timeOfDay = 'night';   // 20:00 - 4:59
-                }
+            // --- Lấy dữ liệu AQI (MỚI) ---
+            async function fetchAQI(lat, lon) {
+                try {
+                    const aqiApiUrl = `https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${lat}&longitude=${lon}&current=us_aqi&timezone=auto`;
+                    const response = await fetch(aqiApiUrl);
+                    
+                    // --- SỬA LỖI: Thêm log chi tiết ---
+                    if (!response.ok) {
+                        let errorDetails = `Lỗi ${response.status}: ${response.statusText}`;
+                         try {
+                            const errorData = await response.json();
+                            if (errorData && errorData.reason) {
+                                errorDetails = errorData.reason;
+                            }
+                        } catch (e) { /* Bỏ qua */ }
+                        console.error('Lỗi khi gọi API Air-Quality (fetchAQI):', errorDetails, 'URL:', aqiApiUrl);
+                        // Không ném lỗi, chỉ log và set N/A
+                        throw new Error(`Không thể tải dữ liệu AQI. ${errorDetails}`);
+                    }
+                    // --- KẾT THÚC SỬA LỖI ---
 
-                // 2. Xác định loại thời tiết
-                if (code <= 1) { // 0, 1
-                    weatherType = 'sunny';
-                } else if (code <= 3) { // 2, 3
-                    weatherType = 'cloudy';
-                } else if (code === 45 || code === 48) { // 45, 48
-                    weatherType = 'foggy';
-                } else if (code >= 71 && code <= 75) { // 71, 73, 75
-                    weatherType = 'snowy';
-                } else if (code >= 51) { // 5x, 6x, 8x, 9x
-                    weatherType = 'rainy';
-                } else {
-                    weatherType = 'default';
-                }
+                    const data = await response.json();
+                    
+                    // --- SỬA LỖI: Kiểm tra data.error ---
+                    if (data.error) {
+                        console.error('Lỗi API AQI (data.error):', data.reason);
+                        throw new Error(data.reason || 'Lỗi không xác định từ API chất lượng không khí');
+                    }
+                    // --- KẾT THÚC SỬA LỖI ---
+                    
+                    // Cập nhật UI ngay lập tức
+                    const aqi = data.current?.us_aqi || 'N/A';
+                    const aqiEl = document.getElementById('detail-aqi');
+                    if (aqiEl) aqiEl.textContent = aqi;
 
-                // 3. Xử lý trường hợp đặc biệt
-                if (timeOfDay === 'night' && weatherType === 'sunny') {
-                    weatherType = 'clear'; // "Nắng" vào ban đêm là "Trời quang"
+                } catch (error) {
+                    // CẬP NHẬT: Sử dụng handleFetchError
+                    handleFetchError(error, 'fetchAQI');
+                    const aqiEl = document.getElementById('detail-aqi');
+                    if (aqiEl) aqiEl.textContent = 'N/A';
                 }
-                if (weatherType === 'default') {
-                    return 'weather-default'; // Trả về mặc định nếu không khớp
-                }
+            }
 
-                // 4. Gộp và trả về tên lớp (ví dụ: "weather-day-sunny")
-                return `weather-${timeOfDay}-${weatherType}`;
+            // --- HÀM MỚI: Lấy tên vị trí từ tọa độ (Reverse Geocoding) ---
+            async function fetchLocationName(lat, lon) {
+                // loadingSpinner đã được hiển thị bởi event listener
+                try {
+                    // SỬA LỖI: Đã xóa &language=vi
+                    const apiUrl = `https://geocoding-api.open-meteo.com/v1/reverse?latitude=${lat}&longitude=${lon}&format=json`;
+                    
+                    const response = await fetch(apiUrl);
+                    if (!response.ok) throw new Error('Không thể lấy tên vị trí.');
+                    
+                    const data = await response.json();
+                    
+                    // Ưu tiên 'locality' (thành phố lớn) hoặc 'city', fallback về 'town'
+                    // CẬP NHẬT: Thêm fallback 'name' và 'administrative' để hiển thị tên tốt hơn
+                    const city = data.locality || data.city || data.town || data.name || 'Vị trí không xác định';
+                    const admin1 = data.admin1 || data.administrative || '';
+                    
+                    // Ghép tên, tránh trùng lặp (ví dụ: "San Francisco, San Francisco")
+                    let locationName = city;
+                    if (admin1 && city !== admin1) {
+                        locationName = `${city}, ${admin1}`;
+                    }
+
+                    // Cập nhật trạng thái global
+                    currentCity = locationName;
+                    currentLat = lat;
+                    currentLon = lon;
+
+                    // Gọi các hàm fetch khác với tên và tọa độ mới
+                    fetchWeather(lat, lon, locationName);
+                    fetchAQI(lat, lon);
+
+                } catch (error) {
+                    // CẬP NHẬT: Sử dụng handleFetchError
+                    handleFetchError(error, 'fetchLocationName');
+                    loadingSpinner.classList.add('hidden'); // Phải ẩn spinner ở đây nếu lỗi
+                }
+                // fetchWeather() sẽ tự ẩn spinner nếu nó chạy thành công
             }
 
             // --- Lấy dữ liệu thời tiết ---
             async function fetchWeather(lat, lon, city) {
                 loadingSpinner.classList.remove('hidden');
                 try {
-                    const apiUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relativehumidity_2m,weathercode,windspeed_10m,pressure_msl,dewpoint_2m,visibility,uv_index&hourly=temperature_2m,weathercode,temperature_80m,precipitation_probability&daily=weathercode,temperature_2m_max,temperature_2m_min&timezone=auto&forecast_days=14`;
+                    // --- SỬA LỖI v2: Đã loại bỏ moon_phase khỏi URL ---
+                    const apiUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relativehumidity_2m,weathercode,windspeed_10m,pressure_msl,dewpoint_2m,visibility,uv_index,apparent_temperature,cloudcover,precipitation&hourly=temperature_2m,weathercode,temperature_80m,precipitation_probability&daily=weathercode,temperature_2m_max,temperature_2m_min,sunrise,sunset&timezone=auto&forecast_days=14`;
                     
                     const response = await fetch(apiUrl);
-                    if (!response.ok) throw new Error('Không thể tải dữ liệu thời tiết.');
+
+                    // --- SỬA LỖI: Thêm log chi tiết ---
+                    if (!response.ok) {
+                        let errorDetails = `Lỗi ${response.status}: ${response.statusText}`;
+                        try {
+                            // Thử đọc chi tiết lỗi từ API (nếu có)
+                            const errorData = await response.json();
+                            if (errorData && errorData.reason) {
+                                errorDetails = errorData.reason;
+                            }
+                        } catch (e) {
+                            // Bỏ qua nếu không thể parse JSON
+                        }
+                        // Log lỗi chi tiết vào console
+                        console.error('Lỗi khi gọi API Open-Meteo (fetchWeather):', errorDetails, 'URL:', apiUrl);
+                        // Ném lỗi với thông báo chi tiết hơn
+                        throw new Error(`Không thể tải dữ liệu thời tiết. ${errorDetails}`);
+                    }
+                    // --- KẾT THÚC SỬA LỖI ---
                     
                     const data = await response.json();
+
+                    // --- SỬA LỖI: Kiểm tra data.error ---
+                    if (data.error) {
+                        console.error('Lỗi API Thời tiết (data.error):', data.reason);
+                        throw new Error(data.reason || 'Lỗi không xác định từ API thời tiết');
+                    }
+                    // --- KẾT THÚC SỬA LỖI ---
+                    
                     updateCurrentWeatherUI(data, city);
                     updateHourlyForecastUI(data);
                     updateDailyForecastUI(data);
@@ -750,141 +1071,168 @@
                     adjustSectionHeights();
 
                 } catch (error) {
-                    console.error('Lỗi khi lấy dữ liệu thời tiết:', error);
-                    showError(error.message);
+                    // CẬP NHẬT: Sử dụng handleFetchError
+                    handleFetchError(error, 'fetchWeather');
                 } finally {
                     loadingSpinner.classList.add('hidden');
                 }
             }
 
-            // --- Lấy tọa độ từ tên thành phố (cho submit) ---
+            // --- Lấy gợi ý địa điểm ---
+            async function fetchSuggestions(query) {
+                try {
+                    const apiUrl = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(query)}&count=10&language=vi&format=json`;
+                    const response = await fetch(apiUrl);
+                    if (!response.ok) throw new Error('Lỗi mạng khi tìm gợi ý.');
+                    
+                    const data = await response.json();
+                    displaySuggestions(data.results || []);
+
+                } catch (error) {
+                    // CẬP NHẬT: Sử dụng handleFetchError
+                    handleFetchError(error, 'fetchSuggestions');
+                    searchSuggestions.classList.add('hidden');
+                }
+            }
+
+            function displaySuggestions(results) {
+                searchSuggestions.innerHTML = '';
+                if (results.length === 0) {
+                    searchSuggestions.classList.add('hidden');
+                    return;
+                }
+
+                results.forEach(location => {
+                    const admin1 = location.admin1 ? `, ${location.admin1}` : '';
+                    const country = location.country ? `, ${location.country}` : '';
+                    const displayName = `${location.name}${admin1}${country}`;
+                    
+                    const suggestionItem = document.createElement('div');
+                    suggestionItem.className = "p-3 hover:bg-slate-100 dark:hover:bg-slate-600 cursor-pointer";
+                    suggestionItem.textContent = displayName;
+                    
+                    suggestionItem.addEventListener('click', () => {
+                        currentCity = `${location.name}${admin1}`; // Tên ngắn gọn hơn
+                        currentLat = location.latitude;
+                        currentLon = location.longitude;
+                        
+                        fetchWeather(location.latitude, location.longitude, currentCity);
+                        fetchAQI(location.latitude, location.longitude); // Lấy AQI cho vị trí mới
+                        
+                        searchSuggestions.classList.add('hidden');
+                        searchInput.value = '';
+                    });
+                    
+                    searchSuggestions.appendChild(suggestionItem);
+                });
+
+                searchSuggestions.classList.remove('hidden');
+            }
+
+            // --- Thêm hàm fetchCoordinates (SỬA LỖI) ---
             async function fetchCoordinates(city) {
                 loadingSpinner.classList.remove('hidden');
                 try {
                     const apiUrl = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1&language=vi&format=json`;
                     const response = await fetch(apiUrl);
-                    if (!response.ok) throw new Error('Không tìm thấy vị trí.');
-                    
-                    const data = await response.json();
-                    if (!data.results || data.results.length === 0) {
-                        throw new Error(`Không tìm thấy vị trí cho "${city}".`);
-                    }
-                    
-                    const location = data.results[0];
-                    const lat = location.latitude;
-                    const lon = location.longitude;
-                    // Xây dựng tên vị trí (ưu tiên Tỉnh/Thành phố, nếu không có thì dùng tên)
-                    const admin1 = location.admin1 ? `, ${location.admin1}` : '';
-                    const displayName = `${location.name}${admin1}`;
-
-                    currentCity = displayName;
-                    currentLat = lat;
-                    currentLon = lon;
-
-                    fetchWeather(lat, lon, displayName);
-
-                } catch (error) {
-                    console.error('Lỗi khi lấy tọa độ:', error);
-                    showError(error.message);
-                } finally {
-                    loadingSpinner.classList.add('hidden');
-                    searchSuggestionsEl.classList.add('hidden'); // Ẩn gợi ý
-                }
-            }
-            
-            // --- THÊM: Lấy gợi ý tìm kiếm ---
-            async function fetchSuggestions(query) {
-                if (query.length < 3) {
-                    searchSuggestionsEl.classList.add('hidden');
-                    return;
-                }
-                
-                try {
-                    const apiUrl = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(query)}&count=10&language=vi&format=json`;
-                    const response = await fetch(apiUrl);
-                    if (!response.ok) return;
+                    if (!response.ok) throw new Error('Không thể tìm thấy vị trí.');
                     
                     const data = await response.json();
                     if (data.results && data.results.length > 0) {
-                        displaySuggestions(data.results);
-                    } else {
-                        searchSuggestionsEl.classList.add('hidden');
-                    }
-                } catch (error) {
-                    console.error('Lỗi khi lấy gợi ý:', error);
-                    searchSuggestionsEl.classList.add('hidden');
-                }
-            }
-
-            // --- THÊM: Hiển thị gợi ý tìm kiếm ---
-            function displaySuggestions(results) {
-                searchSuggestionsEl.innerHTML = '';
-                if (results.length === 0) {
-                    searchSuggestionsEl.classList.add('hidden');
-                    return;
-                }
-                
-                results.forEach(location => {
-                    const admin1 = location.admin1 ? `, ${location.admin1}` : '';
-                    const country = location.country ? `, ${location.country}` : '';
-                    const displayName = `${location.name}${admin1}`;
-                    const fullDisplayName = `${location.name}${admin1}${country}`;
-                    
-                    const suggestionItem = document.createElement('div');
-                    suggestionItem.className = "p-4 hover:bg-slate-100 dark:hover:bg-slate-600 cursor-pointer flex items-center gap-3"; // SỬA: dark:
-                    suggestionItem.innerHTML = `
-                        <span class="icon text-slate-500 dark:text-slate-400">location_on</span> <!-- SỬA: dark: -->
-                        <span>${fullDisplayName}</span>
-                    `;
-                    
-                    suggestionItem.addEventListener('click', () => {
-                        currentCity = displayName;
+                        const location = data.results[0];
+                        
+                        const admin1 = location.admin1 ? `, ${location.admin1}` : '';
+                        currentCity = `${location.name}${admin1}`; // Cập nhật tên
                         currentLat = location.latitude;
                         currentLon = location.longitude;
                         
-                        fetchWeather(location.latitude, location.longitude, displayName);
-                        
-                        searchInput.value = '';
-                        searchSuggestionsEl.classList.add('hidden');
-                    });
-                    
-                    searchSuggestionsEl.appendChild(suggestionItem);
-                });
-                
-                searchSuggestionsEl.classList.remove('hidden');
+                        fetchWeather(currentLat, currentLon, currentCity);
+                        fetchAQI(currentLat, currentLon); // Lấy AQI cho vị trí mới
+                    } else {
+                        throw new Error('Không tìm thấy vị trí cho tên đã nhập.');
+                    }
+
+                } catch (error) {
+                    // CẬP NHẬT: Sử dụng handleFetchError
+                    handleFetchError(error, 'fetchCoordinates');
+                    loadingSpinner.classList.add('hidden'); // Ẩn spinner nếu lỗi
+                }
+                // `fetchWeather` sẽ ẩn spinner khi nó thành công
             }
+
 
             // --- Cập nhật Giao diện ---
             function updateCurrentWeatherUI(data, city) {
                 const current = data.current;
+                const currentHour = new Date().getHours();
                 
-                // THÊM: Cập nhật background body
-                const weatherClass = getWeatherBackgroundClass(current.weathercode);
-                
-                // SỬA: Xóa tất cả các lớp weather- cũ
-                // (Liệt kê tất cả các khả năng để đảm bảo xóa sạch)
-                document.body.classList.remove(
-                    'weather-default',
-                    'weather-morning-sunny', 'weather-day-sunny', 'weather-evening-sunny', 'weather-night-clear',
-                    'weather-morning-cloudy', 'weather-day-cloudy', 'weather-evening-cloudy', 'weather-night-cloudy',
-                    'weather-morning-rainy', 'weather-day-rainy', 'weather-evening-rainy', 'weather-night-rainy',
-                    'weather-morning-foggy', 'weather-day-foggy', 'weather-evening-foggy', 'weather-night-foggy',
-                    'weather-morning-snowy', 'weather-day-snowy', 'weather-evening-snowy', 'weather-night-snowy'
-                );
-                // Thêm lớp mới
-                document.body.classList.add(weatherClass);
-
+                // Cập nhật thẻ thông tin chính
                 currentLocationEl.textContent = city;
-                currentTempEl.textContent = `${Math.round(current.temperature_2m)}°C`;
-                currentConditionEl.textContent = getWeatherDescription(current.weathercode);
-                currentWeatherIconEl.textContent = getWeatherIcon(current.weathercode);
                 
-                currentWindEl.textContent = `${Math.round(current.windspeed_10m)} km/h`;
-                currentPressureEl.textContent = `${Math.round(current.pressure_msl)} hPa`;
-                currentHumidityEl.textContent = `${current.relativehumidity_2m}%`;
-                currentVisibilityEl.textContent = `${Math.round(current.visibility / 1000)} km`;
-                currentDewpointEl.textContent = `${Math.round(current.dewpoint_2m)}°C`;
+                // CẬP NHẬT: Sử dụng animateCountUp
+                animateCountUp(currentTempEl, current.temperature_2m, '°C');
+                
+                currentConditionEl.textContent = getWeatherDescription(current.weathercode);
+                
+                currentWeatherIconContainer.innerHTML = ''; // Xóa icon cũ
+                const iconSrc = getWeatherIcon(current.weathercode, currentHour);
+                currentWeatherIconContainer.appendChild(createWeatherIcon(iconSrc));
+                
+                // CẬP NHẬT: Sử dụng animateCountUp
+                animateCountUp(currentWindEl, current.windspeed_10m, ' km/h');
+                animateCountUp(currentPressureEl, current.pressure_msl, ' hPa');
+                animateCountUp(currentHumidityEl, current.relativehumidity_2m, '%');
+                animateCountUp(currentVisibilityEl, current.visibility / 1000, ' km');
+                animateCountUp(currentDewpointEl, current.dewpoint_2m, '°C');
+                
+                // UV là text mô tả, không phải số đếm
                 currentUvEl.textContent = getUvDescription(Math.round(current.uv_index));
+
+                // Cập nhật Nền (Gradient)
+                const newBgClass = getWeatherBackgroundClass(current.weathercode);
+                const bodyClasses = document.body.classList;
+                bodyClasses.forEach(cls => {
+                    if (cls.startsWith('weather-')) {
+                        bodyClasses.remove(cls);
+                    }
+                });
+                bodyClasses.add(newBgClass);
+
+                // --- CẬP NHẬT MỤC WEATHER DETAILS (Sử dụng animateCountUp) ---
+                const daily = data.daily;
+                const todayIndex = 0; // Luôn là hôm nay
+
+                // Hàm trợ giúp định dạng thời gian (ví dụ: 2024-11-18T06:30 -> 06:30)
+                const formatTime = (dateTimeString) => {
+                    if (!dateTimeString) return '--:--';
+                    try {
+                        return new Date(dateTimeString).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
+                    } catch (e) {
+                        return '--:--';
+                    }
+                };
+                
+                // Cập nhật các mục chi tiết
+                animateCountUp(document.getElementById('detail-temp'), current.temperature_2m, '°C');
+                animateCountUp(document.getElementById('detail-feels-like'), current.apparent_temperature, '°C');
+                animateCountUp(document.getElementById('detail-cloud-cover'), current.cloudcover, '%');
+                animateCountUp(document.getElementById('detail-precipitation'), current.precipitation, ' mm');
+                animateCountUp(document.getElementById('detail-wind'), current.windspeed_10m, ' km/h');
+                animateCountUp(document.getElementById('detail-humidity'), current.relativehumidity_2m, '%');
+                animateCountUp(document.getElementById('detail-visibility'), current.visibility / 1000, ' km');
+                animateCountUp(document.getElementById('detail-pressure'), current.pressure_msl, ' hPa');
+
+                // UV là text, không đếm
+                document.getElementById('detail-uv').textContent = getUvDescription(Math.round(current.uv_index));
+                
+                // Sun & Moon (từ daily) - Đây là text, không đếm
+                document.getElementById('detail-sun').textContent = `${formatTime(daily.sunrise[todayIndex])} / ${formatTime(daily.sunset[todayIndex])}`;
+                
+                // --- SỬA LỖI: Cập nhật mục Moon ---
+                document.getElementById('detail-moon').textContent = 'N/A';
+                
+                // --- SỬA LỖI v2: Cập nhật mục Moon Phase ---
+                document.getElementById('detail-moon-phase').textContent = 'N/A';
             }
 
             function updateHourlyForecastUI(data) {
@@ -893,23 +1241,28 @@
                 const currentHour = now.getHours();
 
                 let startIndex = data.hourly.time.findIndex(timeStr => new Date(timeStr).getHours() === currentHour);
-                if (startIndex === -1) startIndex = 0; 
+                if (startIndex === -1) startIndex = 0;
 
                 for (let i = startIndex; i < startIndex + 24 && i < data.hourly.time.length; i++) {
                     const time = new Date(data.hourly.time[i]);
+                    const hour = time.getHours();
                     const hourString = time.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
                     
                     const tempLow = data.hourly.temperature_80m[i] ? Math.round(data.hourly.temperature_80m[i]) : Math.round(data.hourly.temperature_2m[i] - 2);
 
-                    // SỬA: p-12 -> p-4 và w-33 -> w-40
+                    const iconSrc = getWeatherIcon(data.hourly.weathercode[i], hour);
+
                     const html = `
-                        <div class="text-center flex-shrink-0 p-4 bg-slate-100 dark:bg-slate-700 rounded-2xl w-40"> <!-- SỬA: dark: -->
-                            <span class="icon text-3xl text-blue-500">${getWeatherIcon(data.hourly.weathercode[i])}</span>
+                        <div class="text-center flex-shrink-0 p-4 bg-slate-100/70 dark:bg-slate-700/70 backdrop-blur-sm rounded-2xl w-40">
+                            <!-- Icon SVG -->
+                            <div class="w-12 h-12 mx-auto">
+                                <img src="${iconSrc}" alt="Icon" class="weather-icon loaded">
+                            </div>
                             <div class="my-1">
                                 <span class="font-bold">${Math.round(data.hourly.temperature_2m[i])}°</span>
-                                <span class="text-slate-600 dark:text-slate-400">${tempLow}°</span> <!-- SỬA: dark: -->
+                                <span class="text-slate-600 dark:text-slate-400">${tempLow}°</span>
                             </div>
-                            <div class="text-sm text-slate-700 dark:text-slate-300 mb-1 truncate">${getWeatherDescription(data.hourly.weathercode[i])}</div> <!-- SỬA: dark: -->
+                            <div class="text-sm text-slate-700 dark:text-slate-300 mb-1 truncate">${getWeatherDescription(data.hourly.weathercode[i])}</div>
                             <div class="font-bold">${hourString}</div>
                         </div>
                     `;
@@ -918,42 +1271,45 @@
             }
 
             function updateDailyForecastUI(data) {
-                // SỬA: Toàn bộ hàm này đã được cập nhật
                 dailyForecastContainer.innerHTML = '';
                 for (let i = 0; i < data.daily.time.length; i++) {
                     const date = new Date(data.daily.time[i]);
                     const dayMonth = date.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit' });
                     const weekday = date.toLocaleDateString('vi-VN', { weekday: 'long' });
                     
+                    // Dùng icon ban ngày (giữa trưa) cho dự báo
+                    const iconSrc = getWeatherIcon(data.daily.weathercode[i], 12); 
+
+                    // HTML này dùng cho cả 2 chế độ (ngang/dọc)
                     const html = `
-                        <!-- Thêm 'flex-shrink-0 w-40' cho di động và 'lg:w-full' cho desktop -->
-                        <div class="flex-shrink-0 w-40 p-4 bg-slate-100 dark:bg-slate-700 rounded-2xl lg:w-full"> <!-- SỬA: dark: -->
-                        
-                            <!-- Bố cục DI ĐỘNG (giống hàng giờ): ẩn trên 'lg' -->
-                            <div class="flex flex-col items-center text-center lg:hidden">
-                                <span class="icon text-3xl text-blue-500">${getWeatherIcon(data.daily.weathercode[i])}</span>
-                                <div class="my-1">
-                                    <span class="font-bold">${Math.round(data.daily.temperature_2m_max[i])}°</span>
-                                    <span class="text-slate-600 dark:text-slate-400">/ ${Math.round(data.daily.temperature_2m_min[i])}°</span> <!-- SỬA: dark: -->
-                                </div>
-                                <div class="text-sm text-slate-700 dark:text-slate-300 truncate">${getWeatherDescription(data.daily.weathercode[i])}</div> <!-- SỬA: dark: -->
-                                <div class="font-bold mt-1">${dayMonth}</div>
+                        <!-- Desktop: flex, Mobile: w-40 -->
+                        <div class="p-4 bg-slate-100/70 dark:bg-slate-700/70 backdrop-blur-sm rounded-2xl 
+                                    flex-shrink-0 w-40 
+                                    lg:w-full lg:flex lg:justify-between lg:items-center">
+                            
+                            <!-- Cột 1 (Mobile: Chính) -->
+                            <div class="text-center lg:text-left">
+                                <div class="font-bold">${dayMonth}</div>
+                                <div class="text-slate-600 dark:text-slate-400 lg:hidden">${weekday}</div>
                             </div>
                             
-                            <!-- Bố cục DESKTOP (như cũ): ẩn dưới 'lg' -->
-                            <div class="hidden lg:block">
-                                <div class="flex justify-between items-center mb-1">
-                                    <div class="font-bold">${dayMonth}</div>
-                                    <div class="text-slate-600 dark:text-slate-400">${weekday}</div> <!-- SỬA: dark: -->
-                                </div>
-                                <div class="flex justify-between items-center mb-1">
-                                    <span class="icon text-3xl text-blue-500">${getWeatherIcon(data.daily.weathercode[i])}</span>
-                                    <div>
-                                        <span class="font-bold text-lg">${Math.round(data.daily.temperature_2m_max[i])}°</span>
-                                        <span class="text-slate-600 dark:text-slate-400">/ ${Math.round(data.daily.temperature_2m_min[i])}°</span> <!-- SỬA: dark: -->
-                                    </div>
-                                </div>
-                                <div class="text-sm text-slate-700 dark:text-slate-300">${getWeatherDescription(data.daily.weathercode[i])}</div> <!-- SỬA: dark: -->
+                            <!-- Cột 2 (Mobile: Ẩn) -->
+                            <div class="text-slate-600 dark:text-slate-400 hidden lg:block">${weekday}</div>
+
+                            <!-- Cột 3 (Mobile: Chính) -->
+                            <div class="w-12 h-12 mx-auto my-1 lg:mx-0 lg:my-0">
+                                <img src="${iconSrc}" alt="Icon" class="weather-icon loaded">
+                            </div>
+
+                            <!-- Cột 4 (Mobile: Chính) -->
+                            <div class="text-center lg:text-right">
+                                <span class="font-bold text-lg">${Math.round(data.daily.temperature_2m_max[i])}°</span>
+                                <span class="text-slate-600 dark:text-slate-400">/ ${Math.round(data.daily.temperature_2m_min[i])}°</span>
+                            </div>
+                            
+                            <!-- Cột 5 (Mobile: Chính, Desktop: Hiển thị) -->
+                            <div class="text-sm text-slate-700 dark:text-slate-300 text-center truncate">
+                                ${getWeatherDescription(data.daily.weathercode[i])}
                             </div>
                         </div>
                     `;
@@ -968,86 +1324,97 @@
                 if (city) {
                     fetchCoordinates(city);
                     searchInput.value = '';
-                    searchSuggestionsEl.classList.add('hidden'); // THÊM
+                    searchSuggestions.classList.add('hidden');
+                    searchInput.blur();
                 }
-            });
-
-            // THÊM: Sự kiện gõ phím cho gợi ý
-            searchInput.addEventListener('input', () => {
-                clearTimeout(debounceTimer);
-                debounceTimer = setTimeout(() => {
-                    fetchSuggestions(searchInput.value.trim());
-                }, 300); // Đợi 300ms rồi mới gọi API
-            });
-
-            // THÊM: Ẩn gợi ý khi nhấp ra ngoài
-            document.addEventListener('click', (e) => {
-                if (!searchForm.contains(e.target)) {
-                    searchSuggestionsEl.classList.add('hidden');
-                }
-                
-                // THÊM MỚI: Ẩn menu Cài đặt khi nhấp ra ngoài
-                if (settingsMenu && !settingsButton.contains(e.target) && !settingsMenu.contains(e.target)) {
-                    settingsMenu.classList.add('hidden');
-                    // Reset về menu chính
-                    settingsMainView.classList.remove('hidden');
-                    themeSubmenu.classList.add('hidden');
-                }
-            });
-
-
-            // --- Khởi tạo ---
-            // THÊM: Logic Khởi tạo Theme
-            applyTheme(currentTheme); 
-            lastHourCheck = new Date().getHours(); // Khởi tạo giờ kiểm tra
-
-            setInterval(updateClock, 1000);
-            updateClock();
-            fetchWeather(currentLat, currentLon, currentCity); // Tải dữ liệu ban đầu cho Nha Trang
-
-            // Theo dõi thay đổi kích thước cửa sổ
-            window.addEventListener('resize', adjustSectionHeights);
-
-            // --- THÊM MỚI: Xử lý Modal Bản đồ ---
-            openMapModalBtn.addEventListener('click', () => {
-                // Lấy lat/lon hiện tại và tạo URL chi tiết
-                // (Sử dụng các tham số bạn cung cấp, nhưng với vĩ độ/kinh độ động)
-                const modalMapUrl = `https://embed.windy.com/embed.html?type=map&location=coordinates&metricRain=default&metricTemp=default&metricWind=default&zoom=5&overlay=wind&product=ecmwf&level=surface&lat=${currentLat}&lon=${currentLon}&detailLat=${currentLat}&detailLon=${currentLon}&detail=true&pressure=true&message=true`;
-                
-                fullWeatherMapEl.src = modalMapUrl; // Đặt src cho iframe
-                
-                // SỬA: Thay đổi logic để dùng class animation
-                mapModal.classList.add('modal-open'); 
             });
             
-            closeMapModalBtn.addEventListener('click', () => {
-                // SỬA: Thay đổi logic để dùng class animation
-                mapModal.classList.remove('modal-open');
+            searchInput.addEventListener('input', () => {
+                clearTimeout(searchTimeout);
+                const query = searchInput.value.trim();
+                if (query.length >= 3) {
+                    searchTimeout = setTimeout(() => {
+                        fetchSuggestions(query);
+                    }, 300); // Debounce 300ms
+                } else {
+                    searchSuggestions.classList.add('hidden');
+                }
+            });
+
+            // Ẩn gợi ý khi nhấp ra ngoài
+            document.addEventListener('click', (e) => {
+                if (!searchForm.contains(e.target)) {
+                    searchSuggestions.classList.add('hidden');
+                }
+            });
+
+            // Modal Bản đồ
+            mapDetailsButton.addEventListener('click', () => {
+                const mapUrl = `https://embed.windy.com/embed.html?type=map&location=coordinates&metricRain=default&metricTemp=default&metricWind=default&zoom=5&overlay=wind&product=ecmwf&level=surface&lat=${currentLat}&lon=${currentLon}&detailLat=${currentLat}&detailLon=${currentLon}&detail=true&pressure=true&message=true`;
+                fullWeatherMap.src = mapUrl;
                 
-                fullWeatherMapEl.src = ''; // Dừng tải iframe khi đóng
+                mapModal.classList.remove('hidden');
+                mapModal.classList.remove('modal-exiting');
+                mapModal.classList.add('modal-entering');
             });
 
-            // --- THÊM MỚI: Xử lý Menu Cài đặt ---
-            settingsButton.addEventListener('click', () => {
-                settingsMenu.classList.toggle('hidden');
+            mapCloseButton.addEventListener('click', () => {
+                mapModal.classList.remove('modal-entering');
+                mapModal.classList.add('modal-exiting');
+                
+                // Chờ animation kết thúc rồi mới ẩn
+                setTimeout(() => {
+                    mapModal.classList.add('hidden');
+                    fullWeatherMap.src = 'about:blank'; // Tiết kiệm tài nguyên
+                }, 200);
             });
 
-            themeMenuButton.addEventListener('click', () => {
-                settingsMainView.classList.add('hidden');
-                themeSubmenu.classList.remove('hidden');
+            // THÊM MỚI: Xử lý sự kiện định vị
+            detectLocationButton.addEventListener('click', () => {
+                if ('geolocation' in navigator) {
+                    loadingSpinner.classList.remove('hidden'); // Hiện spinner ngay
+                    navigator.geolocation.getCurrentPosition(
+                        (position) => {
+                            const lat = position.coords.latitude;
+                            const lon = position.coords.longitude;
+                            // Gọi hàm mới để lấy tên vị trí
+                            fetchLocationName(lat, lon);
+                        },
+                        (error) => {
+                            loadingSpinner.classList.add('hidden'); // Ẩn spinner nếu lỗi
+                            
+                            // SỬA LỖI: Log 'error.message' và 'error.code'
+                            console.error('Lỗi Geolocation:', error.message, `(Code: ${error.code})`);
+                            
+                            // Cải thiện thông báo cho người dùng
+                            let userMessage = 'Không thể lấy vị trí.';
+                            if (error.code === 1) { // PERMISSION_DENIED
+                                // SỬA LỖI: Kiểm tra lỗi do policy
+                                if (error.message.includes('permissions policy')) {
+                                    userMessage = 'Định vị đã bị tắt bởi chính sách của môi trường này.';
+                                } else {
+                                    userMessage = 'Bạn đã từ chối quyền truy cập vị trí.';
+                                }
+                            } else if (error.code === 2) { // POSITION_UNAVAILABLE
+                                userMessage = 'Không thể xác định vị trí của bạn.';
+                            } else if (error.code === 3) { // TIMEOUT
+                                userMessage = 'Hết thời gian chờ khi lấy vị trí.';
+                            }
+                            showError(userMessage);
+                        }
+                    );
+                } else {
+                    showError('Trình duyệt của bạn không hỗ trợ định vị.');
+                }
             });
 
-            themeMenuBack.addEventListener('click', () => {
-                settingsMainView.classList.remove('hidden');
-                themeSubmenu.classList.add('hidden');
-            });
-
-            themeOptionButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    const selectedTheme = button.dataset.theme;
-                    applyTheme(selectedTheme);
-                });
-            });
+            // --- Khởi tạo ---
+            applyTheme(currentTheme); // Áp dụng theme đã lưu
+            setInterval(updateClock, 1000);
+            updateClock();
+            fetchWeather(currentLat, currentLon, currentCity); // Tải dữ liệu ban đầu
+            fetchAQI(currentLat, currentLon); // Tải AQI ban đầu
+            window.addEventListener('resize', adjustSectionHeights);
         });
     </script>
 
