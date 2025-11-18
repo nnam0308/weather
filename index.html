@@ -988,7 +988,8 @@
                 // loadingSpinner đã được hiển thị bởi event listener
                 try {
                     // SỬA LỖI: Đã xóa &language=vi
-                    const apiUrl = `https://geocoding-api.open-meteo.com/v1/reverse?latitude=${lat}&longitude=${lon}&format=json`;
+                    // SỬA LỖI LẦN 2: Xóa &format=json (vì nó là mặc định)
+                    const apiUrl = `https://geocoding-api.open-meteo.com/v1/reverse?latitude=${lat}&longitude=${lon}`;
                     
                     const response = await fetch(apiUrl);
                     if (!response.ok) throw new Error('Không thể lấy tên vị trí.');
