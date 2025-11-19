@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <!-- Thêm viewport-fit=cover để hỗ trợ tai thỏ trên iPhone -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Thời tiết</title>
+    <title>Ứng dụng Thời tiết</title>
     
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="https://raw.githubusercontent.com/nnam0308/weather/18389a738bae786aebd65938d5228c60d821b4d0/icon.svg">
@@ -251,7 +251,7 @@
             gap: 1rem; 
         }
         @media (min-width: 768px) { 
-            .details-grid { grid-template-columns: repeat(4, 1fr); } 
+            .details-grid { grid-template-columns: repeat(4, 1fr); padding-top:0 } 
         }
         
         /* Card Design */
@@ -266,10 +266,7 @@
             position: relative;
             overflow: hidden;
             transition: background 0.2s;
-        }
-
-        @media (min-width: 768px) {
-            .detail-card { }
+            gap: 10px;
         }
 
         .detail-card:hover { background: var(--bg-item-hover); }
@@ -322,7 +319,7 @@
             border-left: 5px solid transparent; border-right: 5px solid transparent;
             border-bottom: 16px solid var(--text-color);
             transform-origin: center bottom;
-            margin-left: -5px; margin-top: -16px; /* FIX: Changed from -8px to -16px to center pivot */
+            margin-left: -5px; margin-top: -16px; 
             transition: transform 1s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .compass-arrow::after {
@@ -348,7 +345,6 @@
         .circle-bg { fill: none; stroke: var(--graphic-track); stroke-width: 4; }
         .circle-progress { fill: none; stroke: var(--graphic-fill); stroke-width: 4; stroke-dasharray: 126; stroke-dashoffset: 126; transition: stroke-dashoffset 1s ease-out; stroke-linecap: round; }
         
-        /* SPECIFIC FIX FOR PRESSURE CIRCLE TO AVOID CONFLICT */
         .pressure-ring { fill: none; stroke: var(--accent-blue); stroke-width: 4; stroke-dasharray: 90 126; stroke-dashoffset: 90; transition: stroke-dashoffset 1s ease-out; stroke-linecap: round; }
 
         .temp-curve-container { width: 70px; height: 30px; position: relative; }
@@ -366,11 +362,12 @@
         .modal-content { flex: 1; padding: 1rem; overflow: hidden; }
         .full-map { width: 100%; height: 100%; border-radius: 1rem; border: none; }
 
-        /* --- SETTINGS MENU (Responsive: Bottom Sheet on Mobile / Dropdown on Desktop) --- */
-        /* DELETED OVERLAY Styles */
-        
+        /* --- SETTINGS MENU --- */
         .settings-menu-elastic {
-            /* Mobile Default: Bottom Sheet */
+            /* Mobile Default: Bottom Sheet with Flexbox for Ordering */
+            display: flex;
+            flex-direction: column;
+            
             position: fixed; 
             bottom: 0; left: 0; right: 0; top: auto;
             width: 100%;
@@ -380,29 +377,45 @@
             border-bottom-left-radius: 0; border-bottom-right-radius: 0;
             box-shadow: 0 -10px 40px rgba(0,0,0,0.2);
             border: 1px solid rgba(255,255,255,0.3); border-bottom: none;
-            padding: 1.5rem 1.5rem 2.5rem 1.5rem; /* Thêm padding đáy cho an toàn */
+            padding: 1.5rem 1.5rem 1.5rem 1.5rem;
             
             transform-origin: bottom center;
-            transform: translateY(100%); /* Ẩn xuống dưới đáy */
+            transform: translateY(100%); /* Start hidden at bottom */
             opacity: 1;
             pointer-events: none;
             transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
             z-index: 100;
         }
         
-        /* Override specific positioning that might conflict */
+        /* Override for toggle positioning */
         .controls-right .settings-menu-elastic { top: auto; right: auto; margin-top: 0; } 
 
         .settings-menu-elastic.active { 
-            transform: translateY(0); /* Trượt lên */
+            transform: translateY(0); /* Slide up */
             pointer-events: auto; 
         }
 
-        /* Desktop: Floating Dropdown Style */
-        @media (min-width: 768px) {
-            /* DELETED OVERLAY Desktop Styles */
+        /* Header Styling & Reordering for Mobile */
+        .settings-header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            
+            /* Mobile Specific: Move to Bottom using Order */
+            order: 99; 
+            margin-bottom: 0;
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .settings-title { font-size: 1.25rem; font-weight: 700; }
+        .theme-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem; margin-bottom: 1.5rem; }
 
+        /* Desktop: Floating Dropdown Style & Reset Order */
+        @media (min-width: 768px) {
             .settings-menu-elastic {
+                display: block; /* Restore block flow */
                 position: absolute; top: 0; right: 0; bottom: auto; left: auto;
                 width: 320px;
                 border-radius: 1.5rem;
@@ -422,12 +435,20 @@
                 transform: scale(1) translateY(0); 
                 opacity: 1; 
             }
+
+            /* Reset Header Position for Desktop */
+            .settings-header {
+                order: 0;
+                margin-bottom: 1.5rem;
+                margin-top: 0;
+                padding-top: 0;
+                border-top: none;
+            }
         }
 
         #settings-button { transition: opacity 0.2s; }
         #settings-button.hidden-morph { opacity: 0; pointer-events: none; }
-        .settings-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
-        .theme-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem; margin-bottom: 1.5rem; }
+        
         .theme-btn {
             display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.25rem;
             padding: 0.75rem; border-radius: 0.75rem; border: 1px solid var(--border-color);
