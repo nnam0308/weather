@@ -4,37 +4,27 @@
     <meta charset="UTF-8">
     <!-- Thêm viewport-fit=cover để hỗ trợ tai thỏ trên iPhone -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Ứng dụng Thời tiết</title>
+    <title>Thời tiết</title>
     
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="https://raw.githubusercontent.com/nnam0308/weather/18389a738bae786aebd65938d5228c60d821b4d0/icon.svg">
 
-    <!-- PWA Manifest (Cập nhật icon SVG) -->
+    <!-- PWA Manifest -->
     <link rel="manifest" href="data:application/manifest+json;base64,eyJuYW1lIjoi4buWbmcgZOG7pW5nIFRo4budaSB0aeG6v3QiLCJzaG9ydF9uYW1lIjoiVGjhu5WpIHRp4bq6dCIsInN0YXJ0X3VybCI6Ii4iLCJkaXNwbGF5Ijoic3RhbmRhbG9uZSIsImJhY2tncm91bmRfY29xvciI6IiNmZmZmZmYiLCJ0aGVtZV9jb2xvciI6IiMyNTYzZWIiLCJkZXNjcmlwdGlvbiI6IkThu7Egw6FvIHRo4budaSB0aeG6v3QgY2jDrW5oIHjDoWMiLCJvcmllbnRhdGlvbiI6InBvcnRyYWl0LXByaW1hcnkiLCJpY29ucyI6W3sic3JjIjoiaHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL25uYW0wMzA4L3dlYXRoZXIvMTgzODlhNzM4YmFlNzg2YWViZDY1OTM4ZDUyMjhjNjBkODIxYjRkMC9pY29uLnN2ZyIsInNpemVzIjoiYW55IiwidHlwZSI6ImltYWdlL3N2Zyt4bWwifSx7InNyYyI6Imh0dHBzOi8vcmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbS9ubmFtMDMwOC93ZWF0aGVyLzE4Mzg5YTczOGJhZTc4NmFlYmQ2NTkzOGQ1MjI4YzYwZDgyMWI0ZDAvaWNvbi5zdmciLCJzaXplcyI6IjE5MngxOTIiLCJ0eXBlIjoiaW1hZ2Uvc3ZnK3htbCJ9LHsic3JjIjoiaHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL25uYW0wMzA4L3dlYXRoZXIvMTgzODlhNzM4YmFlNzg2YWViZDY1OTM4ZDUyMjhjNjBkODIxYjRkMC9pY29uLnN2ZyIsInNpemVzIjoiNTEyeDUxMiIsInR5cGUiOiJpbWFnZS9zdmcreG1sIn1dfQ==">
     
     <!-- --- CROSS-PLATFORM THEME CONFIG --- -->
-    
-<!-- 1. Modern Browsers (Android, Chrome/Edge on Windows/macOS) -->
-<meta id="meta-theme-color" name="theme-color" content="#f9fafb">
-<link rel="icon" type="image/svg+xml" href="https://raw.githubusercontent.com/nnam0308/weather/18389a738bae786aebd65938d5228c60d821b4d0/icon.svg">
-<link rel="alternate icon" href="https://raw.githubusercontent.com/nnam0308/weather/18389a738bae786aebd65938d5228c60d821b4d0/icon.png">
-<link rel="manifest" href="manifest.json">
-    <!-- 2. iOS (iPhone/iPad) -->
+    <meta id="meta-theme-color" name="theme-color" content="#f9fafb">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <!-- black-translucent: Nội dung tràn lên status bar (tạo hiệu ứng trong suốt) -->
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Thời tiết">
     <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/nnam0308/weather/18389a738bae786aebd65938d5228c60d821b4d0/icon.svg">
-
-    <!-- 3. Windows (Start Menu Tiles) -->
     <meta name="application-name" content="Ứng dụng Thời tiết">
-    <!-- ID để JS cập nhật màu động -->
     <meta id="meta-tile-color" name="msapplication-TileColor" content="#2563eb">
     <meta name="msapplication-tap-highlight" content="no">
     <meta name="msapplication-TileImage" content="https://raw.githubusercontent.com/nnam0308/weather/18389a738bae786aebd65938d5228c60d821b4d0/icon.svg">
 
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- Material Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet" />
     
@@ -45,31 +35,35 @@
             --text-color: #1e293b;
             --text-light: #ffffff;
             --text-muted: #475569;
-            --bg-glass: rgba(255, 255, 255, 0.35);
-            --bg-glass-hover: rgba(255, 255, 255, 0.45);
-            --bg-item: rgba(255, 255, 255, 0.2);
-            --bg-item-hover: rgba(255, 255, 255, 0.4);
-            --bg-active: rgba(255, 255, 255, 0.6);
-            --border-color: rgba(255, 255, 255, 0.3);
+            --bg-glass: rgba(255, 255, 255, 0.45);
+            --bg-glass-hover: rgba(255, 255, 255, 0.55);
+            --bg-item: rgba(255, 255, 255, 0.3);
+            --bg-item-hover: rgba(255, 255, 255, 0.5);
+            --bg-active: rgba(255, 255, 255, 0.7);
+            --border-color: rgba(255, 255, 255, 0.4);
             --shadow-color: rgba(31, 38, 135, 0.1);
             --input-bg: rgba(255, 255, 255, 0.9);
-            --accent-blue: #2563eb;
-            
-            /* Safe area for iPhone Notch */
+            --accent-blue: #0b50d0;
             --safe-top: env(safe-area-inset-top, 0px);
+            
+            /* Colors for graphics */
+            --graphic-track: rgba(0,0,0,0.1);
+            --graphic-fill: #0b50d0;
         }
 
         html.dark {
             --text-color: #e2e8f0;
             --text-muted: #94a3b8;
-            --bg-glass: rgba(30, 41, 59, 0.5);
-            --bg-glass-hover: rgba(30, 41, 59, 0.65);
-            --bg-item: rgba(0, 0, 0, 0.2);
-            --bg-item-hover: rgba(0, 0, 0, 0.3);
+            --bg-glass: rgba(30, 41, 59, 0.6);
+            --bg-glass-hover: rgba(30, 41, 59, 0.75);
+            --bg-item: rgba(0, 0, 0, 0.3);
+            --bg-item-hover: rgba(0, 0, 0, 0.4);
             --bg-active: rgba(255, 255, 255, 0.15);
-            --border-color: rgba(255, 255, 255, 0.1);
+            --border-color: rgba(255, 255, 255, 0.15);
             --input-bg: rgba(30, 41, 59, 0.9);
             --accent-blue: #60a5fa;
+            --graphic-track: rgba(255,255,255,0.1);
+            --graphic-fill: #60a5fa;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -81,9 +75,7 @@
             position: relative;
             overflow-x: hidden;
             min-height: 100vh;
-            /* Padding bottom for scroll space */
             padding-bottom: 2rem;
-            /* Quan trọng cho iOS PWA: Đảm bảo nền full màn hình */
             background-attachment: fixed; 
         }
 
@@ -98,6 +90,8 @@
         .weather-rain-day { background: linear-gradient(180deg, #42A5F5 0%, #BBDEFB 100%); }
         .weather-rain-night { background: linear-gradient(180deg, #1A237E 0%, #000000 100%); }
         .weather-night-clear { background: linear-gradient(180deg, #0D47A1 0%, #1565C0 100%); }
+        .weather-snow { background: linear-gradient(180deg, #E0E0E0 0%, #FFFFFF 100%); }
+        html.dark .weather-snow { background: linear-gradient(180deg, #37474F 0%, #90A4AE 100%); }
 
         /* --- UTILITIES --- */
         .hidden { display: none !important; }
@@ -107,8 +101,6 @@
         .justify-between { justify-content: space-between; }
         .justify-center { justify-content: center; }
         .gap-2 { gap: 0.5rem; }
-        .gap-3 { gap: 0.75rem; }
-        .gap-4 { gap: 1rem; }
         .w-full { width: 100%; }
         .text-center { text-align: center; }
         .font-bold { font-weight: 700; }
@@ -117,6 +109,7 @@
         .text-green { color: #22c55e; }
         .text-yellow { color: #eab308; }
         .text-purple { color: #c084fc; }
+        .text-teal { color: #14b8a6; }
 
         /* --- SCROLLBAR --- */
         ::-webkit-scrollbar { height: 6px; width: 6px; }
@@ -125,13 +118,12 @@
         ::-webkit-scrollbar-thumb:hover { background: rgba(150, 150, 150, 0.6); }
 
         /* --- LAYOUT CONTAINER --- */
-        .container { max-width: 1400px; margin: 0 auto; position: relative; z-index: 10; padding: 0 1rem; width: 100%; }
+        .container { max-width: 1200px; margin: 0 auto; position: relative; z-index: 10; padding: 0 1rem; width: 100%; }
 
         /* --- HEADER --- */
         .main-header {
             position: fixed; inset: 0; z-index: 50; pointer-events: none;
             display: flex; flex-direction: column; justify-content: space-between; transition: all 0.3s;
-            /* iOS Safe Area support */
             padding-top: max(1.5rem, var(--safe-top)); 
         }
         .header-clock-area {
@@ -144,23 +136,23 @@
         
         .header-controls {
             pointer-events: auto; padding: 1rem 1rem 1.5rem 1rem; width: 100%; display: flex; align-items: center; gap: 0.75rem;
-            background: transparent;
+            background: transparent; position: relative;
         }
         
         .controls-center { display: flex; align-items: center; gap: 0.75rem; flex: 1; min-width: 0; }
-        .controls-right { flex: 0 0 auto; }
+        .controls-right { flex: 0 0 auto; position: relative; z-index: 110;}
 
         .btn-circle {
-            width: 50px; height: 50px; border-radius: 100%;
+            width: 48px; height: 48px; border-radius: 100%;
             background: var(--input-bg); border: none; display: flex; align-items: center; justify-content: center;
             cursor: pointer; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); backdrop-filter: blur(4px);
             transition: transform 0.2s; color: var(--text-color);
         }
         .btn-circle.primary { color: var(--accent-blue); }
-        .btn-circle:hover { transform: scale(1.1); }
+        .btn-circle:hover { transform: scale(1.08); }
         
         .search-wrapper { flex: 1; position: relative; width: 100%;}
-        .search-icon { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: #94a3b8; pointer-events: none; height: 50px;}
+        .search-icon { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: #94a3b8; pointer-events: none; height: 20px;}
         
         .search-spinner {
             position: absolute; right: 1rem; top: 50%; width: 1.25rem; height: 1.25rem;
@@ -192,8 +184,7 @@
                 border-bottom: none; box-shadow: none;
                 width: calc(100% + 2rem); margin: 0 -1rem 1.5rem -1rem; padding: 1rem 2rem;
                 height: auto; display: grid; grid-template-columns: 1fr 2fr 1fr; align-items: center; gap: 1rem;
-                pointer-events: auto;
-                padding-top: 1rem; /* Reset top padding on desktop */
+                pointer-events: auto; padding-top: 1rem; 
             }
             .header-clock-area { justify-content: flex-start; display: block; text-align: left; }
             .clock-time { font-size: 2rem; display: block; }
@@ -214,104 +205,258 @@
         .col-left, .col-right { display: flex; flex-direction: column; gap: 1.5rem; min-width: 0; }
 
         .glass-panel {
-            background: var(--bg-glass); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-            border: 1px solid var(--border-color); box-shadow: 0 8px 32px 0 var(--shadow-color);
+            background: var(--bg-glass); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--border-color); box-shadow: 0 4px 24px -1px var(--shadow-color);
             border-radius: 2rem; padding: 1.5rem; transition: all 0.3s ease; width: 100%;
         }
-        .glass-panel:hover { transform: translateY(-2px); background: var(--bg-glass-hover); border-color: rgba(255,255,255,0.6); }
-        html.dark .glass-panel:hover { border-color: rgba(255,255,255,0.2); }
+        .glass-panel:hover { transform: translateY(-2px); background: var(--bg-glass-hover); border-color: rgba(255,255,255,0.5); }
         
-        .glass-item { background: var(--bg-item); border: 1px solid var(--border-color); border-radius: 1rem; transition: transform 0.2s, background 0.2s, border-color 0.2s; }
-        .glass-item:hover { background: var(--bg-item-hover); transform: scale(1.02); }
+        .glass-item { background: var(--bg-item); border: 1px solid var(--border-color); border-radius: 1rem; transition: transform 0.2s, background 0.2s; }
+        .glass-item:hover { background: var(--bg-item-hover); }
 
-        .section-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem; }
-        .section-title { font-size: 1.25rem; font-weight: bold; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
-        .location-title { font-size: 2rem; font-weight: 700; line-height: 1.2; text-shadow: 0 1px 2px rgba(0,0,0,0.1); word-wrap: break-word; }
-        .location-subtitle { color: var(--text-muted); font-weight: 500; margin-top: 0.25rem; transition: color 0.3s; }
-        .current-weather-display { display: flex; align-items: center; gap: 1.5rem; margin-bottom: 2rem; margin-top: 1rem; flex-wrap: wrap; }
-        .weather-icon-lg { width: 7rem; height: 7rem; filter: drop-shadow(0 10px 8px rgba(0,0,0,0.1)); }
-        .temp-display { font-size: 4.5rem; font-weight: 700; line-height: 1; }
-        .condition-display { font-size: 1.25rem; font-weight: 500; color: var(--text-muted); margin-top: 0.5rem; }
+        .section-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; }
+        .section-title { font-size: 1.25rem; font-weight: bold; margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.5rem; }
+        .location-title { font-size: 2.25rem; font-weight: 700; line-height: 1.1; word-wrap: break-word; }
+        .location-subtitle { color: var(--text-muted); font-weight: 500; margin-top: 0.25rem; }
         
-        .grid-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-        @media (min-width: 768px) { .grid-stats { grid-template-columns: repeat(3, 1fr); } }
-        .stat-card { padding: 0.75rem; display: flex; align-items: center; gap: 0.75rem; overflow: hidden; }
+        .current-weather-display { display: flex; align-items: center; gap: 1.5rem; margin-bottom: 2rem; margin-top: 1rem; }
+        .weather-icon-lg { width: 7rem; height: 7rem; filter: drop-shadow(0 8px 12px rgba(0,0,0,0.1)); }
+        .temp-display { font-size: 5rem; font-weight: 700; line-height: 1; letter-spacing: -0.03em; }
+        .condition-display { font-size: 1.25rem; font-weight: 500; color: var(--text-muted); margin-top: 0.5rem; }
+
+        /* --- UPDATED GRID STATS --- */
+        .grid-stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
+        @media (min-width: 768px) { .grid-stats { grid-template-columns: repeat(4, 1fr); } }
+        .stat-card { padding: 0.75rem 0.5rem; display: flex; align-items: center; gap: 0.5rem; overflow: hidden; }
         .stat-label { font-size: 0.75rem; opacity: 0.7; white-space: nowrap; }
         .stat-value { font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-        .scroll-container { display: flex; gap: 0.75rem; overflow-x: auto; padding-bottom: 1rem; cursor: grab; max-width: 100%; width: 100%; scroll-behavior: smooth; }
-        .scroll-container:active { cursor: grabbing; }
-        .hourly-card { flex: 0 0 auto; min-width: 6rem; padding: 0.75rem; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .scroll-container { display: flex; gap: 0.75rem; overflow-x: auto; padding-bottom: 0.5rem; cursor: grab; width: 100%; scroll-behavior: smooth; }
+        .hourly-card { flex: 0 0 auto; min-width: 4.5rem; padding: 0.75rem 0.5rem; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 0.5rem; border-radius: 1.5rem; }
         
-        .daily-list { display: flex; gap: 0.75rem; overflow-x: auto; padding: 10px; max-width: 100%; width: 100%; }
-        .daily-card { flex: 0 0 auto; padding: 0.75rem; display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; min-width: 180px; cursor: pointer; position: relative; }
-        .daily-card.active { background: var(--bg-active); border-color: var(--text-light); box-shadow: 0 0 15px rgba(255,255,255,0.2); transform: scale(1.03); }
+        .daily-list { display: flex; gap: 0.75rem; overflow-x: auto; padding: 5px; }
+        .daily-card { flex: 0 0 auto; padding: 1rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; min-width: 200px; cursor: pointer; border-radius: 1.25rem; }
+        .daily-card.active { background: var(--bg-active); border-color: var(--text-color); transform: scale(1.02); }
         
         @media (min-width: 1024px) {
-            .daily-forecast-section { height: 400px; display: flex; flex-direction: column; }
-            .daily-list { flex-direction: column; overflow-y: auto; overflow-x: hidden; padding: 12px; flex: 1; }
+            .daily-forecast-section { height: 420px; display: flex; flex-direction: column; }
+            .daily-list { flex-direction: column; overflow-y: auto; padding: 0 5px; flex: 1; }
             .daily-card { width: 100%; min-width: 0; }
         }
 
-        .details-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-        @media (min-width: 768px) { .details-grid { grid-template-columns: repeat(4, 1fr); } }
-        .detail-box { padding: 1rem; display: flex; flex-direction: column; justify-content: space-between; height: 100%; border-radius: 1rem; }
-        .detail-box-header { display: flex; items-center; gap: 0.5rem; margin-bottom: 0.5rem; }
-        .detail-box-value { font-size: 1.5rem; font-weight: bold; }
+        /* --- DETAILED STATS GRID STYLE --- */
+        .details-grid { 
+            display: grid; 
+            grid-template-columns: repeat(2, 1fr); 
+            gap: 1rem; 
+        }
+        @media (min-width: 768px) { 
+            .details-grid { grid-template-columns: repeat(4, 1fr); } 
+        }
+        
+        /* Card Design */
+        .detail-card {
+            background: var(--bg-item); 
+            border: 1px solid var(--border-color);
+            border-radius: 1.75rem;
+            padding: 1.25rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+            transition: background 0.2s;
+        }
 
-        .map-section { display: flex; flex-direction: column; height: 350px; }
+        @media (min-width: 768px) {
+            .detail-card { }
+        }
+
+        .detail-card:hover { background: var(--bg-item-hover); }
+
+        .detail-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            z-index: 2;
+        }
+        .detail-header .material-symbols-rounded { font-size: 1.25rem; }
+
+        .detail-body {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-top: auto;
+            z-index: 2;
+        }
+
+        .detail-value-group {
+            display: flex;
+            flex-direction: column;
+        }
+        .detail-value { font-size: 1.75rem; font-weight: 700; line-height: 1.1; }
+        .detail-sub { font-size: 0.8rem; opacity: 0.7; margin-top: 2px; }
+
+        /* Graphics Area */
+        .detail-graphic {
+            width: 60px; height: 60px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Specific Graphics */
+        .compass-ring {
+            width: 50px; height: 50px; border-radius: 50%;
+            border: 3px solid var(--border-color);
+            position: relative;
+        }
+        .compass-ring::after { content: 'N'; position: absolute; top: -6px; left: 50%; transform: translateX(-50%); font-size: 8px; background: var(--bg-item); padding: 0 2px; }
+        .compass-arrow {
+            position: absolute; top: 50%; left: 50%;
+            width: 0; height: 0;
+            border-left: 5px solid transparent; border-right: 5px solid transparent;
+            border-bottom: 16px solid var(--text-color);
+            transform-origin: center bottom;
+            margin-left: -5px; margin-top: -16px; /* FIX: Changed from -8px to -16px to center pivot */
+            transition: transform 1s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .compass-arrow::after {
+            content: ''; position: absolute; top: 16px; left: -5px;
+            width: 0; height: 0;
+            border-left: 5px solid transparent; border-right: 5px solid transparent;
+            border-top: 16px solid var(--text-color); opacity: 0.3;
+        }
+
+        .humidity-chart { display: flex; align-items: flex-end; gap: 3px; height: 40px; width: 50px; }
+        .h-bar { flex: 1; background: var(--accent-blue); border-radius: 2px; opacity: 0.3; transition: height 0.5s; }
+        .h-bar.active { opacity: 1; }
+
+        .vis-chart { display: flex; flex-direction: column; gap: 4px; width: 50px; align-items: center; }
+        .v-bar { height: 4px; background: var(--accent-blue); border-radius: 2px; opacity: 0.3; width: 100%; }
+        .v-bar:nth-child(1) { width: 30%; } .v-bar:nth-child(2) { width: 50%; } .v-bar:nth-child(3) { width: 70%; } .v-bar:nth-child(4) { width: 90%; } .v-bar:nth-child(5) { width: 100%; }
+
+        .sun-graphic { width: 60px; height: 30px; border-top-left-radius: 35px; border-top-right-radius: 35px; border: 2px solid var(--border-color); border-bottom: none; position: relative; margin-top: 10px; }
+        .sun-dot { width: 10px; height: 10px; background: #fbbf24; border-radius: 50%; position: absolute; bottom: -5px; left: 0; box-shadow: 0 0 8px #fbbf24; }
+        .horizon-line { position: absolute; bottom: 0; left: -5px; right: -5px; height: 2px; background: var(--border-color); }
+
+        .circle-chart { width: 50px; height: 50px; transform: rotate(-90deg); }
+        .circle-bg { fill: none; stroke: var(--graphic-track); stroke-width: 4; }
+        .circle-progress { fill: none; stroke: var(--graphic-fill); stroke-width: 4; stroke-dasharray: 126; stroke-dashoffset: 126; transition: stroke-dashoffset 1s ease-out; stroke-linecap: round; }
+        
+        /* SPECIFIC FIX FOR PRESSURE CIRCLE TO AVOID CONFLICT */
+        .pressure-ring { fill: none; stroke: var(--accent-blue); stroke-width: 4; stroke-dasharray: 90 126; stroke-dashoffset: 90; transition: stroke-dashoffset 1s ease-out; stroke-linecap: round; }
+
+        .temp-curve-container { width: 70px; height: 30px; position: relative; }
+        .temp-curve-path { fill: none; stroke: var(--graphic-fill); stroke-width: 3; stroke-linecap: round; opacity: 0.7; }
+        .temp-dot { fill: var(--text-color); r: 3; }
+
+        .map-section { display: flex; flex-direction: column; height: 300px; }
         .map-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
-        .map-frame { width: 100%; flex: 1; border-radius: 0.75rem; border: none; background: #cbd5e1; }
+        .map-frame { width: 100%; flex: 1; border-radius: 1rem; border: none; background: #cbd5e1; }
         .btn-link { background: none; border: none; color: var(--accent-blue); font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 0.25rem; font-size: 0.875rem; }
 
         .modal-overlay { position: fixed; inset: 0; background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); z-index: 100; display: flex; flex-direction: column; transition: opacity 0.3s; }
         html.dark .modal-overlay { background: rgba(15, 23, 42, 0.9); }
         .modal-header { display: flex; justify-content: space-between; align-items: center; padding: 1.5rem; border-bottom: 1px solid var(--border-color); }
         .modal-content { flex: 1; padding: 1rem; overflow: hidden; }
-        .full-map { width: 100%; height: 100%; border-radius: 1rem; border: none; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); }
+        .full-map { width: 100%; height: 100%; border-radius: 1rem; border: none; }
 
-        .settings-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); z-index: 100; display: flex; }
-        .settings-menu { position: absolute; right: 1rem; bottom: 6rem; width: 18rem; background: var(--input-bg); backdrop-filter: blur(20px); border-radius: 1.5rem; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); padding: 1.25rem; border: 1px solid rgba(255,255,255,0.2); }
-        @media (min-width: 768px) { .settings-menu { bottom: auto; top: 6rem; } }
-        .menu-btn { width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 1rem; border-radius: 1rem; background: transparent; border: none; color: var(--text-color); cursor: pointer; transition: background 0.2s; }
-        .menu-btn:hover { background: var(--bg-glass-hover); }
-        .menu-btn-content { display: flex; align-items: center; gap: 0.75rem; }
+        /* --- SETTINGS MENU (Responsive: Bottom Sheet on Mobile / Dropdown on Desktop) --- */
+        /* DELETED OVERLAY Styles */
+        
+        .settings-menu-elastic {
+            /* Mobile Default: Bottom Sheet */
+            position: fixed; 
+            bottom: 0; left: 0; right: 0; top: auto;
+            width: 100%;
+            background: var(--input-bg); 
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border-top-left-radius: 2rem; border-top-right-radius: 2rem;
+            border-bottom-left-radius: 0; border-bottom-right-radius: 0;
+            box-shadow: 0 -10px 40px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255,255,255,0.3); border-bottom: none;
+            padding: 1.5rem 1.5rem 2.5rem 1.5rem; /* Thêm padding đáy cho an toàn */
+            
+            transform-origin: bottom center;
+            transform: translateY(100%); /* Ẩn xuống dưới đáy */
+            opacity: 1;
+            pointer-events: none;
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 100;
+        }
+        
+        /* Override specific positioning that might conflict */
+        .controls-right .settings-menu-elastic { top: auto; right: auto; margin-top: 0; } 
 
-        .toast { position: fixed; top: 1.5rem; right: 1.5rem; background: rgba(239, 68, 68, 0.9); color: white; padding: 1rem; border-radius: 0.75rem; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); z-index: 110; display: flex; align-items: center; backdrop-filter: blur(4px); }
+        .settings-menu-elastic.active { 
+            transform: translateY(0); /* Trượt lên */
+            pointer-events: auto; 
+        }
+
+        /* Desktop: Floating Dropdown Style */
+        @media (min-width: 768px) {
+            /* DELETED OVERLAY Desktop Styles */
+
+            .settings-menu-elastic {
+                position: absolute; top: 0; right: 0; bottom: auto; left: auto;
+                width: 320px;
+                border-radius: 1.5rem;
+                box-shadow: 0 25px 50px -12px rgba(0,0,0,0.3);
+                border: 1px solid rgba(255,255,255,0.3);
+                padding: 1.25rem;
+                
+                transform-origin: top right; 
+                transform: scale(0.9) translateY(-10px);
+                opacity: 0;
+                transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease-out;
+            }
+            
+            .controls-right .settings-menu-elastic { top: 0; right: 0; }
+            
+            .settings-menu-elastic.active { 
+                transform: scale(1) translateY(0); 
+                opacity: 1; 
+            }
+        }
+
+        #settings-button { transition: opacity 0.2s; }
+        #settings-button.hidden-morph { opacity: 0; pointer-events: none; }
+        .settings-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+        .theme-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem; margin-bottom: 1.5rem; }
+        .theme-btn {
+            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.25rem;
+            padding: 0.75rem; border-radius: 0.75rem; border: 1px solid var(--border-color);
+            background: rgba(255,255,255,0.1); cursor: pointer; transition: all 0.2s; color: var(--text-muted); font-size: 0.875rem;
+        }
+        .theme-btn:hover { background: var(--bg-item-hover); }
+        .theme-btn.active { background: var(--accent-blue); color: white; border-color: transparent; }
+        .sound-row { display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0.25rem; }
+        .switch { position: relative; display: inline-block; width: 50px; height: 28px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
+        .slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--accent-blue); }
+        input:checked + .slider:before { transform: translateX(22px); }
+
+        .toast { position: fixed; top: 1.5rem; right: 1.5rem; background: rgba(239, 68, 68, 0.9); color: white; padding: 1rem; border-radius: 0.75rem; z-index: 110; display: flex; align-items: center; backdrop-filter: blur(4px); }
         .spinner { width: 2rem; height: 2rem; border: 3px solid transparent; border-top-color: var(--accent-blue); border-radius: 50%; animation: spin 1s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
         
         /* --- WEATHER EFFECTS --- */
         #weather-effects-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; overflow: hidden; }
-        
         .rain-drop { position: absolute; background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0.6)); width: 1px; height: 20px; top: -25px; animation: fall linear infinite; }
         @keyframes fall { to { transform: translateY(110vh); } }
-        
-        .thunder-flash { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(255, 255, 255, 0.5); opacity: 0; animation: flash 0.4s ease-out; }
+        .thunder-flash { position: absolute; inset: 0; background-color: rgba(255, 255, 255, 0.5); opacity: 0; animation: flash 0.4s ease-out; }
         @keyframes flash { 0% { opacity: 0.8; } 100% { opacity: 0; } }
-
-        .lightning-bolt {
-            position: absolute;
-            width: 80px; height: 120px;
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23FFEB3B"><path d="M7 2v11h3v9l7-12h-4l4-8z"/></svg>') no-repeat center center;
-            background-size: contain;
-            opacity: 0; transform: scale(0);
-            filter: drop-shadow(0 0 15px rgba(255, 235, 59, 0.9));
-            pointer-events: none;
-        }
-        @keyframes strike {
-            0% { opacity: 0; transform: scale(0.8) skewX(-10deg); }
-            10% { opacity: 1; transform: scale(1.2) skewX(-10deg); }
-            20% { opacity: 0; }
-            30% { opacity: 1; transform: scale(1.2) skewX(-10deg); }
-            100% { opacity: 0; transform: scale(0.8) skewX(-10deg); }
-        }
-        
+        .snow-flake { position: absolute; background-color: white; border-radius: 50%; opacity: 0.8; animation: snowfall linear infinite; }
+        @keyframes snowfall { 0% { transform: translateY(-10px) translateX(0); } 100% { transform: translateY(110vh) translateX(20px); } }
         .sun-beam { position: absolute; top: -20%; right: -20%; width: 80vw; height: 80vw; background: radial-gradient(circle, rgba(255,255,220,0.3) 0%, rgba(255,255,255,0) 60%); animation: sun-pulse 6s ease-in-out infinite alternate; }
         @keyframes sun-pulse { from { opacity: 0.3; transform: scale(1); } to { opacity: 0.6; transform: scale(1.1); } }
-        .sun-glare { position: absolute; top: -150px; right: -150px; width: 800px; height: 800px; background: repeating-conic-gradient(from 0deg, rgba(255,255,255,0) 0deg, rgba(255,255,255,0.15) 5deg, rgba(255,255,255,0) 10deg); animation: sun-rotate 30s linear infinite; border-radius: 50%; }
-        .sun-core { position: absolute; top: 50px; right: 50px; width: 100px; height: 100px; background: radial-gradient(circle, #fff 20%, rgba(255,220,100,0.8) 60%, transparent 100%); filter: blur(15px); animation: sun-pulse 2s infinite alternate; }
-        @keyframes sun-rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         
         @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
         .animate-slide-up { animation: slideUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; opacity: 0; }
@@ -341,15 +486,50 @@
                     <button id="detect-location-button" class="btn-circle primary"><span class="material-symbols-rounded">my_location</span></button>
                     <form id="search-form" class="search-wrapper">
                         <div style="position: relative;">
-                            <div class="search-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" width="20" height="20"><path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" /></svg></div>
-                            <input type="text" id="search-input" placeholder="Tìm kiếm..." class="search-input">
+                            <div class="search-icon"><span class="material-symbols-rounded" style="font-size: 20px;">search</span></div>
+                            <input type="text" id="search-input" placeholder="Tìm kiếm thành phố..." class="search-input">
                             <div id="search-loading" class="search-spinner hidden"></div>
                         </div>
                         <div id="search-suggestions" class="suggestions-box hidden"></div>
                     </form>
                 </div>
                 <div class="controls-right">
-                    <button id="settings-button" class="btn-circle"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" width="24" height="24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m3-6h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5" /></svg></button>
+                    <button id="settings-button" class="btn-circle"><span class="material-symbols-rounded">settings</span></button>
+                    
+                    <div id="settings-menu-wrapper" class="settings-menu-elastic">
+                        <div class="settings-header">
+                            <div class="settings-title">Cài đặt</div>
+                            <button id="settings-close-btn" class="btn-circle" style="width: 32px; height: 32px;"><span class="material-symbols-rounded" style="font-size: 1.25rem;">close</span></button>
+                        </div>
+                        
+                        <div style="margin-bottom: 0.5rem; font-weight: 500; opacity: 0.8; font-size: 0.875rem;">Giao diện</div>
+                        <div class="theme-grid">
+                            <div class="theme-btn" data-theme="light"><span class="material-symbols-rounded">light_mode</span>Sáng</div>
+                            <div class="theme-btn" data-theme="dark"><span class="material-symbols-rounded">dark_mode</span>Tối</div>
+                            <div class="theme-btn" data-theme="system"><span class="material-symbols-rounded">settings_system_daydream</span>Hệ thống</div>
+                            <div class="theme-btn" data-theme="clock"><span class="material-symbols-rounded">schedule</span>Theo giờ</div>
+                        </div>
+
+                        <div class="glass-item" style="height: 1px; margin: 1rem 0; background: var(--border-color);"></div>
+
+                        <div class="sound-row">
+                            <div style="display: flex; align-items: center; gap: 0.75rem; font-weight: 500;">
+                                <span class="material-symbols-rounded">volume_up</span>
+                                <span>Âm thanh môi trường</span>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" id="sound-toggle-switch">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        
+                        <div id="install-area" class="hidden" style="margin-top: 1.5rem;">
+                            <button id="install-app-button" class="btn-circle" style="width: 100%; border-radius: 1rem; height: auto; padding: 0.75rem; gap: 0.5rem;">
+                                <span class="material-symbols-rounded" style="color:var(--accent-blue);">download</span>
+                                <span style="font-weight: 500;">Cài đặt ứng dụng</span>
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </header>
@@ -372,12 +552,46 @@
                         </div>
                     </div>
                     <div class="grid-stats">
-                        <div class="glass-item stat-card"><span class="material-symbols-rounded text-blue">air</span><div><div class="stat-label">Gió</div><div id="current-wind" class="stat-value">--</div></div></div>
-                        <div class="glass-item stat-card"><span class="material-symbols-rounded text-blue">compress</span><div><div class="stat-label">Áp suất</div><div id="current-pressure" class="stat-value">--</div></div></div>
-                        <div class="glass-item stat-card"><span class="material-symbols-rounded text-blue">water_drop</span><div><div class="stat-label">Độ ẩm</div><div id="current-humidity" class="stat-value">--</div></div></div>
-                        <div class="glass-item stat-card"><span class="material-symbols-rounded text-blue">visibility</span><div><div class="stat-label">Tầm nhìn</div><div id="current-visibility" class="stat-value">--</div></div></div>
-                        <div class="glass-item stat-card"><span class="material-symbols-rounded text-blue">dew_point</span><div><div class="stat-label">Điểm sương</div><div id="current-dewpoint" class="stat-value">--</div></div></div>
-                        <div class="glass-item stat-card"><span class="material-symbols-rounded text-orange">wb_sunny</span><div><div class="stat-label">UV</div><div id="current-uv" class="stat-value">--</div></div></div>
+                        <!-- 1. AQI -->
+                        <div class="glass-item stat-card">
+                            <span class="material-symbols-rounded text-green">aq_indoor</span>
+                            <div><div class="stat-label">Chất lượng KK</div><div id="current-aqi" class="stat-value">--</div></div>
+                        </div>
+                        <!-- 2. Gió -->
+                        <div class="glass-item stat-card">
+                            <span class="material-symbols-rounded text-blue">air</span>
+                            <div><div class="stat-label">Gió</div><div id="current-wind" class="stat-value">--</div></div>
+                        </div>
+                        <!-- 3. Độ ẩm -->
+                        <div class="glass-item stat-card">
+                            <span class="material-symbols-rounded text-blue">water_drop</span>
+                            <div><div class="stat-label">Độ ẩm</div><div id="current-humidity" class="stat-value">--</div></div>
+                        </div>
+                        <!-- 4. Cảm giác -->
+                        <div class="glass-item stat-card">
+                            <span class="material-symbols-rounded text-orange">device_thermostat</span>
+                            <div><div class="stat-label">Cảm giác</div><div id="current-feels-like" class="stat-value">--</div></div>
+                        </div>
+                        <!-- 5. Tầm nhìn -->
+                        <div class="glass-item stat-card">
+                            <span class="material-symbols-rounded text-blue">visibility</span>
+                            <div><div class="stat-label">Tầm nhìn</div><div id="current-visibility" class="stat-value">--</div></div>
+                        </div>
+                        <!-- 6. UV -->
+                        <div class="glass-item stat-card">
+                            <span class="material-symbols-rounded text-orange">wb_sunny</span>
+                            <div><div class="stat-label">UV</div><div id="current-uv" class="stat-value">--</div></div>
+                        </div>
+                        <!-- 7. Áp suất -->
+                        <div class="glass-item stat-card">
+                            <span class="material-symbols-rounded text-blue">compress</span>
+                            <div><div class="stat-label">Áp suất</div><div id="current-pressure" class="stat-value">--</div></div>
+                        </div>
+                        <!-- 8. Điểm sương -->
+                        <div class="glass-item stat-card">
+                            <span class="material-symbols-rounded text-blue">dew_point</span>
+                            <div><div class="stat-label">Điểm sương</div><div id="current-dewpoint" class="stat-value">--</div></div>
+                        </div>
                     </div>
                 </section>
                 
@@ -405,18 +619,192 @@
             <section id="weather-details-section" class="glass-panel animate-slide-up delay-500" style="grid-column: 1 / -1;">
                 <h2 class="section-title"><span class="material-symbols-rounded">tune</span> Chỉ số chi tiết</h2>
                 <div class="details-grid">
-                    <div class="glass-item detail-box"><div class="detail-box-header"><span class="material-symbols-rounded text-blue">thermostat</span><span class="stat-label">Nhiệt độ</span></div><div id="detail-temp" class="detail-box-value">--</div></div>
-                    <div class="glass-item detail-box"><div class="detail-box-header"><span class="material-symbols-rounded text-blue">device_thermostat</span><span class="stat-label">Cảm giác</span></div><div id="detail-feels-like" class="detail-box-value">--</div></div>
-                    <div class="glass-item detail-box"><div class="detail-box-header"><span class="material-symbols-rounded text-blue">cloud</span><span class="stat-label">Mây phủ</span></div><div id="detail-cloud-cover" class="detail-box-value">--</div></div>
-                    <div class="glass-item detail-box"><div class="detail-box-header"><span class="material-symbols-rounded text-blue">rainy</span><span class="stat-label">Lượng mưa</span></div><div id="detail-precipitation" class="detail-box-value">--</div></div>
-                    <div class="glass-item detail-box"><div class="detail-box-header"><span class="material-symbols-rounded text-blue">air</span><span class="stat-label">Tốc độ gió</span></div><div id="detail-wind" class="detail-box-value">--</div></div>
-                    <div class="glass-item detail-box"><div class="detail-box-header"><span class="material-symbols-rounded text-blue">water_drop</span><span class="stat-label">Độ ẩm</span></div><div id="detail-humidity" class="detail-box-value">--</div></div>
-                    <div class="glass-item detail-box"><div class="detail-box-header"><span class="material-symbols-rounded text-orange">wb_sunny</span><span class="stat-label">Chỉ số UV</span></div><div id="detail-uv" class="detail-box-value">--</div></div>
-                    <div class="glass-item detail-box"><div class="detail-box-header"><span class="material-symbols-rounded text-green">aq_indoor</span><span class="stat-label">AQI (KK)</span></div><div id="detail-aqi" class="detail-box-value">--</div></div>
-                    <div class="glass-item detail-box"><div class="detail-box-header"><span class="material-symbols-rounded text-blue">visibility</span><span class="stat-label">Tầm nhìn</span></div><div id="detail-visibility" class="detail-box-value">--</div></div>
-                    <div class="glass-item detail-box"><div class="detail-box-header"><span class="material-symbols-rounded text-blue">compress</span><span class="stat-label">Áp suất</span></div><div id="detail-pressure" class="detail-box-value">--</div></div>
-                    <div class="glass-item detail-box"><div class="detail-box-header"><span class="material-symbols-rounded text-yellow">light_mode</span><span class="stat-label">Mặt trời</span></div><div id="detail-sun" class="detail-box-value" style="font-size: 1.1rem;">-- / --</div></div>
-                    <div class="glass-item detail-box"><div class="detail-box-header"><span class="material-symbols-rounded text-purple">dark_mode</span><span class="stat-label">Mặt trăng</span></div><div id="detail-moon" class="detail-box-value" style="font-size: 1.1rem;">N/A</div></div>
+                    
+                    <!-- Nhiệt độ -->
+                    <div class="detail-card">
+                        <div class="detail-header"><span class="material-symbols-rounded text-blue">thermostat</span>Nhiệt độ</div>
+                        <div class="detail-body">
+                            <div class="detail-value-group">
+                                <div id="detail-temp" class="detail-value">--°</div>
+                            </div>
+                            <div class="detail-graphic">
+                                <svg class="temp-curve-container" viewBox="0 0 70 30">
+                                    <path class="temp-curve-path" d="M0,25 Q35,5 70,15" />
+                                    <circle class="temp-dot" cx="35" cy="14" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cảm giác -->
+                    <div class="detail-card">
+                        <div class="detail-header"><span class="material-symbols-rounded text-blue">device_thermostat</span>Cảm giác</div>
+                        <div class="detail-body">
+                            <div class="detail-value-group">
+                                <div id="detail-feels-like" class="detail-value">--°</div>
+                            </div>
+                            <div class="detail-graphic">
+                                <svg class="temp-curve-container" viewBox="0 0 70 30">
+                                     <path class="temp-curve-path" d="M0,15 Q35,25 70,10" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Mây phủ -->
+                    <div class="detail-card">
+                        <div class="detail-header"><span class="material-symbols-rounded text-blue">cloud</span>Mây phủ</div>
+                        <div class="detail-body">
+                            <div class="detail-value-group">
+                                <div id="detail-cloud-cover" class="detail-value">--</div>
+                                <div class="detail-sub">%</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Lượng mưa -->
+                    <div class="detail-card">
+                        <div class="detail-header"><span class="material-symbols-rounded text-blue">rainy</span>Lượng mưa</div>
+                        <div class="detail-body">
+                            <div class="detail-value-group">
+                                <div id="detail-precipitation" class="detail-value">--</div>
+                                <div class="detail-sub">Trong 24h tới</div>
+                            </div>
+                             <div class="detail-graphic">
+                                 <div style="background: var(--accent-blue); width: 40px; height: 40px; border-radius: 50%; opacity: 0.8; display: flex; align-items: center; justify-content: center; color: white; font-size: 10px; font-weight: bold;">mm</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tốc độ gió -->
+                    <div class="detail-card">
+                        <div class="detail-header"><span class="material-symbols-rounded text-teal">air</span>Tốc độ gió</div>
+                        <div class="detail-body">
+                            <div class="detail-value-group">
+                                <div id="detail-wind" class="detail-value">--</div>
+                                <div class="detail-sub">km/h</div>
+                            </div>
+                            <div class="detail-graphic">
+                                <div class="compass-ring">
+                                    <div id="wind-arrow" class="compass-arrow"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Độ ẩm -->
+                    <div class="detail-card">
+                        <div class="detail-header"><span class="material-symbols-rounded text-blue">water_drop</span>Độ ẩm</div>
+                        <div class="detail-body">
+                            <div class="detail-value-group">
+                                <div id="detail-humidity" class="detail-value">--</div>
+                                <div class="detail-sub">%</div>
+                            </div>
+                            <div class="detail-graphic">
+                                <div class="humidity-chart" id="humidity-visual">
+                                    <div class="h-bar" style="height: 30%"></div>
+                                    <div class="h-bar" style="height: 50%"></div>
+                                    <div class="h-bar" style="height: 80%"></div>
+                                    <div class="h-bar" style="height: 60%"></div>
+                                    <div class="h-bar" style="height: 40%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Chỉ số UV -->
+                    <div class="detail-card">
+                        <div class="detail-header"><span class="material-symbols-rounded text-orange">wb_sunny</span>Chỉ số UV</div>
+                        <div class="detail-body">
+                            <div class="detail-value-group">
+                                <div id="detail-uv" class="detail-value">--</div>
+                                <div class="detail-sub" id="uv-text">Thấp</div>
+                            </div>
+                            <div class="detail-graphic">
+                                <svg class="circle-chart" viewBox="0 0 50 50">
+                                    <circle class="circle-bg" cx="25" cy="25" r="20" />
+                                    <circle id="uv-circle" class="circle-progress" cx="25" cy="25" r="20" stroke="var(--text-orange)" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+
+                     <!-- AQI -->
+                    <div class="detail-card">
+                        <div class="detail-header"><span class="material-symbols-rounded text-green">aq_indoor</span>AQI (KK)</div>
+                        <div class="detail-body">
+                            <div class="detail-value-group">
+                                <div id="detail-aqi" class="detail-value">--</div>
+                            </div>
+                            <div class="detail-graphic">
+                                <svg class="circle-chart" viewBox="0 0 50 50">
+                                    <circle class="circle-bg" cx="25" cy="25" r="20" />
+                                    <circle id="aqi-circle" class="circle-progress" cx="25" cy="25" r="20" stroke="var(--text-green)" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tầm nhìn -->
+                    <div class="detail-card">
+                        <div class="detail-header"><span class="material-symbols-rounded text-blue">visibility</span>Tầm nhìn</div>
+                        <div class="detail-body">
+                            <div class="detail-value-group">
+                                <div id="detail-visibility" class="detail-value">--</div>
+                                <div class="detail-sub">km</div>
+                            </div>
+                             <div class="detail-graphic">
+                                <div class="vis-chart" id="vis-visual">
+                                    <div class="v-bar"></div><div class="v-bar"></div><div class="v-bar"></div><div class="v-bar"></div><div class="v-bar"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Áp suất -->
+                    <div class="detail-card">
+                        <div class="detail-header"><span class="material-symbols-rounded text-blue">compress</span>Áp suất</div>
+                        <div class="detail-body">
+                            <div class="detail-value-group">
+                                <div id="detail-pressure" class="detail-value">--</div>
+                                <div class="detail-sub">hPa</div>
+                            </div>
+                             <div class="detail-graphic">
+                                <svg class="circle-chart" viewBox="0 0 50 50" style="transform: rotate(135deg);">
+                                    <circle class="circle-bg" cx="25" cy="25" r="20" style="stroke-dasharray: 90 126; stroke-dashoffset: 0;" />
+                                    <!-- FIX: Removed class circle-progress, added ID for specific JS handling and removed inline dashoffset to let JS set it -->
+                                    <circle id="pressure-circle" class="pressure-ring" cx="25" cy="25" r="20" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Mặt trời -->
+                    <div class="detail-card">
+                        <div class="detail-header"><span class="material-symbols-rounded text-yellow">light_mode</span>Mặt trời</div>
+                        <div class="detail-body">
+                            <div class="detail-value-group">
+                                <div id="detail-sunrise" class="detail-value" style="font-size: 1.25rem;">--:--</div>
+                                <div id="detail-sunset" class="detail-sub" style="font-size: 1rem;">--:--</div>
+                            </div>
+                            <div class="detail-graphic" style="align-items: flex-end;">
+                                <div class="sun-graphic">
+                                    <div class="horizon-line"></div>
+                                    <div class="sun-dot" style="left: 20%; bottom: 12px;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Mặt trăng -->
+                    <div class="detail-card">
+                        <div class="detail-header"><span class="material-symbols-rounded text-purple">dark_mode</span>Mặt trăng</div>
+                        <div class="detail-body">
+                            <div class="detail-value-group">
+                                <div class="detail-value">N/A</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </section>
         </main>
@@ -429,38 +817,25 @@
             </header>
             <main class="modal-content"><iframe id="full-weather-map" class="full-map" src="about:blank" frameborder="0"></iframe></main>
         </div>
-
-        <div id="settings-menu-container" class="settings-overlay hidden">
-            <div id="settings-menu" class="settings-menu">
-                <div id="settings-main-menu">
-                    <h3 class="font-bold mb-4" style="font-size: 1.125rem; padding: 0 0.5rem;">Cài đặt</h3>
-                    <button id="install-app-button" class="menu-btn hidden" style="margin-bottom: 0.25rem;">
-                        <div class="menu-btn-content">
-                            <span class="material-symbols-rounded" style="color:var(--accent-blue);">download</span>
-                            <span style="font-weight: 500;">Cài đặt ứng dụng</span>
-                        </div>
-                        <span class="material-symbols-rounded" style="color:#94a3b8;">chevron_right</span>
-                    </button>
-                    <button id="theme-menu-button" class="menu-btn"><div class="menu-btn-content"><span class="material-symbols-rounded" style="color:#64748b;">palette</span><span>Giao diện</span></div><span class="material-symbols-rounded" style="color:#94a3b8;">chevron_right</span></button>
-                </div>
-                <div id="settings-theme-menu" class="hidden">
-                    <div style="display: flex; items-center; margin-bottom: 1rem;">
-                        <button id="theme-back-button" class="btn-circle" style="width: 36px; height: 36px; margin-right: 0.5rem;"><span class="material-symbols-rounded">arrow_back</span></button>
-                        <h3 class="font-bold" style="font-size: 1.125rem;">Giao diện</h3>
-                    </div>
-                    <div style="display: flex; flex-direction: column; gap: 0.25rem;">
-                        <button data-theme="light" class="theme-option menu-btn"><div class="menu-btn-content"><span class="material-symbols-rounded">light_mode</span> Sáng</div></button>
-                        <button data-theme="dark" class="theme-option menu-btn"><div class="menu-btn-content"><span class="material-symbols-rounded">dark_mode</span> Tối</div></button>
-                        <button data-theme="system" class="theme-option menu-btn"><div class="menu-btn-content"><span class="material-symbols-rounded">settings_system_daydream</span> Hệ thống</div></button>
-                        <button data-theme="clock" class="theme-option menu-btn"><div class="menu-btn-content"><span class="material-symbols-rounded">schedule</span> Theo giờ</div></button>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <!-- REMOVED settings-overlay-bg -->
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // --- CIRCULAR FAVICON LOGIC ---
+            const faviconUrl = "https://raw.githubusercontent.com/nnam0308/weather/18389a738bae786aebd65938d5228c60d821b4d0/icon.svg";
+            const imgFavicon = new Image();
+            imgFavicon.crossOrigin = "Anonymous"; imgFavicon.src = faviconUrl;
+            imgFavicon.onload = () => {
+                const canvas = document.createElement('canvas'); const size = 192; 
+                canvas.width = size; canvas.height = size;
+                const ctx = canvas.getContext('2d');
+                ctx.beginPath(); ctx.arc(size/2, size/2, size/2, 0, 2 * Math.PI);
+                ctx.closePath(); ctx.clip(); ctx.drawImage(imgFavicon, 0, 0, size, size);
+                const link = document.querySelector("link[rel~='icon']");
+                if (link) { link.href = canvas.toDataURL(); link.type = 'image/png'; }
+            };
+
             const GITHUB_BASE_URL = "https://raw.githubusercontent.com/nnam0308/weather/dfbb5f8d2777fdc675d333464f417a4b75c2a3b3/v4/";
             const searchForm = document.getElementById('search-form');
             const searchInput = document.getElementById('search-input');
@@ -486,127 +861,155 @@
             const detectLocationButton = document.getElementById('detect-location-button');
             const settingsButton = document.getElementById('settings-button');
             const weatherEffectsContainer = document.getElementById('weather-effects-container');
+            const settingsMenuWrapper = document.getElementById('settings-menu-wrapper');
+            const settingsCloseBtn = document.getElementById('settings-close-btn');
+            const themeBtns = document.querySelectorAll('.theme-btn');
+            const soundToggleSwitch = document.getElementById('sound-toggle-switch');
+            
+            // Audio
+            const rainAudio = new Audio('https://raw.githubusercontent.com/nnam0308/weather/bbdb3fdbb7122e2fbab112e4e14cdad9aee47ec2/sound/rain.mp3');
+            rainAudio.loop = true;
+            const thunderAudio = new Audio('https://raw.githubusercontent.com/nnam0308/weather/bbdb3fdbb7122e2fbab112e4e14cdad9aee47ec2/sound/storm.mp3');
 
             let currentCity = "Nha Trang";
             let currentLat = 12.2388;
             let currentLon = 109.1967;
             let searchTimeout;
             let currentTheme = localStorage.getItem('theme') || 'system';
+            let isSoundEnabled = localStorage.getItem('soundEnabled') === 'true';
             let globalWeatherData = null;
             let selectedDayIndex = 0;
             let currentEffectInterval = null;
+            let currentRainStatus = false;
 
             let deferredPrompt;
             const installBtn = document.getElementById('install-app-button');
             window.addEventListener('beforeinstallprompt', (e) => {
-                e.preventDefault(); deferredPrompt = e; installBtn.classList.remove('hidden');
+                e.preventDefault(); deferredPrompt = e; 
+                document.getElementById('install-area').classList.remove('hidden');
             });
             installBtn.addEventListener('click', async () => {
                 if (!deferredPrompt) return; deferredPrompt.prompt();
-                await deferredPrompt.userChoice; deferredPrompt = null; installBtn.classList.add('hidden');
+                await deferredPrompt.userChoice; deferredPrompt = null; 
+                document.getElementById('install-area').classList.add('hidden');
             });
-            window.addEventListener('appinstalled', () => { installBtn.classList.add('hidden'); deferredPrompt = null; });
 
-            // NEW: Function to update Window Title Bar Color (PWA) & Tile Color
             function updateAppThemeColor(className) {
                 const metaThemeColor = document.getElementById('meta-theme-color');
                 const metaTileColor = document.getElementById('meta-tile-color');
-                let color = '#f9fafb'; // Default light mode top color
-
-                // Define colors based on gradient tops from CSS
+                let color = '#f9fafb'; 
                 if (className.includes('weather-default')) {
-                    if (document.documentElement.classList.contains('dark')) color = '#0f172a'; // Dark mode top
+                    if (document.documentElement.classList.contains('dark')) color = '#0f172a'; 
                     else color = '#f9fafb';
-                } else if (className.includes('weather-sun-light')) {
-                    color = '#FFF9C4';
-                } else if (className.includes('weather-sun-intense')) {
-                    color = '#FFB300';
-                } else if (className.includes('weather-cloudy-grey')) {
-                    color = '#78909C';
-                } else if (className.includes('weather-rain-day')) {
-                    color = '#42A5F5';
-                } else if (className.includes('weather-rain-night')) {
-                    color = '#1A237E';
-                } else if (className.includes('weather-night-clear')) {
-                    color = '#0D47A1';
-                }
-                
-                // Update theme-color (Chrome/Edge/Android/macOS PWA)
+                } else if (className.includes('weather-sun-light')) color = '#FFF9C4';
+                else if (className.includes('weather-sun-intense')) color = '#FFB300';
+                else if (className.includes('weather-cloudy-grey')) color = '#78909C';
+                else if (className.includes('weather-rain-day')) color = '#42A5F5';
+                else if (className.includes('weather-rain-night')) color = '#1A237E';
+                else if (className.includes('weather-night-clear')) color = '#0D47A1';
+                else if (className.includes('weather-snow')) color = document.documentElement.classList.contains('dark') ? '#37474F' : '#E0E0E0';
                 metaThemeColor.setAttribute('content', color);
-                // Update msapplication-TileColor (Windows Start)
                 metaTileColor.setAttribute('content', color);
             }
+
+            function updateSoundUI() { soundToggleSwitch.checked = isSoundEnabled; }
+            function toggleSound() {
+                isSoundEnabled = soundToggleSwitch.checked;
+                localStorage.setItem('soundEnabled', isSoundEnabled);
+                if (isSoundEnabled) { if (currentRainStatus) rainAudio.play().catch(e => console.log(e)); } 
+                else { rainAudio.pause(); thunderAudio.pause(); thunderAudio.currentTime = 0; }
+            }
+            soundToggleSwitch.onchange = (e) => { e.stopPropagation(); toggleSound(); };
+            updateSoundUI();
+
+            function toggleSettings() {
+                const isOpen = settingsMenuWrapper.classList.contains('active');
+                if(isOpen) {
+                    settingsMenuWrapper.classList.remove('active');
+                    settingsButton.classList.remove('hidden-morph');
+                } else {
+                    settingsMenuWrapper.classList.add('active');
+                    settingsButton.classList.add('hidden-morph');
+                }
+                themeBtns.forEach(btn => {
+                    if(btn.dataset.theme === currentTheme) btn.classList.add('active');
+                    else btn.classList.remove('active');
+                });
+            }
+            settingsButton.onclick = toggleSettings;
+            settingsCloseBtn.onclick = toggleSettings;
+
+            function applyTheme(theme) {
+                themeBtns.forEach(btn => {
+                    if(btn.dataset.theme === theme) btn.classList.add('active'); else btn.classList.remove('active');
+                });
+                let isDark = false; const hour = new Date().getHours();
+                if (theme === 'dark') isDark = true;
+                else if (theme === 'light') isDark = false;
+                else if (theme === 'system') isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                else if (theme === 'clock') isDark = (hour >= 18 || hour < 6);
+
+                if (isDark) document.documentElement.classList.add('dark');
+                else document.documentElement.classList.remove('dark');
+                localStorage.setItem('theme', theme);
+                currentTheme = theme; 
+                if(globalWeatherData) updateAppThemeColor(document.body.className);
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+                if(currentTheme === 'system') applyTheme('system');
+            });
+            themeBtns.forEach(btn => {
+                btn.onclick = (e) => { e.stopPropagation(); applyTheme(btn.dataset.theme); };
+            });
 
             function renderWeatherEffects(weatherCode, isDay) {
                 if (currentEffectInterval) { clearInterval(currentEffectInterval); currentEffectInterval = null; }
                 weatherEffectsContainer.innerHTML = '';
-                
+                rainAudio.pause(); currentRainStatus = false;
+
                 const isRainy = (weatherCode >= 51 && weatherCode <= 67) || (weatherCode >= 80 && weatherCode <= 82) || weatherCode >= 95;
                 const isThunder = weatherCode >= 95;
+                const isSnow = (weatherCode >= 71 && weatherCode <= 77) || (weatherCode >= 85 && weatherCode <= 86);
                 const isClear = weatherCode <= 1;
 
                 if (isRainy) {
-                    const rainCount = 100; 
-                    for (let i = 0; i < rainCount; i++) {
-                        const drop = document.createElement('div');
-                        drop.classList.add('rain-drop');
+                    for (let i = 0; i < 100; i++) {
+                        const drop = document.createElement('div'); drop.classList.add('rain-drop');
                         drop.style.left = Math.random() * 100 + 'vw';
-                        drop.style.animationDuration = Math.random() * 1 + 0.5 + 's';
-                        drop.style.animationDelay = Math.random() * 2 + 's';
+                        drop.style.animationDuration = Math.random() * 1 + 0.5 + 's'; drop.style.animationDelay = Math.random() * 2 + 's';
                         weatherEffectsContainer.appendChild(drop);
                     }
+                    currentRainStatus = true;
+                    if (isSoundEnabled) rainAudio.play().catch(e => console.log(e));
                 }
-
                 if (isThunder) {
-                    const thunder = document.createElement('div');
-                    thunder.classList.add('thunder-flash');
+                    const thunder = document.createElement('div'); thunder.classList.add('thunder-flash');
                     weatherEffectsContainer.appendChild(thunder);
-                    
-                    const boltContainer = document.createElement('div');
-                    boltContainer.style.position = 'absolute'; boltContainer.style.top = '0'; boltContainer.style.left = '0';
-                    boltContainer.style.width = '100%'; boltContainer.style.height = '60%'; boltContainer.style.pointerEvents = 'none';
-                    weatherEffectsContainer.appendChild(boltContainer);
-
                     const triggerThunder = () => {
                         thunder.style.animation = 'none'; thunder.offsetHeight; thunder.style.animation = 'flash 0.4s ease-out';
-                        const bolt = document.createElement('div');
-                        bolt.classList.add('lightning-bolt');
-                        bolt.style.left = Math.random() * 90 + '%'; bolt.style.top = Math.random() * 20 + '%';
-                        bolt.style.animation = 'strike 0.7s ease-out forwards';
-                        boltContainer.appendChild(bolt);
-                        setTimeout(() => { if(bolt.parentNode) bolt.remove(); }, 800);
+                        if (isSoundEnabled) { thunderAudio.currentTime = 0; thunderAudio.play().catch(e => console.log(e)); }
                     };
-
                     currentEffectInterval = setInterval(() => { if(Math.random() > 0.5) triggerThunder(); }, 3500);
                 }
-
+                if (isSnow) {
+                    for (let i = 0; i < 50; i++) {
+                        const flake = document.createElement('div'); flake.classList.add('snow-flake');
+                        flake.style.left = Math.random() * 100 + 'vw';
+                        flake.style.animationDuration = Math.random() * 3 + 2 + 's'; flake.style.animationDelay = Math.random() * 5 + 's';
+                        flake.style.width = flake.style.height = Math.random() * 4 + 4 + 'px';
+                        weatherEffectsContainer.appendChild(flake);
+                    }
+                }
                 if (isClear && isDay) {
-                     if (weatherCode === 0) { 
-                         const glare = document.createElement('div'); glare.classList.add('sun-glare');
-                         weatherEffectsContainer.appendChild(glare);
-                         const core = document.createElement('div'); core.classList.add('sun-core');
-                         weatherEffectsContainer.appendChild(core);
-                         for (let i = 0; i < 15; i++) {
-                            const drop = document.createElement('div');
-                            drop.classList.add('sweat-drop');
-                            drop.style.left = Math.random() * 100 + 'vw';
-                            drop.style.top = Math.random() * 50 + 'vh';
-                            drop.style.animationDuration = Math.random() * 3 + 2 + 's';
-                            drop.style.animationDelay = Math.random() * 5 + 's';
-                            weatherEffectsContainer.appendChild(drop);
-                         }
-                     } else {
-                         const beam = document.createElement('div'); beam.classList.add('sun-beam');
-                         weatherEffectsContainer.appendChild(beam);
-                     }
+                     if (weatherCode > 0) { const beam = document.createElement('div'); beam.classList.add('sun-beam'); weatherEffectsContainer.appendChild(beam); }
                 }
             }
 
             function animateCountUp(el, targetValue, unit = '', duration = 1000) {
+                if(!el) return;
                 const target = Math.round(targetValue);
                 if (isNaN(target)) { el.textContent = typeof targetValue === 'string' ? targetValue : `${targetValue}${unit}`; return; }
-                let startValue = parseInt(el.textContent) || 0;
-                if (isNaN(startValue)) startValue = 0;
+                let startValue = parseInt(el.textContent) || 0; if (isNaN(startValue)) startValue = 0;
                 if (startValue === target) { el.textContent = `${target}${unit}`; return; }
                 let startTime = null;
                 const step = (timestamp) => {
@@ -619,15 +1022,6 @@
                 window.requestAnimationFrame(step);
             }
 
-            function applyTheme(theme) {
-                const hour = new Date().getHours();
-                const isDark = theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches) || (theme === 'clock' && (hour >= 18 || hour < 6));
-                if (isDark) document.documentElement.classList.add('dark'); else document.documentElement.classList.remove('dark');
-                
-                // Re-apply theme color when toggling dark mode manually
-                if(globalWeatherData) updateAppThemeColor(document.body.className);
-            }
-
             function updateClock() {
                 const now = new Date();
                 headerClock.textContent = now.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
@@ -638,57 +1032,29 @@
                 if (currentTheme === 'clock') applyTheme('clock');
             }
 
-            function showError(msg) {
-                errorTextEl.textContent = msg; errorMessageEl.classList.remove('hidden');
-                setTimeout(() => errorMessageEl.classList.add('hidden'), 4000);
-            }
+            function showError(msg) { errorTextEl.textContent = msg; errorMessageEl.classList.remove('hidden'); setTimeout(() => errorMessageEl.classList.add('hidden'), 4000); }
 
             function getWeatherIcon(code, hour) {
                 const isNight = (hour >= 18 || hour < 6);
-                const icons = {
-                    0: isNight ? 'clear_night.svg' : 'clear_day.svg',
-                    1: isNight ? 'mostly_clear_night.svg' : 'mostly_clear_day.svg',
-                    2: isNight ? 'partly_cloudy_night.svg' : 'partly_cloudy_day.svg',
-                    3: 'cloudy.svg', 45: 'haze_fog_dust_smoke.svg', 48: 'haze_fog_dust_smoke.svg',
-                    51: 'drizzle.svg', 53: 'drizzle.svg', 55: 'drizzle.svg',
-                    61: isNight ? 'rain_with_cloudy_dark.svg' : 'rain_with_cloudy_light.svg',
-                    63: 'showers_rain.svg', 65: 'heavy_rain.svg',
-                    71: isNight ? 'snow_with_cloudy_dark.svg' : 'snow_with_cloudy_light.svg',
-                    73: 'showers_snow.svg', 75: 'heavy_snow.svg',
-                    80: isNight ? 'scattered_showers_night.svg' : 'scattered_showers_day.svg',
-                    81: 'showers_rain.svg', 82: 'heavy_rain.svg',
-                    95: isNight ? 'isolated_scattered_thunderstorms_night.svg' : 'isolated_scattered_thunderstorms_day.svg',
-                };
+                const icons = { 0: isNight?'clear_night.svg':'clear_day.svg', 1: isNight?'mostly_clear_night.svg':'mostly_clear_day.svg', 2: isNight?'partly_cloudy_night.svg':'partly_cloudy_day.svg', 3:'cloudy.svg', 45:'haze_fog_dust_smoke.svg', 48:'haze_fog_dust_smoke.svg', 51:'drizzle.svg', 53:'drizzle.svg', 55:'drizzle.svg', 61: isNight?'rain_with_cloudy_dark.svg':'rain_with_cloudy_light.svg', 63:'showers_rain.svg', 65:'heavy_rain.svg', 71: isNight?'snow_with_cloudy_dark.svg':'snow_with_cloudy_light.svg', 73:'showers_snow.svg', 75:'heavy_snow.svg', 80: isNight?'scattered_showers_night.svg':'scattered_showers_day.svg', 81:'showers_rain.svg', 82:'heavy_rain.svg', 95: isNight?'isolated_scattered_thunderstorms_night.svg':'isolated_scattered_thunderstorms_day.svg' };
                 return GITHUB_BASE_URL + (icons[code] || 'cloudy.svg');
             }
-
             function getWeatherDescription(code) {
-                const desc = {
-                    0:'Trời quang',1:'Ít mây',2:'Mây rải rác',3:'Nhiều mây',
-                    45:'Sương mù',48:'Sương muối',51:'Mưa phùn nhẹ',53:'Mưa phùn',55:'Mưa phùn dày',
-                    61:'Mưa nhỏ',63:'Mưa vừa',65:'Mưa to',71:'Tuyết rơi nhẹ',73:'Tuyết rơi',75:'Tuyết rơi dày',
-                    80:'Mưa rào nhẹ',81:'Mưa rào',82:'Mưa rất to',95:'Dông',96:'Dông mưa đá',99:'Dông nặng'
-                };
+                const desc = { 0:'Trời quang',1:'Ít mây',2:'Mây rải rác',3:'Nhiều mây', 45:'Sương mù',48:'Sương muối',51:'Mưa phùn nhẹ',53:'Mưa phùn',55:'Mưa phùn dày', 61:'Mưa nhỏ',63:'Mưa vừa',65:'Mưa to',71:'Tuyết rơi nhẹ',73:'Tuyết rơi',75:'Tuyết rơi dày', 80:'Mưa rào nhẹ',81:'Mưa rào',82:'Mưa rất to',95:'Dông',96:'Dông mưa đá',99:'Dông nặng' };
                 return desc[code] || 'Không xác định';
             }
-
             function getWeatherBackgroundClass(code) {
-                const hour = new Date().getHours();
-                const isNight = (hour >= 18 || hour < 6);
+                const hour = new Date().getHours(); const isNight = (hour >= 18 || hour < 6);
+                if ((code >= 71 && code <= 77) || (code >= 85 && code <= 86)) return 'weather-snow';
                 if ((code >= 51 && code <= 67) || (code >= 80 && code <= 82)) return isNight ? 'weather-rain-night' : 'weather-rain-day';
                 if (code >= 95) return 'weather-cloudy-grey';
-                if (code <= 1) {
-                    if (isNight) return 'weather-night-clear';
-                    if ((hour >= 6 && hour < 9) || (hour >= 16 && hour < 18)) return 'weather-sun-light';
-                    return 'weather-sun-intense';
-                }
+                if (code <= 1) { if (isNight) return 'weather-night-clear'; if ((hour >= 6 && hour < 9) || (hour >= 16 && hour < 18)) return 'weather-sun-light'; return 'weather-sun-intense'; }
                 return 'weather-cloudy-grey';
             }
 
             async function fetchLocationName(lat, lon) {
                 try {
                     const res = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=vi`);
-                    if(!res.ok) throw new Error();
                     const data = await res.json();
                     let name = '';
                     if (data.localityInfo?.administrative) {
@@ -698,43 +1064,48 @@
                         const prov = admin.find(i => i.adminLevel === 4);
                         const parts = [local?.name, district?.name !== local?.name ? district?.name : null, prov?.name !== district?.name ? prov?.name : null].filter(Boolean);
                         name = parts.length > 2 ? `${parts[0]}, ${parts[1]}` : parts.join(', ');
-                    } else {
-                        name = [data.locality, data.city, data.principalSubdivision].filter(Boolean).join(', ');
-                    }
-                    currentCity = name || "Vị trí không xác định";
-                    currentLat = lat; currentLon = lon;
-                    fetchWeather(lat, lon, currentCity);
-                    fetchAQI(lat, lon);
-                } catch(e) { 
-                    console.error(e);
-                    showError('Không thể lấy tên địa điểm.');
-                    loadingSpinner.classList.add('hidden');
-                }
+                    } else { name = [data.locality, data.city, data.principalSubdivision].filter(Boolean).join(', '); }
+                    currentCity = name || "Vị trí không xác định"; currentLat = lat; currentLon = lon;
+                    fetchWeather(lat, lon, currentCity); fetchAQI(lat, lon);
+                } catch(e) { showError('Không thể lấy tên địa điểm.'); loadingSpinner.classList.add('hidden'); }
             }
 
             async function fetchAQI(lat, lon) {
                 try {
                     const res = await fetch(`https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${lat}&longitude=${lon}&current=us_aqi`);
                     const data = await res.json();
-                    document.getElementById('detail-aqi').textContent = data.current?.us_aqi || '--';
+                    const aqi = data.current?.us_aqi || 0;
+                    
+                    // Update Main Stats AQI
+                    const currentAqiEl = document.getElementById('current-aqi');
+                    if(currentAqiEl) currentAqiEl.textContent = aqi;
+
+                    // Update Details Card AQI
+                    const aqiEl = document.getElementById('detail-aqi');
+                    if(aqiEl) aqiEl.textContent = aqi;
+                    
+                    // Update AQI Circle
+                    const circle = document.getElementById('aqi-circle');
+                    if(circle) {
+                        const radius = circle.r.baseVal.value;
+                        const circumference = 2 * Math.PI * radius;
+                        const offset = circumference - (aqi / 300) * circumference; // 300 scale
+                        circle.style.strokeDashoffset = offset;
+                        circle.style.stroke = aqi < 50 ? '#22c55e' : aqi < 100 ? '#eab308' : '#ef4444';
+                    }
+
                 } catch(e) { console.error(e); }
             }
 
             async function fetchWeather(lat, lon, city) {
                 loadingSpinner.classList.remove('hidden');
                 try {
-                    const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relativehumidity_2m,weathercode,windspeed_10m,pressure_msl,dewpoint_2m,visibility,uv_index,apparent_temperature,cloudcover,precipitation&hourly=temperature_2m,weathercode,temperature_80m,precipitation_probability,relativehumidity_2m,surface_pressure,visibility,windspeed_10m&daily=weathercode,temperature_2m_max,temperature_2m_min,sunrise,sunset,uv_index_max,precipitation_sum,wind_speed_10m_max&timezone=auto&forecast_days=14`);
+                    const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relativehumidity_2m,weathercode,windspeed_10m,winddirection_10m,pressure_msl,dewpoint_2m,visibility,uv_index,apparent_temperature,cloudcover,precipitation&hourly=temperature_2m,weathercode,precipitation_probability,relativehumidity_2m,surface_pressure,visibility,windspeed_10m&daily=weathercode,temperature_2m_max,temperature_2m_min,sunrise,sunset,uv_index_max,precipitation_sum,wind_speed_10m_max&timezone=auto&forecast_days=14`);
                     if(!res.ok) throw new Error('Lỗi tải thời tiết');
                     const data = await res.json();
-                    
                     globalWeatherData = data; selectedDayIndex = 0; updateUI(data, city);
                     weatherMapEl.src = `https://embed.windy.com/embed.html?type=map&location=coordinates&metricWind=kmh&metricTemp=°C&radarRange=-1&lat=${lat}&lon=${lon}&zoom=9`;
-                    
-                } catch(e) {
-                    showError(e.message);
-                } finally {
-                    loadingSpinner.classList.add('hidden');
-                }
+                } catch(e) { showError(e.message); } finally { loadingSpinner.classList.add('hidden'); }
             }
 
             function updateUI(data, city) {
@@ -749,121 +1120,143 @@
                 document.querySelectorAll('.daily-card').forEach((card, idx) => {
                     if (idx === index) card.classList.add('active'); else card.classList.remove('active');
                 });
-                loadingSpinner.classList.remove('hidden');
-                setTimeout(() => { updateDashboard(index); loadingSpinner.classList.add('hidden'); }, 200);
+                updateDashboard(index);
             };
 
             function updateDashboard(index) {
-                const data = globalWeatherData;
-                if (!data) return;
+                const data = globalWeatherData; if (!data) return;
                 const isToday = index === 0;
-                const daily = data.daily;
-                const hourly = data.hourly;
-                const current = data.current;
-                const dateStr = daily.time[index];
-                const dateObj = new Date(dateStr);
+                const daily = data.daily; const hourly = data.hourly; const current = data.current;
+                const dateStr = daily.time[index]; const dateObj = new Date(dateStr);
                 const fullDateText = dateObj.toLocaleDateString('vi-VN', { weekday: 'long', day: 'numeric', month: 'numeric', year: 'numeric' });
                 currentTimeDateEl.textContent = isToday ? `${headerClock.textContent} - ${fullDateText}` : fullDateText;
 
-                let displayTemp, displayCode, displayDesc, displayWind, displayPressure, displayHumidity, displayVis, displayDew, displayUV;
+                let displayTemp, displayCode, displayDesc, displayWind, displayPressure, displayHumidity, displayVis, displayUV, displayWindDir, displayFeelsLike, displayDew;
                 let isDayTime = true; 
 
                 if (isToday) {
-                    const h = new Date().getHours();
-                    isDayTime = h >= 6 && h < 18;
-                    displayTemp = current.temperature_2m;
-                    displayCode = current.weathercode;
-                    displayDesc = getWeatherDescription(displayCode);
-                    displayWind = current.windspeed_10m;
-                    displayPressure = current.pressure_msl;
-                    displayHumidity = current.relativehumidity_2m;
-                    displayVis = current.visibility/1000;
+                    const h = new Date().getHours(); isDayTime = h >= 6 && h < 18;
+                    displayTemp = current.temperature_2m; displayCode = current.weathercode; displayDesc = getWeatherDescription(displayCode);
+                    displayWind = current.windspeed_10m; displayWindDir = current.winddirection_10m;
+                    displayPressure = current.pressure_msl; displayHumidity = current.relativehumidity_2m;
+                    displayVis = current.visibility/1000; displayUV = Math.round(current.uv_index);
+                    displayFeelsLike = current.apparent_temperature;
                     displayDew = current.dewpoint_2m;
-                    displayUV = Math.round(current.uv_index);
                 } else {
                     isDayTime = true; 
-                    displayTemp = Math.round(daily.temperature_2m_max[index]);
-                    displayCode = daily.weathercode[index];
-                    displayDesc = getWeatherDescription(displayCode);
-                    displayWind = daily.wind_speed_10m_max[index];
-                    displayUV = daily.uv_index_max[index];
-                    const dayStartIndex = index * 24;
-                    const dayEndIndex = dayStartIndex + 24;
-                    const getAvg = (arr) => {
-                        const slice = arr.slice(dayStartIndex, dayEndIndex);
-                        const sum = slice.reduce((a, b) => a + b, 0);
-                        return slice.length ? Math.round(sum / slice.length) : '--';
-                    };
-                    displayHumidity = getAvg(hourly.relativehumidity_2m);
-                    displayPressure = getAvg(hourly.surface_pressure);
+                    displayTemp = Math.round(daily.temperature_2m_max[index]); displayCode = daily.weathercode[index]; displayDesc = getWeatherDescription(displayCode);
+                    displayWind = daily.wind_speed_10m_max[index]; displayUV = daily.uv_index_max[index]; displayWindDir = 0;
+                    const start = index * 24; const end = start + 24;
+                    const getAvg = (arr) => { const s = arr.slice(start, end); return s.length ? Math.round(s.reduce((a, b) => a + b, 0) / s.length) : '--'; };
+                    displayHumidity = getAvg(hourly.relativehumidity_2m); displayPressure = getAvg(hourly.surface_pressure);
                     displayVis = (getAvg(hourly.visibility) / 1000).toFixed(1);
-                    displayDew = "--"; 
+                    displayFeelsLike = "--";
+                    displayDew = "--";
                 }
 
                 animateCountUp(currentTempEl, displayTemp, '°');
                 currentConditionEl.textContent = displayDesc;
                 currentWeatherIconContainer.innerHTML = `<img src="${getWeatherIcon(displayCode, isDayTime ? 12 : 0)}" class="weather-icon loaded animate-slide-up">`;
-                
+
+                // UPDATE TOP STATS GRID
                 const stats = {
                     'current-wind': [displayWind, ' km/h'],
                     'current-pressure': [displayPressure, ' hPa'],
                     'current-humidity': [displayHumidity, '%'],
                     'current-visibility': [displayVis, ' km'],
                     'current-dewpoint': [displayDew, '°'],
-                    'current-uv': [displayUV, '']
+                    'current-uv': [displayUV, ''],
+                    'current-feels-like': [displayFeelsLike, '°'] // Added Feels Like
                 };
                 for(const [id, [val, unit]] of Object.entries(stats)) {
                     const el = document.getElementById(id); if(el) animateCountUp(el, val, unit);
                 }
 
+
+                // Update Specific Details Cards
                 const detailMap = {
                     'detail-temp': [isToday ? current.temperature_2m : daily.temperature_2m_max[index], '°C'],
                     'detail-feels-like': [isToday ? current.apparent_temperature : '--', '°C'],
                     'detail-cloud-cover': ['--', '%'],
                     'detail-precipitation': [daily.precipitation_sum[index], ' mm'],
-                    'detail-wind': [displayWind, ' km/h'],
-                    'detail-humidity': [displayHumidity, '%'],
+                    'detail-wind': [displayWind, ''],
+                    'detail-humidity': [displayHumidity, ''],
                     'detail-uv': [displayUV, ''],
-                    'detail-visibility': [displayVis, ' km'],
-                    'detail-pressure': [displayPressure, ' hPa'],
+                    'detail-visibility': [displayVis, ''],
+                    'detail-pressure': [displayPressure, ''],
                 };
                 for(const [id, [val, unit]] of Object.entries(detailMap)) {
                     const el = document.getElementById(id); if(el) animateCountUp(el, val, unit);
                 }
-                
+
+                // Graphic Updates
+                // 1. Wind Arrow
+                const arrow = document.getElementById('wind-arrow');
+                if(arrow) arrow.style.transform = `rotate(${displayWindDir}deg)`;
+
+                // 2. Humidity Visual (Randomize heights slightly based on value for effect)
+                const humBars = document.querySelectorAll('.h-bar');
+                humBars.forEach(bar => {
+                    // Make bar height roughly proportional to humidity but randomized
+                    const height = (displayHumidity * 0.8) + (Math.random() * 20);
+                    bar.style.height = Math.min(height, 100) + '%';
+                    bar.style.opacity = displayHumidity > 50 ? 0.8 : 0.4;
+                });
+
+                // 3. UV Circle
+                const uvCircle = document.getElementById('uv-circle');
+                if(uvCircle) {
+                    const r = uvCircle.r.baseVal.value;
+                    const c = 2 * Math.PI * r;
+                    const uvOffset = c - (displayUV / 12) * c; 
+                    uvCircle.style.strokeDashoffset = uvOffset;
+                    const uvText = document.getElementById('uv-text');
+                    if(uvText) uvText.textContent = displayUV < 3 ? 'Thấp' : displayUV < 6 ? 'Trung bình' : displayUV < 8 ? 'Cao' : 'Cực cao';
+                }
+
+                // 4. Pressure Circle (FIXED & HARDENED)
+                const pressureCircle = document.getElementById('pressure-circle');
+                if(pressureCircle) {
+                    // Ensure displayPressure is treated as a number
+                    let val = parseFloat(displayPressure);
+                    // Fallback if invalid (e.g. "--")
+                    if(isNaN(val)) val = 1013; // Default standard pressure
+
+                    // Range: 960hPa (low/storm) -> 1060hPa (high/dry)
+                    const minP = 960; const maxP = 1060;
+                    let pPct = (val - minP) / (maxP - minP);
+                    pPct = Math.max(0, Math.min(1, pPct)); // Clamp 0-1
+                    
+                    // Arc length is 90 (defined in style). Empty = 90 offset. Full = 0 offset.
+                    const maxOffset = 90;
+                    const pOffset = maxOffset - (pPct * maxOffset);
+                    
+                    // Force apply style
+                    pressureCircle.style.strokeDashoffset = pOffset;
+                }
+
+                // 5. Sun Times
                 const sunrise = new Date(daily.sunrise[index]).toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit'});
                 const sunset = new Date(daily.sunset[index]).toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit'});
-                document.getElementById('detail-sun').textContent = `${sunrise} / ${sunset}`;
+                document.getElementById('detail-sunrise').textContent = sunrise;
+                document.getElementById('detail-sunset').textContent = sunset;
 
                 const newClass = `${getWeatherBackgroundClass(displayCode)}`;
-                document.body.className = newClass;
-                // NEW: Update theme color when background changes
-                updateAppThemeColor(newClass);
-
+                document.body.className = newClass; updateAppThemeColor(newClass);
                 const realHour = new Date().getHours();
-                const effectIsDay = isToday ? (realHour >= 6 && realHour < 18) : true;
-                renderWeatherEffects(displayCode, effectIsDay);
+                renderWeatherEffects(displayCode, isToday ? (realHour >= 6 && realHour < 18) : true);
 
-                // --- 3. UPDATE HOURLY FORECAST (UPDATED LOGIC) ---
                 hourlyForecastContainer.innerHTML = '';
                 let startH = 0; let endH = 0;
-
                 if (isToday) {
                     const currentHour = new Date().getHours();
-                    const todayDate = daily.time[0]; // YYYY-MM-DD của hôm nay
-                    
-                    // Tìm vị trí giờ hiện tại trong dữ liệu
+                    const todayDate = daily.time[0]; 
                     startH = hourly.time.findIndex(t => t.startsWith(todayDate) && new Date(t).getHours() === currentHour);
-                    if (startH === -1) startH = 0; // Fallback
-
-                    // Điểm dừng là đầu ngày mai (để chỉ lấy đến 23:00 hôm nay)
-                    const tomorrowDate = daily.time[1];
-                    endH = hourly.time.findIndex(t => t.startsWith(tomorrowDate));
-                    if (endH === -1) endH = hourly.time.length; // Fallback nếu không tìm thấy ngày mai
+                    if (startH === -1) startH = 0;
+                    endH = hourly.time.findIndex(t => t.startsWith(daily.time[1]));
+                    if (endH === -1) endH = hourly.time.length; 
                 } else {
-                    // Logic cũ cho các ngày khác: lấy trọn vẹn 24h của ngày đó
-                    const targetDate = daily.time[index];
-                    startH = hourly.time.findIndex(t => t.startsWith(targetDate));
+                    startH = hourly.time.findIndex(t => t.startsWith(daily.time[index]));
                     endH = startH + 24;
                 }
 
@@ -871,50 +1264,34 @@
                     for(let i=startH; i<endH && i<hourly.time.length; i++) {
                         const time = new Date(hourly.time[i]);
                         const hCode = hourly.weathercode[i];
-                        const hTemp = Math.round(hourly.temperature_2m[i]);
-                        const hProb = hourly.precipitation_probability[i];
-                        
-                        const hHtml = `
-                            <div class="glass-item hourly-card">
+                        const hHtml = `<div class="glass-item hourly-card">
                                 <div class="font-bold mb-1" style="font-size: 0.875rem;">${time.toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit'})}</div>
                                 <div style="width: 2.5rem; height: 2.5rem; margin: 0.25rem 0;"><img src="${getWeatherIcon(hCode, time.getHours())}" class="w-full h-full"></div>
-                                <div class="font-bold" style="font-size: 1.125rem;">${hTemp}°</div>
-                                <div class="opacity-80 leading-tight mb-1" style="font-size: 0.75rem;">${getWeatherDescription(hCode)}</div>
-                                <div class="opacity-60" style="font-size: 0.75rem;">${hProb}% mưa</div>
+                                <div class="font-bold" style="font-size: 1.125rem;">${Math.round(hourly.temperature_2m[i])}°</div>
+                                <div class="opacity-60" style="font-size: 0.75rem;">${hourly.precipitation_probability[i]}% mưa</div>
                             </div>`;
                         hourlyForecastContainer.insertAdjacentHTML('beforeend', hHtml);
                     }
-                } else {
-                     hourlyForecastContainer.innerHTML = '<div style="padding:1rem; opacity:0.7;">Không có dữ liệu dự báo cho khung giờ này.</div>';
-                }
-
-                if (weatherMapEl.src && !weatherMapEl.src.includes('about:blank')) {
-                    let url = new URL(weatherMapEl.src);
-                }
+                } else { hourlyForecastContainer.innerHTML = '<div style="padding:1rem; opacity:0.7;">Không có dữ liệu dự báo.</div>'; }
             }
 
             function renderDailyList(data) {
                 dailyForecastContainer.innerHTML = '';
                 for(let i=0; i<data.daily.time.length; i++) {
                     const date = new Date(data.daily.time[i]);
-                    const dCode = data.daily.weathercode[i];
-                    const max = Math.round(data.daily.temperature_2m_max[i]);
-                    const min = Math.round(data.daily.temperature_2m_min[i]);
                     const isActive = i === selectedDayIndex ? 'active' : '';
-                    
-                    const dHtml = `
-                        <div class="glass-item daily-card ${isActive}" onclick="selectDay(${i})">
+                    const dHtml = `<div class="glass-item daily-card ${isActive}" onclick="selectDay(${i})">
                             <div class="text-center" style="width: 3.5rem;">
                                 <div class="font-bold">${date.toLocaleDateString('vi-VN',{day:'2-digit',month:'2-digit'})}</div>
                                 <div class="opacity-70" style="font-size: 0.75rem;">${date.toLocaleDateString('vi-VN',{weekday:'short'})}</div>
                             </div>
                             <div style="flex: 1; display: flex; flex-direction: column; align-items: center;">
-                                <div style="width: 2.5rem; height: 2.5rem; margin-bottom: 0.25rem;"><img src="${getWeatherIcon(dCode, 12)}" class="w-full h-full"></div>
-                                <div style="font-size: 0.75rem; text-align: center; font-weight: 500;">${getWeatherDescription(dCode)}</div>
+                                <div style="width: 2.5rem; height: 2.5rem; margin-bottom: 0.25rem;"><img src="${getWeatherIcon(data.daily.weathercode[i], 12)}" class="w-full h-full"></div>
+                                <div style="font-size: 0.75rem; text-align: center; font-weight: 500;">${getWeatherDescription(data.daily.weathercode[i])}</div>
                             </div>
                             <div class="text-right" style="width: 3rem;">
-                                <div class="font-bold">${max}°</div>
-                                <div class="opacity-70" style="font-size: 0.75rem;">${min}°</div>
+                                <div class="font-bold">${Math.round(data.daily.temperature_2m_max[i])}°</div>
+                                <div class="opacity-70" style="font-size: 0.75rem;">${Math.round(data.daily.temperature_2m_min[i])}°</div>
                             </div>
                         </div>`;
                     dailyForecastContainer.insertAdjacentHTML('beforeend', dHtml);
@@ -925,13 +1302,11 @@
                 e.preventDefault(); const q = searchInput.value.trim();
                 if(q) { clearTimeout(searchTimeout); fetchSuggestions(q); }
             });
-            
             searchInput.addEventListener('input', () => {
                 clearTimeout(searchTimeout); const q = searchInput.value.trim();
                 if(q.length >= 1) searchTimeout = setTimeout(() => fetchSuggestions(q), 400);
                 else { searchSuggestions.classList.add('hidden'); searchLoading.classList.add('hidden'); }
             });
-
             async function fetchSuggestions(q) {
                 searchLoading.classList.remove('hidden'); 
                 try {
@@ -939,9 +1314,8 @@
                     const data = await res.json();
                     searchSuggestions.innerHTML = ''; 
                     if(!data.results || data.results.length === 0) {
-                        const div = document.createElement('div');
-                        div.className = "suggestion-item"; div.style.textAlign = "center"; div.style.opacity = "0.7";
-                        div.textContent = "Không tìm thấy địa điểm"; searchSuggestions.appendChild(div); searchSuggestions.classList.remove('hidden'); return;
+                        searchSuggestions.innerHTML = '<div class="suggestion-item" style="text-align:center; opacity:0.7">Không tìm thấy địa điểm</div>';
+                        searchSuggestions.classList.remove('hidden'); return;
                     }
                     const unique = []; const seen = new Set();
                     data.results.forEach(i => { const k = `${i.name}-${i.admin1}-${i.country}`; if(!seen.has(k)) { seen.add(k); unique.push(i); } });
@@ -972,31 +1346,6 @@
                 }
             };
 
-            document.getElementById('settings-menu-container').onclick = (e) => {
-                if(e.target === document.getElementById('settings-menu-container')) {
-                    document.getElementById('settings-menu-container').classList.add('hidden');
-                    document.getElementById('settings-main-menu').classList.remove('hidden');
-                    document.getElementById('settings-theme-menu').classList.add('hidden');
-                }
-            };
-            settingsButton.onclick = () => document.getElementById('settings-menu-container').classList.remove('hidden');
-            document.getElementById('theme-menu-button').onclick = () => {
-                document.getElementById('settings-main-menu').classList.add('hidden');
-                document.getElementById('settings-theme-menu').classList.remove('hidden');
-            };
-            document.getElementById('theme-back-button').onclick = () => {
-                document.getElementById('settings-main-menu').classList.remove('hidden');
-                document.getElementById('settings-theme-menu').classList.add('hidden');
-            };
-            document.querySelectorAll('.theme-option').forEach(btn => {
-                btn.onclick = () => {
-                    currentTheme = btn.dataset.theme;
-                    localStorage.setItem('theme', currentTheme);
-                    applyTheme(currentTheme);
-                    document.getElementById('settings-menu-container').classList.add('hidden');
-                }
-            });
-
             mapDetailsButton.onclick = () => {
                 fullWeatherMap.src = weatherMapEl.src.replace('zoom=9', 'zoom=5') + '&detail=true&pressure=true';
                 mapModal.classList.remove('hidden'); mapModal.classList.remove('modal-exiting'); mapModal.classList.add('modal-entering');
@@ -1005,7 +1354,20 @@
                 mapModal.classList.remove('modal-entering'); mapModal.classList.add('modal-exiting');
                 setTimeout(() => { mapModal.classList.add('hidden'); fullWeatherMap.src = 'about:blank'; }, 200);
             };
-            document.addEventListener('click', (e) => { if(!searchForm.contains(e.target)) searchSuggestions.classList.add('hidden'); });
+            
+            // --- UPDATED CLICK LISTENER FOR MENU & SEARCH ---
+            document.addEventListener('click', (e) => { 
+                // Close search suggestions if clicked outside
+                if(!searchForm.contains(e.target)) searchSuggestions.classList.add('hidden'); 
+                
+                // Close settings menu if clicked outside
+                // Check if click is OUTSIDE menu wrapper AND OUTSIDE toggle button
+                if (!settingsMenuWrapper.contains(e.target) && !settingsButton.contains(e.target)) {
+                    if (settingsMenuWrapper.classList.contains('active')) {
+                        toggleSettings(); // Close menu
+                    }
+                }
+            });
 
             applyTheme(currentTheme);
             setInterval(updateClock, 1000);
