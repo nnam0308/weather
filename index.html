@@ -2,20 +2,30 @@
 <html lang="vi"> 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <!-- Thêm viewport-fit=cover để hỗ trợ tai thỏ trên iPhone -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Ứng dụng Thời tiết</title>
     
-    <!-- PWA Manifest Updated -->
+    <!-- PWA Manifest -->
     <link rel="manifest" href="data:application/manifest+json;base64,eyJuYW1lIjoi4buWbmcgZOG7pW5nIFRo4budaSB0aeG6v3QiLCJzaG9ydF9uYW1lIjoiVGjhu5WpIHRp4bq6dCIsInN0YXJ0X3VybCI6Ii4iLCJkaXNwbGF5Ijoic3RhbmRhbG9uZSIsImJhY2tncm91bmRfY29xvciI6IiNmZmZmZmYiLCJ0aGVtZV9jb2xvciI6IiMyNTYzZWIiLCJkZXNjcmlwdGlvbiI6IkThu7Egw6FvIHRo4budaSB0aeG6v3QgY2jDrW5oIHjDoWMiLCJvcmllbnRhdGlvbiI6InBvcnRyYWl0LXByaW1hcnkiLCJpY29ucyI6W3sic3JjIjoiaHR0cHM6Ly9jZG4taWNvbnMtcG5nLmZsYXRpY29uLmNvbS81MTIvNDA1Mi80MDUyOTg0LnBuZyIsInNpemVzIjoiMTkyeDE5MiIsInR5cGUiOiJpbWFnZS9wbmcifSx7InNyYyI6Imh0dHBzOi8vY2RuLWljb25zLXBuZy5mbGF0aWNvbi5jb20vNTEyLzQwNTIvNDA1Mjk4NC5wbmciLCJzaXplcyI6IjUxMng1MTIiLCJ0eXBlIjoiaW1hZ2UvcG5nIn1dfQ==">
     
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="theme-color" content="transparent">
+    <!-- --- CROSS-PLATFORM THEME CONFIG --- -->
+    
+    <!-- 1. Modern Browsers (Android, Chrome/Edge on Windows/macOS) -->
+    <!-- ID để JS cập nhật màu động -->
+    <meta id="meta-theme-color" name="theme-color" content="#f9fafb">
+
+    <!-- 2. iOS (iPhone/iPad) -->
     <meta name="apple-mobile-web-app-capable" content="yes">
+    <!-- black-translucent: Nội dung tràn lên status bar (tạo hiệu ứng trong suốt) -->
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Thời tiết">
     <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/4052/4052984.png">
+
+    <!-- 3. Windows (Start Menu Tiles) -->
     <meta name="application-name" content="Ứng dụng Thời tiết">
-    <meta name="msapplication-TileColor" content="transparent">
+    <!-- ID để JS cập nhật màu động -->
+    <meta id="meta-tile-color" name="msapplication-TileColor" content="#2563eb">
     <meta name="msapplication-tap-highlight" content="no">
     <meta name="msapplication-TileImage" content="https://cdn-icons-png.flaticon.com/512/4052/4052984.png">
 
@@ -40,6 +50,9 @@
             --shadow-color: rgba(31, 38, 135, 0.1);
             --input-bg: rgba(255, 255, 255, 0.9);
             --accent-blue: #2563eb;
+            
+            /* Safe area for iPhone Notch */
+            --safe-top: env(safe-area-inset-top, 0px);
         }
 
         html.dark {
@@ -64,7 +77,10 @@
             position: relative;
             overflow-x: hidden;
             min-height: 100vh;
+            /* Padding bottom for scroll space */
             padding-bottom: 2rem;
+            /* Quan trọng cho iOS PWA: Đảm bảo nền full màn hình */
+            background-attachment: fixed; 
         }
 
         img { max-width: 100%; display: block; }
@@ -111,9 +127,11 @@
         .main-header {
             position: fixed; inset: 0; z-index: 50; pointer-events: none;
             display: flex; flex-direction: column; justify-content: space-between; transition: all 0.3s;
+            /* iOS Safe Area support */
+            padding-top: max(1.5rem, var(--safe-top)); 
         }
         .header-clock-area {
-            pointer-events: auto; padding-top: 1.5rem; display: flex; justify-content: center; align-items: center; gap: 0.75rem;
+            pointer-events: auto; display: flex; justify-content: center; align-items: center; gap: 0.75rem;
             text-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
         .clock-time { font-size: 1.8rem; font-weight: bold; color: white; }
@@ -171,8 +189,9 @@
                 width: calc(100% + 2rem); margin: 0 -1rem 1.5rem -1rem; padding: 1rem 2rem;
                 height: auto; display: grid; grid-template-columns: 1fr 2fr 1fr; align-items: center; gap: 1rem;
                 pointer-events: auto;
+                padding-top: 1rem; /* Reset top padding on desktop */
             }
-            .header-clock-area { padding-top: 0; justify-content: flex-start; display: block; text-align: left; }
+            .header-clock-area { justify-content: flex-start; display: block; text-align: left; }
             .clock-time { font-size: 2rem; display: block; }
             .clock-sep { display: none; }
             .header-controls { padding: 0; display: contents; background: none; }
@@ -261,15 +280,12 @@
         /* --- WEATHER EFFECTS --- */
         #weather-effects-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; overflow: hidden; }
         
-        /* Rain */
         .rain-drop { position: absolute; background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0.6)); width: 1px; height: 20px; top: -25px; animation: fall linear infinite; }
         @keyframes fall { to { transform: translateY(110vh); } }
         
-        /* Thunder */
         .thunder-flash { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(255, 255, 255, 0.5); opacity: 0; animation: flash 0.4s ease-out; }
         @keyframes flash { 0% { opacity: 0.8; } 100% { opacity: 0; } }
 
-        /* Lightning Bolt */
         .lightning-bolt {
             position: absolute;
             width: 80px; height: 120px;
@@ -287,7 +303,6 @@
             100% { opacity: 0; transform: scale(0.8) skewX(-10deg); }
         }
         
-        /* Sun effects */
         .sun-beam { position: absolute; top: -20%; right: -20%; width: 80vw; height: 80vw; background: radial-gradient(circle, rgba(255,255,220,0.3) 0%, rgba(255,255,255,0) 60%); animation: sun-pulse 6s ease-in-out infinite alternate; }
         @keyframes sun-pulse { from { opacity: 0.3; transform: scale(1); } to { opacity: 0.6; transform: scale(1.1); } }
         .sun-glare { position: absolute; top: -150px; right: -150px; width: 800px; height: 800px; background: repeating-conic-gradient(from 0deg, rgba(255,255,255,0) 0deg, rgba(255,255,255,0.15) 5deg, rgba(255,255,255,0) 10deg); animation: sun-rotate 30s linear infinite; border-radius: 50%; }
@@ -319,7 +334,6 @@
             </div>
             <div class="header-controls">
                 <div class="controls-center">
-                    <!-- Xóa title="Vị trí của tôi" -->
                     <button id="detect-location-button" class="btn-circle primary"><span class="material-symbols-rounded">my_location</span></button>
                     <form id="search-form" class="search-wrapper">
                         <div style="position: relative;">
@@ -476,7 +490,7 @@
             let currentTheme = localStorage.getItem('theme') || 'system';
             let globalWeatherData = null;
             let selectedDayIndex = 0;
-            let currentEffectInterval = null; // Global var to track interval
+            let currentEffectInterval = null;
 
             let deferredPrompt;
             const installBtn = document.getElementById('install-app-button');
@@ -489,20 +503,44 @@
             });
             window.addEventListener('appinstalled', () => { installBtn.classList.add('hidden'); deferredPrompt = null; });
 
-            // Updated Effect Rendering Logic with Bolt
-            function renderWeatherEffects(weatherCode, isDay) {
-                // CLEAR PREVIOUS INTERVAL IF ANY
-                if (currentEffectInterval) {
-                    clearInterval(currentEffectInterval);
-                    currentEffectInterval = null;
+            // NEW: Function to update Window Title Bar Color (PWA) & Tile Color
+            function updateAppThemeColor(className) {
+                const metaThemeColor = document.getElementById('meta-theme-color');
+                const metaTileColor = document.getElementById('meta-tile-color');
+                let color = '#f9fafb'; // Default light mode top color
+
+                // Define colors based on gradient tops from CSS
+                if (className.includes('weather-default')) {
+                    if (document.documentElement.classList.contains('dark')) color = '#0f172a'; // Dark mode top
+                    else color = '#f9fafb';
+                } else if (className.includes('weather-sun-light')) {
+                    color = '#FFF9C4';
+                } else if (className.includes('weather-sun-intense')) {
+                    color = '#FFB300';
+                } else if (className.includes('weather-cloudy-grey')) {
+                    color = '#78909C';
+                } else if (className.includes('weather-rain-day')) {
+                    color = '#42A5F5';
+                } else if (className.includes('weather-rain-night')) {
+                    color = '#1A237E';
+                } else if (className.includes('weather-night-clear')) {
+                    color = '#0D47A1';
                 }
+                
+                // Update theme-color (Chrome/Edge/Android/macOS PWA)
+                metaThemeColor.setAttribute('content', color);
+                // Update msapplication-TileColor (Windows Start)
+                metaTileColor.setAttribute('content', color);
+            }
+
+            function renderWeatherEffects(weatherCode, isDay) {
+                if (currentEffectInterval) { clearInterval(currentEffectInterval); currentEffectInterval = null; }
                 weatherEffectsContainer.innerHTML = '';
                 
                 const isRainy = (weatherCode >= 51 && weatherCode <= 67) || (weatherCode >= 80 && weatherCode <= 82) || weatherCode >= 95;
                 const isThunder = weatherCode >= 95;
                 const isClear = weatherCode <= 1;
 
-                // 1. Rain Effect
                 if (isRainy) {
                     const rainCount = 100; 
                     for (let i = 0; i < rainCount; i++) {
@@ -515,50 +553,31 @@
                     }
                 }
 
-                // 2. Thunder Effect (Flash + Bolt)
                 if (isThunder) {
                     const thunder = document.createElement('div');
                     thunder.classList.add('thunder-flash');
                     weatherEffectsContainer.appendChild(thunder);
                     
-                    // Bolt Container
                     const boltContainer = document.createElement('div');
-                    boltContainer.style.position = 'absolute';
-                    boltContainer.style.top = '0';
-                    boltContainer.style.left = '0';
-                    boltContainer.style.width = '100%';
-                    boltContainer.style.height = '60%';
-                    boltContainer.style.pointerEvents = 'none';
+                    boltContainer.style.position = 'absolute'; boltContainer.style.top = '0'; boltContainer.style.left = '0';
+                    boltContainer.style.width = '100%'; boltContainer.style.height = '60%'; boltContainer.style.pointerEvents = 'none';
                     weatherEffectsContainer.appendChild(boltContainer);
 
                     const triggerThunder = () => {
-                        // Screen Flash
-                        thunder.style.animation = 'none';
-                        thunder.offsetHeight; 
-                        thunder.style.animation = 'flash 0.4s ease-out';
-
-                        // Bolt Visual
+                        thunder.style.animation = 'none'; thunder.offsetHeight; thunder.style.animation = 'flash 0.4s ease-out';
                         const bolt = document.createElement('div');
                         bolt.classList.add('lightning-bolt');
-                        bolt.style.left = Math.random() * 90 + '%';
-                        bolt.style.top = Math.random() * 20 + '%';
+                        bolt.style.left = Math.random() * 90 + '%'; bolt.style.top = Math.random() * 20 + '%';
                         bolt.style.animation = 'strike 0.7s ease-out forwards';
                         boltContainer.appendChild(bolt);
-                        
                         setTimeout(() => { if(bolt.parentNode) bolt.remove(); }, 800);
                     };
 
-                    // Set global interval
-                    currentEffectInterval = setInterval(() => {
-                        if(Math.random() > 0.5) { 
-                            triggerThunder();
-                        }
-                    }, 3500);
+                    currentEffectInterval = setInterval(() => { if(Math.random() > 0.5) triggerThunder(); }, 3500);
                 }
 
-                // 3. Sun Effect (Only clear day)
                 if (isClear && isDay) {
-                     if (weatherCode === 0) { // Clear sky
+                     if (weatherCode === 0) { 
                          const glare = document.createElement('div'); glare.classList.add('sun-glare');
                          weatherEffectsContainer.appendChild(glare);
                          const core = document.createElement('div'); core.classList.add('sun-core');
@@ -600,6 +619,9 @@
                 const hour = new Date().getHours();
                 const isDark = theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches) || (theme === 'clock' && (hour >= 18 || hour < 6));
                 if (isDark) document.documentElement.classList.add('dark'); else document.documentElement.classList.remove('dark');
+                
+                // Re-apply theme color when toggling dark mode manually
+                if(globalWeatherData) updateAppThemeColor(document.body.className);
             }
 
             function updateClock() {
@@ -646,34 +668,16 @@
                 return desc[code] || 'Không xác định';
             }
 
-            // Updated Background Class Logic
             function getWeatherBackgroundClass(code) {
                 const hour = new Date().getHours();
                 const isNight = (hour >= 18 || hour < 6);
-
-                // 1. Rain (Codes 51-67, 80-82)
-                // Or Thunder with Rain logic if desired. We keep strict code range.
-                if ((code >= 51 && code <= 67) || (code >= 80 && code <= 82)) {
-                    return isNight ? 'weather-rain-night' : 'weather-rain-day';
-                }
-
-                // 2. Thunder (Codes 95, 96, 99) - "Gloomy with thunder -> Grey"
-                if (code >= 95) {
-                    return 'weather-cloudy-grey'; // Grey background for Gloomy/Thunder
-                }
-
-                // 3. Clear/Sunny (Codes 0, 1)
+                if ((code >= 51 && code <= 67) || (code >= 80 && code <= 82)) return isNight ? 'weather-rain-night' : 'weather-rain-day';
+                if (code >= 95) return 'weather-cloudy-grey';
                 if (code <= 1) {
                     if (isNight) return 'weather-night-clear';
-                    // Morning: 6-9, Evening: 16-18 -> Light Yellow
-                    if ((hour >= 6 && hour < 9) || (hour >= 16 && hour < 18)) {
-                        return 'weather-sun-light';
-                    }
-                    // Intense Day: 9-16 -> Deep Yellow
+                    if ((hour >= 6 && hour < 9) || (hour >= 16 && hour < 18)) return 'weather-sun-light';
                     return 'weather-sun-intense';
                 }
-
-                // 4. Cloudy/Foggy (Codes 2, 3, 45, 48) -> Grey
                 return 'weather-cloudy-grey';
             }
 
@@ -827,29 +831,27 @@
                 const sunset = new Date(daily.sunset[index]).toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit'});
                 document.getElementById('detail-sun').textContent = `${sunrise} / ${sunset}`;
 
-                document.body.className = `${getWeatherBackgroundClass(displayCode)}`;
+                const newClass = `${getWeatherBackgroundClass(displayCode)}`;
+                document.body.className = newClass;
+                // NEW: Update theme color when background changes
+                updateAppThemeColor(newClass);
+
                 const realHour = new Date().getHours();
                 const effectIsDay = isToday ? (realHour >= 6 && realHour < 18) : true;
                 renderWeatherEffects(displayCode, effectIsDay);
 
-                // --- 3. UPDATE HOURLY FORECAST (UPDATED LOGIC) ---
                 hourlyForecastContainer.innerHTML = '';
                 let startH = 0; let endH = 0;
 
                 if (isToday) {
                     const currentHour = new Date().getHours();
-                    const todayDate = daily.time[0]; // YYYY-MM-DD của hôm nay
-                    
-                    // Tìm vị trí giờ hiện tại trong dữ liệu
+                    const todayDate = daily.time[0]; 
                     startH = hourly.time.findIndex(t => t.startsWith(todayDate) && new Date(t).getHours() === currentHour);
-                    if (startH === -1) startH = 0; // Fallback
-
-                    // Điểm dừng là đầu ngày mai (để chỉ lấy đến 23:00 hôm nay)
+                    if (startH === -1) startH = 0; 
                     const tomorrowDate = daily.time[1];
                     endH = hourly.time.findIndex(t => t.startsWith(tomorrowDate));
-                    if (endH === -1) endH = hourly.time.length; // Fallback nếu không tìm thấy ngày mai
+                    if (endH === -1) endH = hourly.time.length; 
                 } else {
-                    // Logic cũ cho các ngày khác: lấy trọn vẹn 24h của ngày đó
                     const targetDate = daily.time[index];
                     startH = hourly.time.findIndex(t => t.startsWith(targetDate));
                     endH = startH + 24;
