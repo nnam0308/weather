@@ -828,25 +828,34 @@
                 document.getElementById('detail-sun').textContent = `${sunrise} / ${sunset}`;
 
                 document.body.className = `${getWeatherBackgroundClass(displayCode)}`;
-                // Use isDayTime for icon selection but also check real hour for effects if today
                 const realHour = new Date().getHours();
                 const effectIsDay = isToday ? (realHour >= 6 && realHour < 18) : true;
                 renderWeatherEffects(displayCode, effectIsDay);
 
+                // --- 3. UPDATE HOURLY FORECAST (UPDATED LOGIC) ---
                 hourlyForecastContainer.innerHTML = '';
-                let startH = 0; let endH = 24;
+                let startH = 0; let endH = 0;
+
                 if (isToday) {
                     const currentHour = new Date().getHours();
-                    const nowStr = new Date().toISOString().slice(0, 13);
-                    startH = hourly.time.findIndex(t => t.startsWith(nowStr)) || 0;
-                    endH = startH + 24;
+                    const todayDate = daily.time[0]; // YYYY-MM-DD của hôm nay
+                    
+                    // Tìm vị trí giờ hiện tại trong dữ liệu
+                    startH = hourly.time.findIndex(t => t.startsWith(todayDate) && new Date(t).getHours() === currentHour);
+                    if (startH === -1) startH = 0; // Fallback
+
+                    // Điểm dừng là đầu ngày mai (để chỉ lấy đến 23:00 hôm nay)
+                    const tomorrowDate = daily.time[1];
+                    endH = hourly.time.findIndex(t => t.startsWith(tomorrowDate));
+                    if (endH === -1) endH = hourly.time.length; // Fallback nếu không tìm thấy ngày mai
                 } else {
+                    // Logic cũ cho các ngày khác: lấy trọn vẹn 24h của ngày đó
                     const targetDate = daily.time[index];
                     startH = hourly.time.findIndex(t => t.startsWith(targetDate));
                     endH = startH + 24;
                 }
 
-                if (startH !== -1) {
+                if (startH !== -1 && endH > startH) {
                     for(let i=startH; i<endH && i<hourly.time.length; i++) {
                         const time = new Date(hourly.time[i]);
                         const hCode = hourly.weathercode[i];
@@ -863,6 +872,8 @@
                             </div>`;
                         hourlyForecastContainer.insertAdjacentHTML('beforeend', hHtml);
                     }
+                } else {
+                     hourlyForecastContainer.innerHTML = '<div style="padding:1rem; opacity:0.7;">Không có dữ liệu dự báo cho khung giờ này.</div>';
                 }
 
                 if (weatherMapEl.src && !weatherMapEl.src.includes('about:blank')) {
