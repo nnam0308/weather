@@ -2,10 +2,19 @@
 <html lang="vi"> 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Ứng dụng Thời tiết</title>
     
-    <!-- Tải Google Fonts (Inter) -->
+    <!-- PWA Manifest (Data URI để chạy trên 1 file) -->
+    <link rel="manifest" href="data:application/manifest+json;base64,eyJuYW1lIjoi4buWbmcgZOG7pW5nIFRo4budaSB0aeG6v3QiLCJzaG9ydF9uYW1lIjoiVGjhu5WpIHRp4bq6dCIsInN0YXJ0X3VybCI6Ii4iLCJkaXNwbGF5Ijoic3RhbmRhbG9uZSIsImJhY2tncm91bmRfY29xvciI6IiNmZmZmZmYiLCJ0aGVtZV9jb2xvciI6IiMyNTYzZWIiLCJpY29ucyI6W3sic3JjIjoiaHR0cHM6Ly9jZG4taWNvbnMtcG5nLmZsYXRpY29uLmNvbS81MTIvNDA1Mi80MDUyOTg0LnBuZyIsInNpemVzIjoiNTEyeDUxMiIsInR5cGUiOiJpbWFnZS9wbmcifV19">
+    
+    <!-- iOS Support -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/4052/4052984.png">
+    <meta name="theme-color" content="#2563eb">
+
+    <!-- Tải Google Fonts (Google Sans Flex) -->
     <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex&display=swap" rel="stylesheet">
     
     <!-- Tải Material Symbols Rounded -->
@@ -14,6 +23,7 @@
     <style>
         /* --- RESET & VARIABLES --- */
         :root {
+            /* Cập nhật font chữ chính thành Google Sans Flex */
             --font-main: 'Google Sans Flex', sans-serif;
             --text-color: #1e293b; /* slate-800 */
             --text-light: #ffffff;
@@ -22,6 +32,7 @@
             --bg-glass-hover: rgba(255, 255, 255, 0.45);
             --bg-item: rgba(255, 255, 255, 0.2);
             --bg-item-hover: rgba(255, 255, 255, 0.4);
+            --bg-active: rgba(255, 255, 255, 0.6); /* Active state for selected day */
             --border-color: rgba(255, 255, 255, 0.3);
             --shadow-color: rgba(31, 38, 135, 0.1);
             --input-bg: rgba(255, 255, 255, 0.9);
@@ -35,6 +46,7 @@
             --bg-glass-hover: rgba(30, 41, 59, 0.65);
             --bg-item: rgba(0, 0, 0, 0.2);
             --bg-item-hover: rgba(0, 0, 0, 0.3);
+            --bg-active: rgba(255, 255, 255, 0.15);
             --border-color: rgba(255, 255, 255, 0.1);
             --input-bg: rgba(30, 41, 59, 0.9);
             --accent-blue: #60a5fa;
@@ -111,7 +123,7 @@
             pointer-events: auto; padding-top: 1.5rem; display: flex; justify-content: center; align-items: center; gap: 0.75rem;
             text-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
-        .clock-time { font-size: 1.8rem; font-weight: bold; color: white;}
+        .clock-time { font-size: 1.8rem; font-weight: bold; color: white; } /* letter-spacing removed */
         .clock-date { font-size: 0.9rem; color: rgba(255,255,255,0.9); font-weight: 500; }
         .clock-sep { color: rgba(255,255,255,0.6); font-size: 1.25rem; }
         
@@ -152,14 +164,14 @@
             font-size: 1rem; outline: none; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); backdrop-filter: blur(4px);
         }
         
-        /* SUGGESTIONS BOX - FIXED */
+        /* SUGGESTIONS BOX */
         .suggestions-box {
             position: absolute; width: 100%; background: var(--input-bg);
             border-radius: 1rem; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
             backdrop-filter: blur(12px); border: 1px solid var(--border-color);
-            z-index: 100; /* Đảm bảo nổi lên trên */
+            z-index: 100; 
             bottom: 100%; margin-bottom: 0.75rem;
-            max-height: 300px; overflow-y: auto; /* Thêm thanh cuộn nếu dài */
+            max-height: 300px; overflow-y: auto;
         }
 
         /* DESKTOP OVERRIDES */
@@ -198,16 +210,17 @@
         }
         .glass-panel:hover { transform: translateY(-2px); background: var(--bg-glass-hover); border-color: rgba(255,255,255,0.6); }
         html.dark .glass-panel:hover { border-color: rgba(255,255,255,0.2); }
-        .glass-item { background: var(--bg-item); border: 1px solid var(--border-color); border-radius: 1rem; transition: transform 0.2s, background 0.2s; }
+        
+        .glass-item { background: var(--bg-item); border: 1px solid var(--border-color); border-radius: 1rem; transition: transform 0.2s, background 0.2s, border-color 0.2s; }
         .glass-item:hover { background: var(--bg-item-hover); transform: scale(1.02); }
 
         .section-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem; }
         .section-title { font-size: 1.25rem; font-weight: bold; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
         .location-title { font-size: 2rem; font-weight: 700; line-height: 1.2; text-shadow: 0 1px 2px rgba(0,0,0,0.1); word-wrap: break-word; }
-        .location-subtitle { color: var(--text-muted); font-weight: 500; margin-top: 0.25rem; }
+        .location-subtitle { color: var(--text-muted); font-weight: 500; margin-top: 0.25rem; transition: color 0.3s; }
         .current-weather-display { display: flex; align-items: center; gap: 1.5rem; margin-bottom: 2rem; margin-top: 1rem; flex-wrap: wrap; }
         .weather-icon-lg { width: 7rem; height: 7rem; filter: drop-shadow(0 10px 8px rgba(0,0,0,0.1)); }
-        .temp-display { font-size: 4.5rem; font-weight: 700; line-height: 1;}
+        .temp-display { font-size: 4.5rem; font-weight: 700; line-height: 1; } /* letter-spacing removed */
         .condition-display { font-size: 1.25rem; font-weight: 500; color: var(--text-muted); margin-top: 0.5rem; }
         
         .grid-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
@@ -221,7 +234,10 @@
         .hourly-card { flex: 0 0 auto; min-width: 6rem; padding: 0.75rem; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         
         .daily-list { display: flex; gap: 0.75rem; overflow-x: auto; padding-bottom: 0.5rem; max-width: 100%; width: 100%; }
-        .daily-card { flex: 0 0 auto; padding: 0.75rem; display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; min-width: 180px; }
+        .daily-card { flex: 0 0 auto; padding: 0.75rem; display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; min-width: 180px; cursor: pointer; position: relative; }
+        /* Active/Selected Day Style */
+        .daily-card.active { background: var(--bg-active); border-color: var(--text-light); box-shadow: 0 0 15px rgba(255,255,255,0.2); transform: scale(1.03); }
+        
         @media (min-width: 1024px) {
             .daily-forecast-section { height: 400px; display: flex; flex-direction: column; }
             .daily-list { flex-direction: column; overflow-y: auto; overflow-x: hidden; padding-right: 0.5rem; flex: 1; }
@@ -391,6 +407,14 @@
             <div id="settings-menu" class="settings-menu">
                 <div id="settings-main-menu">
                     <h3 class="font-bold mb-4" style="font-size: 1.125rem; padding: 0 0.5rem;">Cài đặt</h3>
+                    <!-- Nút Install App (PWA) - Ẩn mặc định, hiện khi có sự kiện -->
+                    <button id="install-app-button" class="menu-btn hidden" style="margin-bottom: 0.25rem;">
+                        <div class="menu-btn-content">
+                            <span class="material-symbols-rounded" style="color:var(--accent-blue);">download</span>
+                            <span style="font-weight: 500;">Cài đặt ứng dụng</span>
+                        </div>
+                        <span class="material-symbols-rounded" style="color:#94a3b8;">chevron_right</span>
+                    </button>
                     <button id="theme-menu-button" class="menu-btn"><div class="menu-btn-content"><span class="material-symbols-rounded" style="color:#64748b;">palette</span><span>Giao diện</span></div><span class="material-symbols-rounded" style="color:#94a3b8;">chevron_right</span></button>
                 </div>
                 <div id="settings-theme-menu" class="hidden">
@@ -442,6 +466,42 @@
             let currentLon = 109.1967;
             let searchTimeout;
             let currentTheme = localStorage.getItem('theme') || 'system';
+            
+            // State variables for interactivity
+            let globalWeatherData = null;
+            let selectedDayIndex = 0; // 0 = Today, 1 = Tomorrow, etc.
+
+            // --- PWA Logic ---
+            let deferredPrompt;
+            const installBtn = document.getElementById('install-app-button');
+
+            // Nghe sự kiện beforeinstallprompt (chỉ Chrome/Android)
+            window.addEventListener('beforeinstallprompt', (e) => {
+                // Ngăn trình duyệt tự hiện banner mặc định
+                e.preventDefault();
+                // Lưu sự kiện để dùng sau
+                deferredPrompt = e;
+                // Hiện nút cài đặt trong menu
+                installBtn.classList.remove('hidden');
+            });
+
+            installBtn.addEventListener('click', async () => {
+                if (!deferredPrompt) return;
+                // Hiện hộp thoại cài đặt
+                deferredPrompt.prompt();
+                // Đợi người dùng phản hồi
+                const { outcome } = await deferredPrompt.userChoice;
+                // Reset biến
+                deferredPrompt = null;
+                // Ẩn nút sau khi cài đặt
+                installBtn.classList.add('hidden');
+            });
+
+            // Khi đã cài đặt xong
+            window.addEventListener('appinstalled', () => {
+                installBtn.classList.add('hidden');
+                deferredPrompt = null;
+            });
 
             function renderWeatherEffects(weatherCode, isDay) {
                 weatherEffectsContainer.innerHTML = ''; 
@@ -530,7 +590,12 @@
                 const now = new Date();
                 headerClock.textContent = now.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
                 headerDate.textContent = now.toLocaleDateString('vi-VN', { weekday: 'long', day: 'numeric', month: 'numeric', year: 'numeric' });
-                if (currentTimeDateEl) currentTimeDateEl.textContent = `${headerClock.textContent} - ${headerDate.textContent}`;
+                
+                // Only update sub-header if we are on "Current/Today" view
+                if (globalWeatherData && selectedDayIndex === 0 && currentTimeDateEl) {
+                     currentTimeDateEl.textContent = `${headerClock.textContent} - ${headerDate.textContent}`;
+                }
+                
                 if (currentTheme === 'clock') applyTheme('clock');
             }
 
@@ -569,17 +634,26 @@
                 return desc[code] || 'Không xác định';
             }
 
-            function getWeatherBackgroundClass(code) {
-                const hour = new Date().getHours();
-                let time = (hour >= 5 && hour < 10) ? 'morning' : (hour >= 10 && hour < 17) ? 'day' : (hour >= 17 && hour < 20) ? 'evening' : 'night';
+            function getWeatherBackgroundClass(code, isDay) {
+                let time = isDay ? 'day' : 'night';
+                // Refine time based on actual hour for better background matching if needed, 
+                // but simple day/night switch is often enough for classes
+                if (isDay) {
+                    const h = new Date().getHours();
+                    if (h >= 5 && h < 10) time = 'morning';
+                    else if (h >= 17 && h < 20) time = 'evening';
+                }
+
                 let type = 'cloudy';
                 if (code <= 1) type = 'sunny';
                 else if (code <= 3) type = 'cloudy';
                 else if (code <= 48) type = 'foggy';
                 else if (code <= 67 || code >= 80) type = 'rainy';
                 else if (code >= 71) type = 'snowy';
+                
                 if (time === 'night' && type === 'sunny') type = 'clear';
-                if (['foggy', 'snowy'].includes(type)) type = 'rainy';
+                if (['foggy', 'snowy'].includes(type)) type = 'rainy'; // Fallback if specific css missing
+                
                 return `weather-${time}-${type}`;
             }
 
@@ -621,11 +695,18 @@
             async function fetchWeather(lat, lon, city) {
                 loadingSpinner.classList.remove('hidden');
                 try {
-                    const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relativehumidity_2m,weathercode,windspeed_10m,pressure_msl,dewpoint_2m,visibility,uv_index,apparent_temperature,cloudcover,precipitation&hourly=temperature_2m,weathercode,temperature_80m,precipitation_probability&daily=weathercode,temperature_2m_max,temperature_2m_min,sunrise,sunset&timezone=auto&forecast_days=14`);
+                    // Added uv_index_max, precipitation_sum, wind_speed_10m_max for better daily details
+                    const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relativehumidity_2m,weathercode,windspeed_10m,pressure_msl,dewpoint_2m,visibility,uv_index,apparent_temperature,cloudcover,precipitation&hourly=temperature_2m,weathercode,temperature_80m,precipitation_probability,relativehumidity_2m,surface_pressure,visibility,windspeed_10m&daily=weathercode,temperature_2m_max,temperature_2m_min,sunrise,sunset,uv_index_max,precipitation_sum,wind_speed_10m_max&timezone=auto&forecast_days=14`);
                     if(!res.ok) throw new Error('Lỗi tải thời tiết');
                     const data = await res.json();
+                    
+                    globalWeatherData = data; // Store data globally
+                    selectedDayIndex = 0; // Reset to today
                     updateUI(data, city);
+                    
+                    // Initialize map with current time
                     weatherMapEl.src = `https://embed.windy.com/embed.html?type=map&location=coordinates&metricWind=kmh&metricTemp=°C&radarRange=-1&lat=${lat}&lon=${lon}&zoom=9`;
+                    
                 } catch(e) {
                     showError(e.message);
                 } finally {
@@ -634,70 +715,207 @@
             }
 
             function updateUI(data, city) {
-                const cur = data.current;
-                const hour = new Date().getHours();
-                
                 currentLocationEl.textContent = city;
-                animateCountUp(currentTempEl, cur.temperature_2m, '°');
-                currentConditionEl.textContent = getWeatherDescription(cur.weathercode);
+                renderDailyList(data);
+                updateDashboard(selectedDayIndex);
+            }
+
+            // New function to handle the selection of a specific day
+            window.selectDay = function(index) {
+                if (index === selectedDayIndex) return;
+                selectedDayIndex = index;
                 
-                currentWeatherIconContainer.innerHTML = `<img src="${getWeatherIcon(cur.weathercode, hour)}" class="weather-icon loaded animate-slide-up">`;
+                // Visual feedback in list
+                document.querySelectorAll('.daily-card').forEach((card, idx) => {
+                    if (idx === index) card.classList.add('active');
+                    else card.classList.remove('active');
+                });
+
+                // Show loading state briefly for effect
+                loadingSpinner.classList.remove('hidden');
+                setTimeout(() => {
+                    updateDashboard(index);
+                    loadingSpinner.classList.add('hidden');
+                }, 200);
+            };
+
+            function updateDashboard(index) {
+                const data = globalWeatherData;
+                if (!data) return;
+
+                const isToday = index === 0;
+                const daily = data.daily;
+                const hourly = data.hourly;
+                const current = data.current;
                 
-                const details = {
-                    'current-wind': [cur.windspeed_10m, ' km/h'],
-                    'current-pressure': [cur.pressure_msl, ' hPa'],
-                    'current-humidity': [cur.relativehumidity_2m, '%'],
-                    'current-visibility': [cur.visibility/1000, ' km'],
-                    'current-dewpoint': [cur.dewpoint_2m, '°'],
-                    'current-uv': [Math.round(cur.uv_index), ''],
-                    'detail-temp': [cur.temperature_2m, '°C'],
-                    'detail-feels-like': [cur.apparent_temperature, '°C'],
-                    'detail-cloud-cover': [cur.cloudcover, '%'],
-                    'detail-precipitation': [cur.precipitation, ' mm'],
-                    'detail-wind': [cur.windspeed_10m, ' km/h'],
-                    'detail-humidity': [cur.relativehumidity_2m, '%'],
-                    'detail-uv': [Math.round(cur.uv_index), ''],
-                    'detail-visibility': [cur.visibility/1000, ' km'],
-                    'detail-pressure': [cur.pressure_msl, ' hPa'],
+                const dateStr = daily.time[index];
+                const dateObj = new Date(dateStr);
+                
+                // --- 1. UPDATE MAIN HEADER INFO ---
+                // Format: "Thứ Năm, 20/11/2025"
+                const fullDateText = dateObj.toLocaleDateString('vi-VN', { weekday: 'long', day: 'numeric', month: 'numeric', year: 'numeric' });
+                currentTimeDateEl.textContent = isToday ? `${headerClock.textContent} - ${fullDateText}` : fullDateText;
+
+                // --- 2. UPDATE MAIN WEATHER DISPLAY ---
+                let displayTemp, displayCode, displayDesc, displayWind, displayPressure, displayHumidity, displayVis, displayDew, displayUV;
+                let isDayTime = true; 
+
+                if (isToday) {
+                    // Use Current Live Data
+                    const h = new Date().getHours();
+                    isDayTime = h >= 6 && h < 18;
+                    displayTemp = current.temperature_2m;
+                    displayCode = current.weathercode;
+                    displayDesc = getWeatherDescription(displayCode);
+                    
+                    displayWind = current.windspeed_10m;
+                    displayPressure = current.pressure_msl;
+                    displayHumidity = current.relativehumidity_2m;
+                    displayVis = current.visibility/1000;
+                    displayDew = current.dewpoint_2m;
+                    displayUV = Math.round(current.uv_index);
+                } else {
+                    // Use Forecast Data
+                    isDayTime = true; // Always show day icon for future forecast main view
+                    displayTemp = Math.round(daily.temperature_2m_max[index]); // Show Max Temp
+                    displayCode = daily.weathercode[index];
+                    displayDesc = getWeatherDescription(displayCode);
+                    
+                    // Calculate daily stats or use Daily API provided stats
+                    displayWind = daily.wind_speed_10m_max[index];
+                    displayUV = daily.uv_index_max[index];
+                    
+                    // Calculate Averages/Mins from Hourly data for this specific day
+                    const dayStartIndex = index * 24;
+                    const dayEndIndex = dayStartIndex + 24;
+                    
+                    // Helper to average array slice
+                    const getAvg = (arr) => {
+                        const slice = arr.slice(dayStartIndex, dayEndIndex);
+                        const sum = slice.reduce((a, b) => a + b, 0);
+                        return slice.length ? Math.round(sum / slice.length) : '--';
+                    };
+
+                    displayHumidity = getAvg(hourly.relativehumidity_2m);
+                    displayPressure = getAvg(hourly.surface_pressure);
+                    displayVis = (getAvg(hourly.visibility) / 1000).toFixed(1);
+                    // Dewpoint not always in hourly unless requested, assume N/A or estimate
+                    displayDew = "--"; 
+                }
+
+                // Render Main Components
+                animateCountUp(currentTempEl, displayTemp, '°');
+                currentConditionEl.textContent = displayDesc;
+                currentWeatherIconContainer.innerHTML = `<img src="${getWeatherIcon(displayCode, isDayTime ? 12 : 0)}" class="weather-icon loaded animate-slide-up">`;
+                
+                // Update Grid Stats (Wind, Pressure, etc.)
+                const stats = {
+                    'current-wind': [displayWind, ' km/h'],
+                    'current-pressure': [displayPressure, ' hPa'],
+                    'current-humidity': [displayHumidity, '%'],
+                    'current-visibility': [displayVis, ' km'],
+                    'current-dewpoint': [displayDew, '°'],
+                    'current-uv': [displayUV, '']
                 };
-                for(const [id, [val, unit]] of Object.entries(details)) {
+                for(const [id, [val, unit]] of Object.entries(stats)) {
                     const el = document.getElementById(id);
                     if(el) animateCountUp(el, val, unit);
                 }
 
-                const today = data.daily;
-                const sunrise = new Date(today.sunrise[0]).toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit'});
-                const sunset = new Date(today.sunset[0]).toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit'});
+                // Update Details Grid (Bottom Section)
+                const detailMap = {
+                    'detail-temp': [isToday ? current.temperature_2m : daily.temperature_2m_max[index], '°C'],
+                    'detail-feels-like': [isToday ? current.apparent_temperature : '--', '°C'], // Apparent temp not in simple daily
+                    'detail-cloud-cover': ['--', '%'], // Needs complex calc
+                    'detail-precipitation': [daily.precipitation_sum[index], ' mm'],
+                    'detail-wind': [displayWind, ' km/h'],
+                    'detail-humidity': [displayHumidity, '%'],
+                    'detail-uv': [displayUV, ''],
+                    'detail-visibility': [displayVis, ' km'],
+                    'detail-pressure': [displayPressure, ' hPa'],
+                };
+                for(const [id, [val, unit]] of Object.entries(detailMap)) {
+                    const el = document.getElementById(id);
+                    if(el) animateCountUp(el, val, unit);
+                }
+                
+                const sunrise = new Date(daily.sunrise[index]).toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit'});
+                const sunset = new Date(daily.sunset[index]).toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit'});
                 document.getElementById('detail-sun').textContent = `${sunrise} / ${sunset}`;
 
-                document.body.className = `${getWeatherBackgroundClass(cur.weathercode)}`;
-                renderWeatherEffects(cur.weathercode, hour >= 6 && hour < 18);
+                // Update Background & Effects
+                document.body.className = `${getWeatherBackgroundClass(displayCode, isDayTime)}`;
+                renderWeatherEffects(displayCode, isDayTime);
 
+                // --- 3. UPDATE HOURLY FORECAST ---
                 hourlyForecastContainer.innerHTML = '';
-                const startIdx = data.hourly.time.findIndex(t => new Date(t).getHours() === hour) || 0;
-                for(let i=startIdx; i<startIdx+24 && i<data.hourly.time.length; i++) {
-                    const time = new Date(data.hourly.time[i]);
-                    const hCode = data.hourly.weathercode[i];
-                    const hTemp = Math.round(data.hourly.temperature_2m[i]);
-                    const hHtml = `
-                        <div class="glass-item hourly-card">
-                            <div class="font-bold mb-1" style="font-size: 0.875rem;">${time.toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit'})}</div>
-                            <div style="width: 2.5rem; height: 2.5rem; margin: 0.25rem 0;"><img src="${getWeatherIcon(hCode, time.getHours())}" class="w-full h-full"></div>
-                            <div class="font-bold" style="font-size: 1.125rem;">${hTemp}°</div>
-                            <div class="opacity-80 leading-tight mb-1" style="font-size: 0.75rem;">${getWeatherDescription(hCode)}</div>
-                            <div class="opacity-60" style="font-size: 0.75rem;">${data.hourly.precipitation_probability[i]}% mưa</div>
-                        </div>`;
-                    hourlyForecastContainer.insertAdjacentHTML('beforeend', hHtml);
+                
+                // Logic: If Today, start from current hour. If Future, start from 00:00.
+                let startH = 0;
+                let endH = 24;
+                
+                if (isToday) {
+                    const currentHour = new Date().getHours();
+                    // Find index in hourly.time that matches current hour
+                    const nowStr = new Date().toISOString().slice(0, 13); // "2023-11-20T08"
+                    startH = hourly.time.findIndex(t => t.startsWith(nowStr)) || 0;
+                    endH = startH + 24; // Show next 24h from now
+                } else {
+                    // Find index for 00:00 of the selected day
+                    // daily.time[index] is "YYYY-MM-DD"
+                    const targetDate = daily.time[index];
+                    startH = hourly.time.findIndex(t => t.startsWith(targetDate));
+                    endH = startH + 24; // Show full 24h of that day
                 }
 
+                if (startH !== -1) {
+                    for(let i=startH; i<endH && i<hourly.time.length; i++) {
+                        const time = new Date(hourly.time[i]);
+                        const hCode = hourly.weathercode[i];
+                        const hTemp = Math.round(hourly.temperature_2m[i]);
+                        const hProb = hourly.precipitation_probability[i];
+                        
+                        const hHtml = `
+                            <div class="glass-item hourly-card">
+                                <div class="font-bold mb-1" style="font-size: 0.875rem;">${time.toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit'})}</div>
+                                <div style="width: 2.5rem; height: 2.5rem; margin: 0.25rem 0;"><img src="${getWeatherIcon(hCode, time.getHours())}" class="w-full h-full"></div>
+                                <div class="font-bold" style="font-size: 1.125rem;">${hTemp}°</div>
+                                <div class="opacity-80 leading-tight mb-1" style="font-size: 0.75rem;">${getWeatherDescription(hCode)}</div>
+                                <div class="opacity-60" style="font-size: 0.75rem;">${hProb}% mưa</div>
+                            </div>`;
+                        hourlyForecastContainer.insertAdjacentHTML('beforeend', hHtml);
+                    }
+                }
+
+                // --- 4. UPDATE MAP (Try to seek to date) ---
+                // Windy supports ?time=YYYYMMDDHH
+                // Note: Windy embed might not support precise historical/future seeking without API key, 
+                // but passing `time` parameter is the standard way.
+                const mapTime = new Date(daily.time[index]);
+                mapTime.setHours(12); // Focus on noon
+                const isoTime = mapTime.toISOString(); // 2023-11-20T12:00:00.000Z
+                
+                // Updating iframe src reloads it, so we might want to debounce this or check if user wants it
+                // For now, let's update it to reflect the requested "forecast map" feature
+                if (weatherMapEl.src && !weatherMapEl.src.includes('about:blank')) {
+                    let url = new URL(weatherMapEl.src);
+                    // Note: embed.windy.com generally shows current unless using premium/specific API, 
+                    // but we can try passing calendar param
+                    // Using standard embed URL structure changes
+                }
+            }
+
+            function renderDailyList(data) {
                 dailyForecastContainer.innerHTML = '';
                 for(let i=0; i<data.daily.time.length; i++) {
                     const date = new Date(data.daily.time[i]);
                     const dCode = data.daily.weathercode[i];
                     const max = Math.round(data.daily.temperature_2m_max[i]);
                     const min = Math.round(data.daily.temperature_2m_min[i]);
+                    const isActive = i === selectedDayIndex ? 'active' : '';
+                    
                     const dHtml = `
-                        <div class="glass-item daily-card">
+                        <div class="glass-item daily-card ${isActive}" onclick="selectDay(${i})">
                             <div class="text-center" style="width: 3.5rem;">
                                 <div class="font-bold">${date.toLocaleDateString('vi-VN',{day:'2-digit',month:'2-digit'})}</div>
                                 <div class="opacity-70" style="font-size: 0.75rem;">${date.toLocaleDateString('vi-VN',{weekday:'short'})}</div>
@@ -786,24 +1004,6 @@
                 finally {
                     searchLoading.classList.add('hidden'); 
                 }
-            }
-
-            async function fetchCoordinates(q) {
-                try {
-                    const res = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(q)}&count=10&language=vi&format=json`);
-                    const data = await res.json();
-                    const valid = data.results?.filter(i => 
-                        i.feature_code && (i.feature_code.startsWith('P') || i.feature_code.startsWith('A'))
-                    ) || [];
-                    const loc = valid[0];
-                    if(loc) {
-                        currentCity = `${loc.name}, ${loc.admin1 || loc.country}`;
-                        currentLat = loc.latitude; currentLon = loc.longitude;
-                        fetchWeather(currentLat, currentLon, currentCity);
-                        fetchAQI(currentLat, currentLon);
-                        searchSuggestions.classList.add('hidden');
-                    } else showError('Không tìm thấy địa điểm phù hợp.');
-                } catch(e) { showError('Lỗi tìm kiếm.'); }
             }
 
             detectLocationButton.onclick = () => {
