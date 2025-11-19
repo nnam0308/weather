@@ -122,7 +122,17 @@
         ::-webkit-scrollbar-thumb:hover { background: rgba(150, 150, 150, 0.6); }
 
         /* --- LAYOUT CONTAINER --- */
-        .container { max-width: 1200px; margin: 0 auto; position: relative; z-index: 10; padding: 0 1rem; width: 100%; }
+        .container { 
+            /* Removed max-width: 1200px */
+            margin: 0 auto; 
+            position: relative; 
+            z-index: 10; 
+            padding: 0 1rem; 
+            width: 100%; 
+        }
+        @media (min-width: 1024px) { 
+            .container { padding: 10px; } 
+        }
 
         /* --- HEADER --- */
         .main-header {
@@ -244,7 +254,12 @@
         
         @media (min-width: 1024px) {
             .daily-forecast-section { height: 420px; display: flex; flex-direction: column; }
-            .daily-list { flex-direction: column; overflow-y: auto; padding: 0 5px; flex: 1; }
+            .daily-list { 
+                flex-direction: column; 
+                overflow-y: auto; 
+                padding: 10px; /* Updated padding from 0 5px to 10px */
+                flex: 1; 
+            }
             .daily-card { width: 100%; min-width: 0; }
         }
 
@@ -270,6 +285,7 @@
             position: relative;
             overflow: hidden;
             transition: background 0.2s;
+            gap: 10px;
         }
 
         .detail-card:hover { background: var(--bg-item-hover); }
@@ -291,6 +307,7 @@
             align-items: flex-end;
             margin-top: auto;
             z-index: 2;
+            gap: 10px;
         }
 
         .detail-value-group {
