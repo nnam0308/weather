@@ -6,28 +6,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Ứng dụng Thời tiết</title>
     
-    <!-- PWA Manifest -->
-    <link rel="manifest" href="data:application/manifest+json;base64,eyJuYW1lIjoi4buWbmcgZOG7pW5nIFRo4budaSB0aeG6v3QiLCJzaG9ydF9uYW1lIjoiVGjhu5WpIHRp4bq6dCIsInN0YXJ0X3VybCI6Ii4iLCJkaXNwbGF5Ijoic3RhbmRhbG9uZSIsImJhY2tncm91bmRfY29xvciI6IiNmZmZmZmYiLCJ0aGVtZV9jb2xvciI6IiMyNTYzZWIiLCJkZXNjcmlwdGlvbiI6IkThu7Egw6FvIHRo4budaSB0aeG6v3QgY2jDrW5oIHjDoWMiLCJvcmllbnRhdGlvbiI6InBvcnRyYWl0LXByaW1hcnkiLCJpY29ucyI6W3sic3JjIjoiaHR0cHM6Ly9jZG4taWNvbnMtcG5nLmZsYXRpY29uLmNvbS81MTIvNDA1Mi80MDUyOTg0LnBuZyIsInNpemVzIjoiMTkyeDE5MiIsInR5cGUiOiJpbWFnZS9wbmcifSx7InNyYyI6Imh0dHBzOi8vY2RuLWljb25zLXBuZy5mbGF0aWNvbi5jb20vNTEyLzQwNTIvNDA1Mjk4NC5wbmciLCJzaXplcyI6IjUxMng1MTIiLCJ0eXBlIjoiaW1hZ2UvcG5nIn1dfQ==">
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="https://raw.githubusercontent.com/nnam0308/weather/18389a738bae786aebd65938d5228c60d821b4d0/icon.svg">
+
+    <!-- PWA Manifest (Cập nhật icon SVG) -->
+    <link rel="manifest" href="data:application/manifest+json;base64,eyJuYW1lIjoi4buWbmcgZOG7pW5nIFRo4budaSB0aeG6v3QiLCJzaG9ydF9uYW1lIjoiVGjhu5WpIHRp4bq6dCIsInN0YXJ0X3VybCI6Ii4iLCJkaXNwbGF5Ijoic3RhbmRhbG9uZSIsImJhY2tncm91bmRfY29xvciI6IiNmZmZmZmYiLCJ0aGVtZV9jb2xvciI6IiMyNTYzZWIiLCJkZXNjcmlwdGlvbiI6IkThu7Egw6FvIHRo4budaSB0aeG6v3QgY2jDrW5oIHjDoWMiLCJvcmllbnRhdGlvbiI6InBvcnRyYWl0LXByaW1hcnkiLCJpY29ucyI6W3sic3JjIjoiaHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL25uYW0wMzA4L3dlYXRoZXIvMTgzODlhNzM4YmFlNzg2YWViZDY1OTM4ZDUyMjhjNjBkODIxYjRkMC9pY29uLnN2ZyIsInNpemVzIjoiYW55IiwidHlwZSI6ImltYWdlL3N2Zyt4bWwifSx7InNyYyI6Imh0dHBzOi8vcmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbS9ubmFtMDMwOC93ZWF0aGVyLzE4Mzg5YTczOGJhZTc4NmFlYmQ2NTkzOGQ1MjI4YzYwZDgyMWI0ZDAvaWNvbi5zdmciLCJzaXplcyI6IjE5MngxOTIiLCJ0eXBlIjoiaW1hZ2Uvc3ZnK3htbCJ9LHsic3JjIjoiaHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL25uYW0wMzA4L3dlYXRoZXIvMTgzODlhNzM4YmFlNzg2YWViZDY1OTM4ZDUyMjhjNjBkODIxYjRkMC9pY29uLnN2ZyIsInNpemVzIjoiNTEyeDUxMiIsInR5cGUiOiJpbWFnZS9zdmcreG1sIn1dfQ==">
     
     <!-- --- CROSS-PLATFORM THEME CONFIG --- -->
     
-    <!-- 1. Modern Browsers (Android, Chrome/Edge on Windows/macOS) -->
-    <!-- ID để JS cập nhật màu động -->
-    <meta id="meta-theme-color" name="theme-color" content="#f9fafb">
-
+<!-- 1. Modern Browsers (Android, Chrome/Edge on Windows/macOS) -->
+<meta id="meta-theme-color" name="theme-color" content="#f9fafb">
+<link rel="icon" type="image/svg+xml" href="https://raw.githubusercontent.com/nnam0308/weather/18389a738bae786aebd65938d5228c60d821b4d0/icon.svg">
+<link rel="alternate icon" href="https://raw.githubusercontent.com/nnam0308/weather/18389a738bae786aebd65938d5228c60d821b4d0/icon.png">
+<link rel="manifest" href="manifest.json">
     <!-- 2. iOS (iPhone/iPad) -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <!-- black-translucent: Nội dung tràn lên status bar (tạo hiệu ứng trong suốt) -->
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Thời tiết">
-    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/4052/4052984.png">
+    <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/nnam0308/weather/18389a738bae786aebd65938d5228c60d821b4d0/icon.svg">
 
     <!-- 3. Windows (Start Menu Tiles) -->
     <meta name="application-name" content="Ứng dụng Thời tiết">
     <!-- ID để JS cập nhật màu động -->
     <meta id="meta-tile-color" name="msapplication-TileColor" content="#2563eb">
     <meta name="msapplication-tap-highlight" content="no">
-    <meta name="msapplication-TileImage" content="https://cdn-icons-png.flaticon.com/512/4052/4052984.png">
+    <meta name="msapplication-TileImage" content="https://raw.githubusercontent.com/nnam0308/weather/18389a738bae786aebd65938d5228c60d821b4d0/icon.svg">
 
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex&display=swap" rel="stylesheet">
@@ -147,7 +151,7 @@
         .controls-right { flex: 0 0 auto; }
 
         .btn-circle {
-            flex: 0 0 48px; width: 48px; height: 48px; border-radius: 50%;
+            width: 50px; height: 50px; border-radius: 100%;
             background: var(--input-bg); border: none; display: flex; align-items: center; justify-content: center;
             cursor: pointer; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); backdrop-filter: blur(4px);
             transition: transform 0.2s; color: var(--text-color);
@@ -155,8 +159,8 @@
         .btn-circle.primary { color: var(--accent-blue); }
         .btn-circle:hover { transform: scale(1.1); }
         
-        .search-wrapper { flex: 1; position: relative; width: auto; }
-        .search-icon { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: #94a3b8; pointer-events: none; }
+        .search-wrapper { flex: 1; position: relative; width: 100%;}
+        .search-icon { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: #94a3b8; pointer-events: none; height: 50px;}
         
         .search-spinner {
             position: absolute; right: 1rem; top: 50%; width: 1.25rem; height: 1.25rem;
@@ -171,7 +175,7 @@
         .search-input {
             width: 100%; background: var(--input-bg); color: var(--text-color);
             border: none; border-radius: 9999px; padding: 0.75rem 3rem 0.75rem 3rem;
-            font-size: 1rem; outline: none; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); backdrop-filter: blur(4px);
+            font-size: 1rem; outline: none; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); backdrop-filter: blur(4px); font-family: var(--font-main);
         }
         
         .suggestions-box {
@@ -230,7 +234,7 @@
         .condition-display { font-size: 1.25rem; font-weight: 500; color: var(--text-muted); margin-top: 0.5rem; }
         
         .grid-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-        @media (min-width: 768px) { .grid-stats { grid-template-columns: repeat(4, 1fr); } }
+        @media (min-width: 768px) { .grid-stats { grid-template-columns: repeat(3, 1fr); } }
         .stat-card { padding: 0.75rem; display: flex; align-items: center; gap: 0.75rem; overflow: hidden; }
         .stat-label { font-size: 0.75rem; opacity: 0.7; white-space: nowrap; }
         .stat-value { font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -239,13 +243,13 @@
         .scroll-container:active { cursor: grabbing; }
         .hourly-card { flex: 0 0 auto; min-width: 6rem; padding: 0.75rem; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         
-        .daily-list { display: flex; gap: 0.75rem; overflow-x: auto; padding-bottom: 0.5rem; max-width: 100%; width: 100%; }
+        .daily-list { display: flex; gap: 0.75rem; overflow-x: auto; padding: 10px; max-width: 100%; width: 100%; }
         .daily-card { flex: 0 0 auto; padding: 0.75rem; display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; min-width: 180px; cursor: pointer; position: relative; }
         .daily-card.active { background: var(--bg-active); border-color: var(--text-light); box-shadow: 0 0 15px rgba(255,255,255,0.2); transform: scale(1.03); }
         
         @media (min-width: 1024px) {
             .daily-forecast-section { height: 400px; display: flex; flex-direction: column; }
-            .daily-list { flex-direction: column; overflow-y: auto; overflow-x: hidden; padding-right: 0.5rem; flex: 1; }
+            .daily-list { flex-direction: column; overflow-y: auto; overflow-x: hidden; padding: 12px; flex: 1; }
             .daily-card { width: 100%; min-width: 0; }
         }
 
@@ -269,7 +273,7 @@
         .settings-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); z-index: 100; display: flex; }
         .settings-menu { position: absolute; right: 1rem; bottom: 6rem; width: 18rem; background: var(--input-bg); backdrop-filter: blur(20px); border-radius: 1.5rem; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); padding: 1.25rem; border: 1px solid rgba(255,255,255,0.2); }
         @media (min-width: 768px) { .settings-menu { bottom: auto; top: 6rem; } }
-        .menu-btn { width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; border-radius: 0.75rem; background: transparent; border: none; color: var(--text-color); cursor: pointer; transition: background 0.2s; }
+        .menu-btn { width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 1rem; border-radius: 1rem; background: transparent; border: none; color: var(--text-color); cursor: pointer; transition: background 0.2s; }
         .menu-btn:hover { background: var(--bg-glass-hover); }
         .menu-btn-content { display: flex; align-items: center; gap: 0.75rem; }
 
@@ -840,18 +844,24 @@
                 const effectIsDay = isToday ? (realHour >= 6 && realHour < 18) : true;
                 renderWeatherEffects(displayCode, effectIsDay);
 
+                // --- 3. UPDATE HOURLY FORECAST (UPDATED LOGIC) ---
                 hourlyForecastContainer.innerHTML = '';
                 let startH = 0; let endH = 0;
 
                 if (isToday) {
                     const currentHour = new Date().getHours();
-                    const todayDate = daily.time[0]; 
+                    const todayDate = daily.time[0]; // YYYY-MM-DD của hôm nay
+                    
+                    // Tìm vị trí giờ hiện tại trong dữ liệu
                     startH = hourly.time.findIndex(t => t.startsWith(todayDate) && new Date(t).getHours() === currentHour);
-                    if (startH === -1) startH = 0; 
+                    if (startH === -1) startH = 0; // Fallback
+
+                    // Điểm dừng là đầu ngày mai (để chỉ lấy đến 23:00 hôm nay)
                     const tomorrowDate = daily.time[1];
                     endH = hourly.time.findIndex(t => t.startsWith(tomorrowDate));
-                    if (endH === -1) endH = hourly.time.length; 
+                    if (endH === -1) endH = hourly.time.length; // Fallback nếu không tìm thấy ngày mai
                 } else {
+                    // Logic cũ cho các ngày khác: lấy trọn vẹn 24h của ngày đó
                     const targetDate = daily.time[index];
                     startH = hourly.time.findIndex(t => t.startsWith(targetDate));
                     endH = startH + 24;
