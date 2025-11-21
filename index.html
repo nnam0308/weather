@@ -6,10 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Ứng dụng Thời tiết</title>
     
-    <!-- Favicon (Cập nhật PNG) -->
+    <!-- Favicon -->
     <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/nnam0308/weather/18389a738bae786aebd65938d5228c60d821b4d0/icon.png">
 
-    <!-- PWA Manifest (Cập nhật icon PNG) -->
+    <!-- PWA Manifest -->
     <link rel="manifest" href="data:application/manifest+json;base64,eyJuYW1lIjoi4buWbmcgZOG7pW5nIFRo4budaSB0aeG6v3QiLCJzaG9ydF9uYW1lIjoiVGjhu5WpIHRp4bq6dCIsInN0YXJ0X3VybCI6Ii4iLCJkaXNwbGF5Ijoic3RhbmRhbG9uZSIsImJhY2tncm91bmRfY29xvciI6IiNmZmZmZmYiLCJ0aGVtZV9jb2xvciI6IiMyNTYzZWIiLCJkZXNjcmlwdGlvbiI6IkThu7Egw6FvIHRo4budaSB0aeG6v3QgY2jDrW5oIHjDoWMiLCJvcmllbnRhdGlvbiI6InBvcnRyYWl0LXByaW1hcnkiLCJpY29ucyI6W3sic3JjIjoiaHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL25uYW0wMzA4L3dlYXRoZXIvMTgzODlhNzM4YmFlNzg2YWViZDY1OTM4ZDUyMjhjNjBkODIxYjRkMC9pY29uLnBuZyIsInNpemVzIjoiMTkyeDE5MiIsInR5cGUiOiJpbWFnZS9wbmcifSx7InNyYyI6Imh0dHBzOi8vcmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbS9ubmFtMDMwOC93ZWF0aGVyLzE4Mzg5YTczOGJhZTc4NmFlYmQ2NTkzOGQ1MjI4YzYwZDgyMWI0ZDAvaWNvbi5wbmciLCJzaXplcyI6IjUxMng1MTIiLCJ0eXBlIjoiaW1hZ2UvcG5nIn1dfQ==">
     
     <!-- --- CROSS-PLATFORM THEME CONFIG --- -->
@@ -17,15 +17,13 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Thời tiết">
-    <!-- Apple Touch Icon (Cập nhật PNG) -->
     <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/nnam0308/weather/18389a738bae786aebd65938d5228c60d821b4d0/icon.png">
     <meta name="application-name" content="Ứng dụng Thời tiết">
     <meta id="meta-tile-color" name="msapplication-TileColor" content="#2563eb">
     <meta name="msapplication-tap-highlight" content="no">
-    <!-- Tile Image (Cập nhật PNG) -->
     <meta name="msapplication-TileImage" content="https://raw.githubusercontent.com/nnam0308/weather/18389a738bae786aebd65938d5228c60d821b4d0/icon.png">
 
-    <!-- Google Fonts (UPDATED) -->
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&display=swap" rel="stylesheet">
@@ -34,42 +32,49 @@
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet" />
     
     <style>
-        /* --- RESET & VARIABLES --- */
+        /* --- LIQUID GLASS VARIABLES --- */
         :root {
-            /* UPDATED FONT VARIABLE */
             --font-main: 'Google Sans Flex', sans-serif;
             --text-color: #1e293b;
             --text-light: #ffffff;
             --text-muted: #475569;
-            --bg-glass: rgba(255, 255, 255, 0.45);
-            --bg-glass-hover: rgba(255, 255, 255, 0.55);
-            --bg-item: rgba(255, 255, 255, 0.3);
-            --bg-item-hover: rgba(255, 255, 255, 0.5);
-            --bg-active: rgba(255, 255, 255, 0.7);
-            --border-color: rgba(255, 255, 255, 0.4);
-            --shadow-color: rgba(31, 38, 135, 0.1);
-            --input-bg: rgba(255, 255, 255, 0.9);
+            
+            /* Liquid Glass Colors - Light Mode */
+            --glass-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.1));
+            --glass-bg-hover: linear-gradient(135deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.2));
+            --glass-border: 1px solid rgba(255, 255, 255, 0.4);
+            --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+            
+            /* Item Glass Colors */
+            --item-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.05));
+            --item-bg-hover: linear-gradient(135deg, rgba(255, 255, 255, 0.45), rgba(255, 255, 255, 0.15));
+            --item-border: 1px solid rgba(255, 255, 255, 0.3);
+            
+            --input-bg: rgba(255, 255, 255, 0.6);
             --accent-blue: #0b50d0;
             --safe-top: env(safe-area-inset-top, 0px);
             
-            /* Colors for graphics */
-            --graphic-track: rgba(0,0,0,0.1);
-            --graphic-fill: #0b50d0;
+            /* Glow Color */
+            --glow-color: rgba(11, 80, 208, 0.6);
         }
 
         html.dark {
             --text-color: #e2e8f0;
             --text-muted: #94a3b8;
-            --bg-glass: rgba(30, 41, 59, 0.6);
-            --bg-glass-hover: rgba(30, 41, 59, 0.75);
-            --bg-item: rgba(0, 0, 0, 0.3);
-            --bg-item-hover: rgba(0, 0, 0, 0.4);
-            --bg-active: rgba(255, 255, 255, 0.15);
-            --border-color: rgba(255, 255, 255, 0.15);
-            --input-bg: rgba(30, 41, 59, 0.9);
+            
+            /* Liquid Glass Colors - Dark Mode */
+            --glass-bg: linear-gradient(135deg, rgba(30, 41, 59, 0.4), rgba(15, 23, 42, 0.2));
+            --glass-bg-hover: linear-gradient(135deg, rgba(30, 41, 59, 0.5), rgba(15, 23, 42, 0.3));
+            --glass-border: 1px solid rgba(255, 255, 255, 0.08);
+            --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            
+            --item-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02));
+            --item-bg-hover: linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.05));
+            --item-border: 1px solid rgba(255, 255, 255, 0.05);
+            
+            --input-bg: rgba(15, 23, 42, 0.6);
             --accent-blue: #60a5fa;
-            --graphic-track: rgba(255,255,255,0.1);
-            --graphic-fill: #60a5fa;
+            --glow-color: rgba(96, 165, 250, 0.6);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -129,17 +134,11 @@
             position: relative; 
             z-index: 10; 
             padding: 0 1rem; 
-            width: 95%; /* Default width */
+            width: 95%; 
         }
 
-        /* Mobile / 9:16 ratio - Width 100% */
-        @media (max-width: 768px) {
-             .container { width: 100%; }
-        }
-
-        @media (min-width: 1024px) { 
-            .container { padding: 10px; } 
-        }
+        @media (max-width: 768px) { .container { width: 100%; } }
+        @media (min-width: 1024px) { .container { padding: 10px; } }
 
         /* --- HEADER --- */
         .main-header {
@@ -165,12 +164,31 @@
 
         .btn-circle {
             width: 48px; height: 48px; border-radius: 100%;
-            background: var(--input-bg); border: none; display: flex; align-items: center; justify-content: center;
-            cursor: pointer; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); backdrop-filter: blur(4px);
-            transition: transform 0.2s; color: var(--text-color);
+            /* Liquid Glass for Buttons */
+            background: var(--glass-bg);
+            border: var(--glass-border);
+            border-top: 1px solid rgba(255,255,255,0.5); /* Highlight */
+            backdrop-filter: blur(10px) saturate(150%); -webkit-backdrop-filter: blur(10px) saturate(150%);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: all 0.2s; color: var(--text-color);
         }
-        .btn-circle.primary { color: var(--accent-blue); }
-        .btn-circle:hover { transform: scale(1.08); }
+        
+        /* UPDATED: Removed solid white background, now uses consistent glass style */
+        .btn-circle.primary { 
+            color: var(--accent-blue); 
+            /* background: var(--glass-bg);  Inherits glass style, just changes icon color */
+        }
+        
+        /* GLOW EFFECT on Active/Focus */
+        .btn-circle:active {
+            transform: scale(0.95);
+            box-shadow: 0 0 15px var(--glow-color), inset 0 0 10px rgba(255,255,255,0.3);
+            border-color: var(--accent-blue);
+        }
+
+        .btn-circle:hover { transform: scale(1.08); background: var(--glass-bg-hover); }
         
         .search-wrapper { flex: 1; position: relative; width: 100%;}
         .search-icon { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: #94a3b8; pointer-events: none; height: 20px;}
@@ -186,16 +204,35 @@
         }
 
         .search-input {
-            width: 100%; background: var(--input-bg); color: var(--text-color);
-            border: none; border-radius: 9999px; padding: 0.75rem 3rem 0.75rem 3rem;
-            font-size: 1rem; outline: none; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); backdrop-filter: blur(4px); font-family: var(--font-main);
+            width: 100%; 
+            /* Liquid Input */
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px) saturate(120%); -webkit-backdrop-filter: blur(12px) saturate(120%);
+            border: var(--glass-border);
+            box-shadow: var(--glass-shadow);
+            
+            color: var(--text-color);
+            border-radius: 9999px; padding: 0.75rem 3rem 0.75rem 3rem;
+            font-size: 1rem; outline: none; font-family: var(--font-main);
+            transition: all 0.2s;
+        }
+        
+        /* GLOW EFFECT on Search Input Focus */
+        .search-input:focus { 
+            background: var(--input-bg); 
+            box-shadow: 0 0 20px var(--glow-color);
+            border-color: var(--accent-blue);
         }
         
         .suggestions-box {
-            position: absolute; width: 100%; background: var(--input-bg);
-            border-radius: 1rem; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
-            backdrop-filter: blur(12px); border: 1px solid var(--border-color);
-            z-index: 100; bottom: 100%; margin-bottom: 0.75rem; max-height: 300px; overflow-y: auto;
+            position: absolute; width: 100%; 
+            /* Liquid Dropdown */
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px) saturate(150%); -webkit-backdrop-filter: blur(20px) saturate(150%);
+            border: var(--glass-border);
+            box-shadow: var(--glass-shadow);
+            
+            border-radius: 1rem; z-index: 100; bottom: 100%; margin-bottom: 0.75rem; max-height: 300px; overflow-y: auto;
         }
 
         @media (min-width: 768px) {
@@ -218,30 +255,54 @@
             body { padding-top: 0; }
         }
 
-        .suggestion-item { padding: 0.75rem 1rem; cursor: pointer; border-bottom: 1px solid var(--border-color); font-size: 0.875rem; }
-        .suggestion-item:hover { background: var(--bg-glass-hover); }
+        .suggestion-item { padding: 0.75rem 1rem; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.1); font-size: 0.875rem; }
+        .suggestion-item:hover { background: rgba(255,255,255,0.2); }
 
         .main-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; padding-top: 4rem; width: 100%; }
         @media (min-width: 1024px) { .main-grid { grid-template-columns: 1fr 1fr; padding-top: 0; } }
         .col-left, .col-right { display: flex; flex-direction: column; gap: 1.5rem; min-width: 0; }
 
+        /* --- LIQUID GLASS PANELS --- */
         .glass-panel {
-            background: var(--bg-glass); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-            border: 1px solid var(--border-color); box-shadow: 0 4px 24px -1px var(--shadow-color);
+            background: var(--glass-bg);
+            backdrop-filter: blur(25px) saturate(180%); -webkit-backdrop-filter: blur(25px) saturate(180%); /* Increased Blur & Saturation */
+            border: var(--glass-border);
+            border-top: 1px solid rgba(255,255,255,0.6); /* Top sheen */
+            border-left: 1px solid rgba(255,255,255,0.6); /* Left sheen */
+            box-shadow: var(--glass-shadow);
+            
             border-radius: 2rem; padding: 1.5rem; transition: all 0.3s ease; width: 100%;
         }
-        .glass-panel:hover { transform: translateY(-2px); background: var(--bg-glass-hover); border-color: rgba(255,255,255,0.5); }
+        .glass-panel:hover { 
+            transform: translateY(-2px); 
+            background: var(--glass-bg-hover); 
+            box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.25);
+        }
         
-        .glass-item { background: var(--bg-item); border: 1px solid var(--border-color); border-radius: 1rem; transition: transform 0.2s, background 0.2s; }
-        .glass-item:hover { background: var(--bg-item-hover); }
+        /* --- LIQUID GLASS ITEMS --- */
+        .glass-item { 
+            background: var(--item-bg);
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            border: var(--item-border);
+            
+            border-radius: 1rem; transition: transform 0.2s, background 0.2s; 
+        }
+        .glass-item:hover { background: var(--item-bg-hover); }
 
         .section-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; }
         .section-title { font-size: 1.25rem; font-weight: bold; margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.5rem; }
         .location-title { font-size: 2.25rem; font-weight: 700; line-height: 1.1; word-wrap: break-word; }
         .location-subtitle { color: var(--text-muted); font-weight: 500; margin-top: 0.25rem; }
         
-        .current-weather-display { display: flex; align-items: center; gap: 1.5rem; margin-bottom: 2rem; margin-top: 1rem; }
-        .weather-icon-lg { width: 7rem; height: 7rem; filter: drop-shadow(0 8px 12px rgba(0,0,0,0.1)); }
+        .current-weather-display { 
+            display: flex; 
+            align-items: center; 
+            gap: 1.5rem; 
+            margin-bottom: 2rem; 
+            margin-top: 1rem; 
+        }
+
+        .weather-icon-lg { width: 7rem; height: 7rem; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.15)); }
         .temp-display { font-size: 5rem; font-weight: 700; line-height: 1; letter-spacing: -0.03em; }
         .condition-display { font-size: 1.25rem; font-weight: 500; color: var(--text-muted); margin-top: 0.5rem; }
 
@@ -257,7 +318,13 @@
         
         .daily-list { display: flex; gap: 0.75rem; overflow-x: auto; padding: 5px; }
         .daily-card { flex: 0 0 auto; padding: 1rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; min-width: 200px; cursor: pointer; border-radius: 1.25rem; }
-        .daily-card.active { background: var(--bg-active); border-color: var(--text-color); transform: scale(1.02); }
+        .daily-card.active { 
+            background: rgba(255, 255, 255, 0.5); 
+            border: 1px solid rgba(255,255,255,0.8); 
+            transform: scale(1.02); 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        html.dark .daily-card.active { background: rgba(255,255,255,0.15); border-color: rgba(255,255,255,0.3); }
         
         @media (min-width: 1024px) {
             .daily-forecast-section { height: 420px; display: flex; flex-direction: column; }
@@ -280,10 +347,15 @@
             .details-grid { grid-template-columns: repeat(4, 1fr); } 
         }
         
-        /* Card Design */
+        /* LIQUID DETAIL CARDS */
         .detail-card {
-            background: var(--bg-item); 
-            border: 1px solid var(--border-color);
+            background: var(--item-bg);
+            backdrop-filter: blur(15px) saturate(140%); -webkit-backdrop-filter: blur(15px) saturate(140%);
+            border: var(--item-border);
+            border-top: 1px solid rgba(255,255,255,0.4);
+            border-left: 1px solid rgba(255,255,255,0.3);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+
             border-radius: 1.75rem;
             padding: 1.25rem;
             display: flex;
@@ -295,7 +367,7 @@
             gap: 10px;
         }
 
-        .detail-card:hover { background: var(--bg-item-hover); }
+        .detail-card:hover { background: var(--item-bg-hover); }
 
         .detail-header {
             display: flex;
@@ -398,12 +470,14 @@
             position: fixed; 
             bottom: 0; left: 0; right: 0; top: auto;
             width: 100%;
-            background: var(--input-bg); 
-            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            /* Liquid Glass Menu */
+            background: var(--glass-bg);
+            backdrop-filter: blur(30px) saturate(180%); -webkit-backdrop-filter: blur(30px) saturate(180%);
+            border-top: 1px solid rgba(255,255,255,0.5);
+            box-shadow: 0 -10px 40px rgba(0,0,0,0.2);
+            
             border-top-left-radius: 2rem; border-top-right-radius: 2rem;
             border-bottom-left-radius: 0; border-bottom-right-radius: 0;
-            box-shadow: 0 -10px 40px rgba(0,0,0,0.2);
-            border: 1px solid rgba(255,255,255,0.3); border-bottom: none;
             padding: 1.5rem 1.5rem 1.5rem 1.5rem;
             
             transform-origin: bottom center;
@@ -446,10 +520,13 @@
                 position: absolute; top: 0; right: 0; bottom: auto; left: auto;
                 width: 320px;
                 border-radius: 1.5rem;
-                box-shadow: 0 25px 50px -12px rgba(0,0,0,0.3);
-                border: 1px solid rgba(255,255,255,0.3);
-                padding: 1.25rem;
                 
+                /* Desktop Liquid Glass */
+                background: var(--glass-bg);
+                border: var(--glass-border);
+                box-shadow: var(--glass-shadow);
+                
+                padding: 1.25rem;
                 transform-origin: top right; 
                 transform: scale(0.9) translateY(-10px);
                 opacity: 0;
@@ -592,6 +669,7 @@
                         </div>
                         <div id="loading-spinner" class="spinner hidden"></div>
                     </div>
+                    
                     <div class="current-weather-display">
                         <div id="current-weather-icon-container" class="weather-icon-lg"></div>
                         <div>
@@ -599,6 +677,7 @@
                             <div id="current-condition" class="condition-display">...</div>
                         </div>
                     </div>
+
                     <div class="grid-stats">
                         <!-- 1. AQI -->
                         <div class="glass-item stat-card">
@@ -651,7 +730,7 @@
             
             <div class="col-right">
                 <section id="daily-forecast-section" class="glass-panel daily-forecast-section animate-slide-up delay-300">
-                    <h2 class="section-title"><span class="material-symbols-rounded">calendar_month</span> Dự báo 14 ngày</h2>
+                    <h2 class="section-title"><span class="material-symbols-rounded">calendar_month</span> Dự báo 16 ngày</h2>
                     <div id="daily-forecast-container" class="daily-list custom-scrollbar"></div>
                 </section>
                 
@@ -1049,7 +1128,7 @@
                     }
                 }
                 if (isClear && isDay) {
-                     if (weatherCode > 0) { const beam = document.createElement('div'); beam.classList.add('sun-beam'); weatherEffectsContainer.appendChild(beam); }
+                     if (weatherCode <= 1) { const beam = document.createElement('div'); beam.classList.add('sun-beam'); weatherEffectsContainer.appendChild(beam); }
                 }
             }
 
@@ -1084,7 +1163,21 @@
 
             function getWeatherIcon(code, hour) {
                 const isNight = (hour >= 18 || hour < 6);
-                const icons = { 0: isNight?'clear_night.svg':'clear_day.svg', 1: isNight?'mostly_clear_night.svg':'mostly_clear_day.svg', 2: isNight?'partly_cloudy_night.svg':'partly_cloudy_day.svg', 3:'cloudy.svg', 45:'haze_fog_dust_smoke.svg', 48:'haze_fog_dust_smoke.svg', 51:'drizzle.svg', 53:'drizzle.svg', 55:'drizzle.svg', 61: isNight?'rain_with_cloudy_dark.svg':'rain_with_cloudy_light.svg', 63:'showers_rain.svg', 65:'heavy_rain.svg', 71: isNight?'snow_with_cloudy_dark.svg':'snow_with_cloudy_light.svg', 73:'showers_snow.svg', 75:'heavy_snow.svg', 80: isNight?'scattered_showers_night.svg':'scattered_showers_day.svg', 81:'showers_rain.svg', 82:'heavy_rain.svg', 95: isNight?'isolated_scattered_thunderstorms_night.svg':'isolated_scattered_thunderstorms_day.svg' };
+                const icons = { 
+                    0: isNight?'clear_night.svg':'clear_day.svg', 
+                    1: isNight?'mostly_clear_night.svg':'mostly_clear_day.svg', 
+                    2: isNight?'partly_cloudy_night.svg':'partly_cloudy_day.svg', 
+                    3:'cloudy.svg', 
+                    45:'haze_fog_dust_smoke.svg', 48:'haze_fog_dust_smoke.svg', 
+                    51:'drizzle.svg', 53:'drizzle.svg', 55:'drizzle.svg', 
+                    61: isNight?'rain_with_cloudy_dark.svg':'rain_with_cloudy_light.svg', 
+                    63:'showers_rain.svg', 65:'heavy_rain.svg', 
+                    71: isNight?'snow_with_cloudy_dark.svg':'snow_with_cloudy_light.svg', 
+                    73:'showers_snow.svg', 75:'heavy_snow.svg', 
+                    80: isNight?'scattered_showers_night.svg':'scattered_showers_day.svg', 
+                    81:'showers_rain.svg', 82:'heavy_rain.svg', 
+                    95: isNight?'isolated_scattered_thunderstorms_night.svg':'isolated_scattered_thunderstorms_day.svg' 
+                };
                 return GITHUB_BASE_URL + (icons[code] || 'cloudy.svg');
             }
             function getWeatherDescription(code) {
@@ -1148,9 +1241,12 @@
             async function fetchWeather(lat, lon, city) {
                 loadingSpinner.classList.remove('hidden');
                 try {
-                    const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relativehumidity_2m,weathercode,windspeed_10m,winddirection_10m,pressure_msl,dewpoint_2m,visibility,uv_index,apparent_temperature,cloudcover,precipitation&hourly=temperature_2m,weathercode,precipitation_probability,relativehumidity_2m,surface_pressure,visibility,windspeed_10m&daily=weathercode,temperature_2m_max,temperature_2m_min,sunrise,sunset,uv_index_max,precipitation_sum,wind_speed_10m_max&timezone=auto&forecast_days=14`);
+                    // OPEN-METEO API - Reverted to Open-Meteo
+                    const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relativehumidity_2m,weathercode,windspeed_10m,winddirection_10m,pressure_msl,dewpoint_2m,visibility,uv_index,apparent_temperature,cloudcover,precipitation&hourly=temperature_2m,weathercode,precipitation_probability,relativehumidity_2m,surface_pressure,visibility,windspeed_10m&daily=weathercode,temperature_2m_max,temperature_2m_min,sunrise,sunset,uv_index_max,precipitation_sum,wind_speed_10m_max&timezone=auto&forecast_days=16`);
+                    
                     if(!res.ok) throw new Error('Lỗi tải thời tiết');
                     const data = await res.json();
+                    
                     globalWeatherData = data; selectedDayIndex = 0; updateUI(data, city);
                     weatherMapEl.src = `https://embed.windy.com/embed.html?type=map&location=coordinates&metricWind=kmh&metricTemp=°C&radarRange=-1&lat=${lat}&lon=${lon}&zoom=9`;
                 } catch(e) { showError(e.message); } finally { loadingSpinner.classList.add('hidden'); }
@@ -1419,7 +1515,12 @@
                 mapModal.classList.remove('modal-entering'); mapModal.classList.add('modal-exiting');
                 setTimeout(() => { mapModal.classList.add('hidden'); fullWeatherMap.src = 'about:blank'; }, 200);
             };
-            document.addEventListener('click', (e) => { if(!searchForm.contains(e.target)) searchSuggestions.classList.add('hidden'); });
+            document.addEventListener('click', (e) => { 
+                if(!searchForm.contains(e.target)) searchSuggestions.classList.add('hidden'); 
+                if (!settingsMenuWrapper.contains(e.target) && !settingsButton.contains(e.target)) {
+                    if (settingsMenuWrapper.classList.contains('active')) toggleSettings(); 
+                }
+            });
 
             applyTheme(currentTheme);
             setInterval(updateClock, 1000);
