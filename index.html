@@ -176,7 +176,7 @@
         }
         
         .controls-center { display: flex; align-items: center; gap: 0.75rem; flex: 1; min-width: 0; }
-        .controls-right { flex: 0 0 auto; position: relative; z-index: 110;}
+        .controls-right { flex: 0 0 auto; position: relative; z-index: 110; display: flex; align-items: center; gap: 0.75rem;}
 
         .btn-circle {
             width: 48px; height: 48px; border-radius: 100%;
@@ -201,6 +201,47 @@
         }
 
         .btn-circle:hover { transform: scale(1.08); background: var(--glass-bg-hover); }
+        
+        /* --- UNIT TOGGLE --- */
+        .unit-toggle-group {
+            display: flex;
+            align-items: center;
+            background: var(--glass-bg);
+            border: var(--glass-border);
+            backdrop-filter: blur(10px) saturate(150%); -webkit-backdrop-filter: blur(10px) saturate(150%);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            border-radius: 99px;
+            padding: 0.25rem;
+            height: 48px;
+        }
+        
+        .unit-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-weight: 600;
+            padding: 0 0.75rem;
+            height: 100%;
+            border-radius: 99px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: var(--font-main);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .unit-btn:hover {
+            color: var(--text-color);
+            background: rgba(255,255,255,0.1);
+        }
+        
+        .unit-btn.active {
+            background: var(--accent-blue);
+            color: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
         
         .search-wrapper { flex: 1; position: relative; width: 100%;}
         .search-icon { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: #94a3b8; pointer-events: none; height: 20px;}
@@ -258,7 +299,7 @@
             .clock-sep { display: none; }
             .header-controls { padding: 0; display: contents; background: none; }
             .controls-center { grid-column: 2; justify-content: center; width: 100%; display: flex; align-items: center; gap: 0.75rem; }
-            .controls-right { grid-column: 3; display: flex; justify-content: flex-end; }
+            .controls-right { grid-column: 3; display: flex; justify-content: flex-end; align-items: center; gap: 0.75rem;}
             .search-wrapper { max-width: 28rem; }
             .suggestions-box { bottom: auto; top: 100%; margin-top: 0.5rem; margin-bottom: 0; } 
             body { padding-top: 0; }
@@ -620,6 +661,13 @@
                     </form>
                 </div>
                 <div class="controls-right">
+                    <!-- UNIT TOGGLE START -->
+                    <div class="unit-toggle-group">
+                        <button id="unit-c" class="unit-btn active">°C</button>
+                        <button id="unit-f" class="unit-btn">°F</button>
+                    </div>
+                    <!-- UNIT TOGGLE END -->
+
                     <button id="settings-button" class="btn-circle"><span class="material-symbols-rounded">settings</span></button>
                     
                     <div id="settings-menu-wrapper" class="settings-menu-elastic">
@@ -992,6 +1040,10 @@
             const themeBtns = document.querySelectorAll('.theme-btn');
             const soundToggleSwitch = document.getElementById('sound-toggle-switch');
             
+            // Unit Toggle Elements
+            const unitCBtn = document.getElementById('unit-c');
+            const unitFBtn = document.getElementById('unit-f');
+
             // Audio
             const rainAudio = new Audio('https://raw.githubusercontent.com/nnam0308/weather/bbdb3fdbb7122e2fbab112e4e14cdad9aee47ec2/sound/rain.mp3');
             rainAudio.loop = true;
@@ -1002,6 +1054,7 @@
             let currentLon = 109.1967;
             let searchTimeout;
             let currentTheme = localStorage.getItem('theme') || 'system';
+            let currentUnit = localStorage.getItem('unit') || 'c'; // 'c' or 'f'
             let isSoundEnabled = localStorage.getItem('soundEnabled') === 'true';
             let globalWeatherData = null;
             let selectedDayIndex = 0;
@@ -1019,6 +1072,39 @@
                 await deferredPrompt.userChoice; deferredPrompt = null; 
                 document.getElementById('install-area').classList.add('hidden');
             });
+
+            // --- UNIT TOGGLE LOGIC ---
+            function updateUnitUI() {
+                if (currentUnit === 'c') {
+                    unitCBtn.classList.add('active');
+                    unitFBtn.classList.remove('active');
+                } else {
+                    unitCBtn.classList.remove('active');
+                    unitFBtn.classList.add('active');
+                }
+            }
+            
+            function setUnit(unit) {
+                if (currentUnit === unit) return;
+                currentUnit = unit;
+                localStorage.setItem('unit', unit);
+                updateUnitUI();
+                // Re-fetch weather with new unit
+                fetchWeather(currentLat, currentLon, currentCity);
+                
+                // Update map unit
+                const unitStr = unit === 'c' ? 'metricTemp=°C' : 'metricTemp=°F';
+                const currentSrc = weatherMapEl.src;
+                // Simple replacement might be tricky if param not there, so rebuild is safer or regex replace
+                if(currentSrc !== 'about:blank') {
+                    // Update Windy Embed param if possible, but usually windy handles its own state or needs full reload
+                    // For simplicity, let's just re-set src in fetchWeather
+                }
+            }
+
+            unitCBtn.addEventListener('click', () => setUnit('c'));
+            unitFBtn.addEventListener('click', () => setUnit('f'));
+            updateUnitUI(); // Init
 
             function updateAppThemeColor(className) {
                 const metaThemeColor = document.getElementById('meta-theme-color');
@@ -1262,15 +1348,21 @@
 
             async function fetchWeather(lat, lon, city) {
                 loadingSpinner.classList.remove('hidden');
+                // Add unit parameter to API call
+                const unitParam = currentUnit === 'f' ? '&temperature_unit=fahrenheit' : '';
+                
                 try {
                     // OPEN-METEO API - Reverted to Open-Meteo (Forecast 16 Days)
-                    const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relativehumidity_2m,weathercode,windspeed_10m,winddirection_10m,pressure_msl,dewpoint_2m,visibility,uv_index,apparent_temperature,cloudcover,precipitation&hourly=temperature_2m,weathercode,precipitation_probability,relativehumidity_2m,surface_pressure,visibility,windspeed_10m&daily=weathercode,temperature_2m_max,temperature_2m_min,sunrise,sunset,uv_index_max,precipitation_sum,wind_speed_10m_max&timezone=auto&forecast_days=16`);
+                    const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relativehumidity_2m,weathercode,windspeed_10m,winddirection_10m,pressure_msl,dewpoint_2m,visibility,uv_index,apparent_temperature,cloudcover,precipitation&hourly=temperature_2m,weathercode,precipitation_probability,relativehumidity_2m,surface_pressure,visibility,windspeed_10m&daily=weathercode,temperature_2m_max,temperature_2m_min,sunrise,sunset,uv_index_max,precipitation_sum,wind_speed_10m_max&timezone=auto&forecast_days=16${unitParam}`);
                     
                     if(!res.ok) throw new Error('Lỗi tải thời tiết');
                     const data = await res.json();
                     
                     globalWeatherData = data; selectedDayIndex = 0; updateUI(data, city);
-                    weatherMapEl.src = `https://embed.windy.com/embed.html?type=map&location=coordinates&metricWind=kmh&metricTemp=°C&radarRange=-1&lat=${lat}&lon=${lon}&zoom=9`;
+                    
+                    // Update map unit
+                    const mapUnit = currentUnit === 'c' ? '°C' : '°F';
+                    weatherMapEl.src = `https://embed.windy.com/embed.html?type=map&location=coordinates&metricWind=kmh&metricTemp=${mapUnit}&radarRange=-1&lat=${lat}&lon=${lon}&zoom=9`;
                 } catch(e) { showError(e.message); } finally { loadingSpinner.classList.add('hidden'); }
             }
 
@@ -1303,6 +1395,9 @@
                     const dateLabel = isToday ? "24h tới" : dateObj.toLocaleDateString('vi-VN', {day: '2-digit', month: '2-digit'});
                     hourlyTitle.innerHTML = `<span class="material-symbols-rounded">schedule</span> Dự báo hàng giờ (${dateLabel})`;
                 }
+                
+                const tempUnit = currentUnit === 'c' ? '°C' : '°F';
+                const tempSymbol = '°'; // Display just symbol for big numbers
 
                 let displayTemp, displayCode, displayDesc, displayWind, displayPressure, displayHumidity, displayVis, displayUV, displayWindDir, displayFeelsLike, displayDew;
                 let isDayTime = true; 
@@ -1327,7 +1422,7 @@
                     displayDew = "--";
                 }
 
-                animateCountUp(currentTempEl, displayTemp, '°');
+                animateCountUp(currentTempEl, displayTemp, tempSymbol);
                 currentConditionEl.textContent = displayDesc;
                 currentWeatherIconContainer.innerHTML = `<img src="${getWeatherIcon(displayCode, isDayTime ? 12 : 0)}" class="weather-icon loaded animate-slide-up">`;
 
@@ -1337,9 +1432,9 @@
                     'current-pressure': [displayPressure, ' hPa'],
                     'current-humidity': [displayHumidity, '%'],
                     'current-visibility': [displayVis, ' km'],
-                    'current-dewpoint': [displayDew, '°'],
+                    'current-dewpoint': [displayDew, tempSymbol],
                     'current-uv': [displayUV, ''],
-                    'current-feels-like': [displayFeelsLike, '°'] // Added Feels Like
+                    'current-feels-like': [displayFeelsLike, tempSymbol] // Added Feels Like
                 };
                 for(const [id, [val, unit]] of Object.entries(stats)) {
                     const el = document.getElementById(id); if(el) animateCountUp(el, val, unit);
@@ -1348,8 +1443,8 @@
 
                 // Update Specific Details Cards
                 const detailMap = {
-                    'detail-temp': [isToday ? current.temperature_2m : daily.temperature_2m_max[index], '°C'],
-                    'detail-feels-like': [isToday ? current.apparent_temperature : '--', '°C'],
+                    'detail-temp': [isToday ? current.temperature_2m : daily.temperature_2m_max[index], tempUnit],
+                    'detail-feels-like': [isToday ? current.apparent_temperature : '--', tempUnit],
                     'detail-cloud-cover': ['--', '%'],
                     'detail-precipitation': [daily.precipitation_sum[index], ' mm'],
                     'detail-wind': [displayWind, ''],
