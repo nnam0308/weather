@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <!-- Thêm viewport-fit=cover để hỗ trợ tai thỏ trên iPhone -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Ứng dụng Thời tiết</title>
+    <title>Thời tiết</title>
     
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/nnam0308/weather/18389a738bae786aebd65938d5228c60d821b4d0/icon.png">
@@ -51,10 +51,20 @@
             --item-border: 1px solid rgba(255, 255, 255, 0.3);
             
             --input-bg: rgba(255, 255, 255, 0.6);
-            --accent-blue: #0b50d0;
             --safe-top: env(safe-area-inset-top, 0px);
             
-            /* Glow Color */
+            /* DYNAMIC ACCENT COLORS (Based on Weather) */
+            --accent-default: #0b50d0;
+            --accent-sunny: #f59e0b;   /* Orange/Yellow */
+            --accent-cloudy: #64748b;  /* Blue Grey */
+            --accent-rain: #3b82f6;    /* Blue */
+            --accent-night: #6366f1;   /* Indigo */
+            --accent-snow: #0ea5e9;    /* Light Blue */
+            
+            /* Current Accent (Will be updated by JS) */
+            --accent-blue: var(--accent-default); 
+            
+            /* Glow Color (Derived from Accent) */
             --glow-color: rgba(11, 80, 208, 0.6);
         }
 
@@ -73,8 +83,14 @@
             --item-border: 1px solid rgba(255, 255, 255, 0.05);
             
             --input-bg: rgba(15, 23, 42, 0.6);
-            --accent-blue: #60a5fa;
-            --glow-color: rgba(96, 165, 250, 0.6);
+            
+            /* Dark Mode Accents (Brighter) */
+            --accent-default: #60a5fa;
+            --accent-sunny: #fbbf24;
+            --accent-cloudy: #94a3b8;
+            --accent-rain: #60a5fa;
+            --accent-night: #818cf8;
+            --accent-snow: #38bdf8;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -164,10 +180,9 @@
 
         .btn-circle {
             width: 48px; height: 48px; border-radius: 100%;
-            /* Liquid Glass for Buttons */
             background: var(--glass-bg);
             border: var(--glass-border);
-            border-top: 1px solid rgba(255,255,255,0.5); /* Highlight */
+            border-top: 1px solid rgba(255,255,255,0.5);
             backdrop-filter: blur(10px) saturate(150%); -webkit-backdrop-filter: blur(10px) saturate(150%);
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
             
@@ -175,13 +190,10 @@
             cursor: pointer; transition: all 0.2s; color: var(--text-color);
         }
         
-        /* UPDATED: Removed solid white background, now uses consistent glass style */
         .btn-circle.primary { 
             color: var(--accent-blue); 
-            /* background: var(--glass-bg);  Inherits glass style, just changes icon color */
         }
         
-        /* GLOW EFFECT on Active/Focus */
         .btn-circle:active {
             transform: scale(0.95);
             box-shadow: 0 0 15px var(--glow-color), inset 0 0 10px rgba(255,255,255,0.3);
@@ -205,7 +217,6 @@
 
         .search-input {
             width: 100%; 
-            /* Liquid Input */
             background: var(--glass-bg);
             backdrop-filter: blur(12px) saturate(120%); -webkit-backdrop-filter: blur(12px) saturate(120%);
             border: var(--glass-border);
@@ -217,7 +228,6 @@
             transition: all 0.2s;
         }
         
-        /* GLOW EFFECT on Search Input Focus */
         .search-input:focus { 
             background: var(--input-bg); 
             box-shadow: 0 0 20px var(--glow-color);
@@ -226,7 +236,6 @@
         
         .suggestions-box {
             position: absolute; width: 100%; 
-            /* Liquid Dropdown */
             background: var(--glass-bg);
             backdrop-filter: blur(20px) saturate(150%); -webkit-backdrop-filter: blur(20px) saturate(150%);
             border: var(--glass-border);
@@ -265,10 +274,10 @@
         /* --- LIQUID GLASS PANELS --- */
         .glass-panel {
             background: var(--glass-bg);
-            backdrop-filter: blur(25px) saturate(180%); -webkit-backdrop-filter: blur(25px) saturate(180%); /* Increased Blur & Saturation */
+            backdrop-filter: blur(25px) saturate(180%); -webkit-backdrop-filter: blur(25px) saturate(180%);
             border: var(--glass-border);
-            border-top: 1px solid rgba(255,255,255,0.6); /* Top sheen */
-            border-left: 1px solid rgba(255,255,255,0.6); /* Left sheen */
+            border-top: 1px solid rgba(255,255,255,0.6);
+            border-left: 1px solid rgba(255,255,255,0.6);
             box-shadow: var(--glass-shadow);
             
             border-radius: 2rem; padding: 1.5rem; transition: all 0.3s ease; width: 100%;
@@ -331,7 +340,7 @@
             .daily-list { 
                 flex-direction: column; 
                 overflow-y: auto; 
-                padding: 10px; /* Updated padding from 0 5px to 10px */
+                padding: 10px; 
                 flex: 1; 
             }
             .daily-card { width: 100%; min-width: 0; }
@@ -463,14 +472,12 @@
 
         /* --- SETTINGS MENU --- */
         .settings-menu-elastic {
-            /* Mobile Default: Bottom Sheet with Flexbox for Ordering */
             display: flex;
             flex-direction: column;
             
             position: fixed; 
             bottom: 0; left: 0; right: 0; top: auto;
             width: 100%;
-            /* Liquid Glass Menu */
             background: var(--glass-bg);
             backdrop-filter: blur(30px) saturate(180%); -webkit-backdrop-filter: blur(30px) saturate(180%);
             border-top: 1px solid rgba(255,255,255,0.5);
@@ -481,28 +488,25 @@
             padding: 1.5rem 1.5rem 1.5rem 1.5rem;
             
             transform-origin: bottom center;
-            transform: translateY(100%); /* Start hidden at bottom */
+            transform: translateY(100%);
             opacity: 1;
             pointer-events: none;
             transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
             z-index: 100;
         }
         
-        /* Override for toggle positioning */
         .controls-right .settings-menu-elastic { top: auto; right: auto; margin-top: 0; } 
 
         .settings-menu-elastic.active { 
-            transform: translateY(0); /* Slide up */
+            transform: translateY(0);
             pointer-events: auto; 
         }
 
-        /* Header Styling & Reordering for Mobile */
         .settings-header { 
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
             
-            /* Mobile Specific: Move to Bottom using Order */
             order: 99; 
             margin-bottom: 0;
             margin-top: 1.5rem;
@@ -513,15 +517,13 @@
         .settings-title { font-size: 1.25rem; font-weight: 700; }
         .theme-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem; margin-bottom: 1.5rem; }
 
-        /* Desktop: Floating Dropdown Style & Reset Order */
         @media (min-width: 768px) {
             .settings-menu-elastic {
-                display: block; /* Restore block flow */
+                display: block; 
                 position: absolute; top: 0; right: 0; bottom: auto; left: auto;
                 width: 320px;
                 border-radius: 1.5rem;
                 
-                /* Desktop Liquid Glass */
                 background: var(--glass-bg);
                 border: var(--glass-border);
                 box-shadow: var(--glass-shadow);
@@ -540,7 +542,6 @@
                 opacity: 1; 
             }
 
-            /* Reset Header Position for Desktop */
             .settings-header {
                 order: 0;
                 margin-bottom: 1.5rem;
@@ -669,7 +670,6 @@
                         </div>
                         <div id="loading-spinner" class="spinner hidden"></div>
                     </div>
-                    
                     <div class="current-weather-display">
                         <div id="current-weather-icon-container" class="weather-icon-lg"></div>
                         <div>
@@ -677,7 +677,6 @@
                             <div id="current-condition" class="condition-display">...</div>
                         </div>
                     </div>
-
                     <div class="grid-stats">
                         <!-- 1. AQI -->
                         <div class="glass-item stat-card">
@@ -1025,18 +1024,41 @@
                 const metaThemeColor = document.getElementById('meta-theme-color');
                 const metaTileColor = document.getElementById('meta-tile-color');
                 let color = '#f9fafb'; 
+                let accentColor = getComputedStyle(document.documentElement).getPropertyValue('--accent-default');
+
                 if (className.includes('weather-default')) {
                     if (document.documentElement.classList.contains('dark')) color = '#0f172a'; 
                     else color = '#f9fafb';
-                } else if (className.includes('weather-sun-light')) color = '#FFF9C4';
-                else if (className.includes('weather-sun-intense')) color = '#FFB300';
-                else if (className.includes('weather-cloudy-grey')) color = '#78909C';
-                else if (className.includes('weather-rain-day')) color = '#42A5F5';
-                else if (className.includes('weather-rain-night')) color = '#1A237E';
-                else if (className.includes('weather-night-clear')) color = '#0D47A1';
-                else if (className.includes('weather-snow')) color = document.documentElement.classList.contains('dark') ? '#37474F' : '#E0E0E0';
+                } else if (className.includes('weather-sun-light')) {
+                    color = '#FFF9C4';
+                    accentColor = getComputedStyle(document.documentElement).getPropertyValue('--accent-sunny');
+                } else if (className.includes('weather-sun-intense')) {
+                    color = '#FFB300';
+                    accentColor = getComputedStyle(document.documentElement).getPropertyValue('--accent-sunny');
+                } else if (className.includes('weather-cloudy-grey')) {
+                    color = '#78909C';
+                    accentColor = getComputedStyle(document.documentElement).getPropertyValue('--accent-cloudy');
+                } else if (className.includes('weather-rain-day')) {
+                    color = '#42A5F5';
+                    accentColor = getComputedStyle(document.documentElement).getPropertyValue('--accent-rain');
+                } else if (className.includes('weather-rain-night')) {
+                    color = '#1A237E';
+                    accentColor = getComputedStyle(document.documentElement).getPropertyValue('--accent-night');
+                } else if (className.includes('weather-night-clear')) {
+                    color = '#0D47A1';
+                    accentColor = getComputedStyle(document.documentElement).getPropertyValue('--accent-night');
+                } else if (className.includes('weather-snow')) {
+                    if (document.documentElement.classList.contains('dark')) color = '#37474F';
+                    else color = '#E0E0E0';
+                    accentColor = getComputedStyle(document.documentElement).getPropertyValue('--accent-snow');
+                }
                 metaThemeColor.setAttribute('content', color);
                 metaTileColor.setAttribute('content', color);
+                
+                // Update Dynamic Accent
+                document.documentElement.style.setProperty('--accent-blue', accentColor);
+                // Also update glow to match accent
+                document.documentElement.style.setProperty('--glow-color', accentColor);
             }
 
             function updateSoundUI() { soundToggleSwitch.checked = isSoundEnabled; }
@@ -1241,7 +1263,7 @@
             async function fetchWeather(lat, lon, city) {
                 loadingSpinner.classList.remove('hidden');
                 try {
-                    // OPEN-METEO API - Reverted to Open-Meteo
+                    // OPEN-METEO API - Reverted to Open-Meteo (Forecast 16 Days)
                     const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relativehumidity_2m,weathercode,windspeed_10m,winddirection_10m,pressure_msl,dewpoint_2m,visibility,uv_index,apparent_temperature,cloudcover,precipitation&hourly=temperature_2m,weathercode,precipitation_probability,relativehumidity_2m,surface_pressure,visibility,windspeed_10m&daily=weathercode,temperature_2m_max,temperature_2m_min,sunrise,sunset,uv_index_max,precipitation_sum,wind_speed_10m_max&timezone=auto&forecast_days=16`);
                     
                     if(!res.ok) throw new Error('Lỗi tải thời tiết');
